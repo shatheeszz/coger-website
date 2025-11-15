@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coger Enterprises - Your Online Store</title>
+    <title>Coger Enterprises - Premium Coconut Products</title>
     <style>
         * {
             margin: 0;
@@ -14,119 +14,84 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #2c1810;
+            background-color: #f8f5f0;
         }
 
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5c4a33 0%, #8b7355 50%, #a0826d 100%);
             color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
         }
 
         nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .nav-links a:hover {
-            opacity: 0.8;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background-color: #6d5d4b;
+            padding: 1rem;
             text-align: center;
-            padding: 4rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background: white;
-            color: #667eea;
+        nav a {
+            color: white;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: transform 0.3s;
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
+        nav a:hover {
+            color: #d4af37;
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin: 3rem 0 2rem;
-            color: #667eea;
-        }
-
-        .products-grid {
+        .products {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
         .product-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid #d4c5b0;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
 
         .product-image {
             width: 100%;
             height: 250px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            object-fit: cover;
+            background: linear-gradient(135deg, #e8dcc8 0%, #c9b89a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            font-size: 5rem;
         }
 
         .product-info {
@@ -134,189 +99,195 @@
         }
 
         .product-title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
+            color: #5c4a33;
             margin-bottom: 0.5rem;
-            color: #333;
+            font-weight: 600;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .product-price {
-            font-size: 1.5rem;
-            color: #667eea;
+            font-size: 1.8rem;
+            color: #7a5d3a;
             font-weight: bold;
-            margin: 0.5rem 0;
-        }
-
-        .product-desc {
-            color: #666;
             margin-bottom: 1rem;
         }
 
         .add-to-cart {
-            width: 100%;
-            padding: 0.8rem;
-            background: #667eea;
+            background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
-            font-weight: bold;
-            transition: background 0.3s;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
         }
 
         .add-to-cart:hover {
-            background: #764ba2;
+            background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
+            transform: scale(1.02);
         }
 
         footer {
-            background: #333;
+            background-color: #5c4a33;
             color: white;
             text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
+            padding: 2rem 0;
+            margin-top: 3rem;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            list-style: none;
-            margin-top: 1rem;
-        }
-
-        .footer-links a {
+        .cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
             color: white;
-            text-decoration: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            font-weight: bold;
+            z-index: 1000;
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
+        .cart:hover {
+            background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
+        }
+
+        #cart-count {
+            background-color: #d4af37;
+            border-radius: 50%;
+            padding: 0.2rem 0.6rem;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
+    <div class="cart" onclick="alert('Cart feature coming soon!')">
+        🛒 Cart <span id="cart-count">0</span>
+    </div>
+
     <header>
-        <nav>
-            <div class="logo">Coger Enterprises</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#products">Products</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+        <h1>🥥 Coger Enterprises</h1>
+        <p>Premium Natural Coconut Products - From Nature to You</p>
     </header>
 
-    <section class="hero">
-        <h1>Welcome to Coger Enterprises</h1>
-        <p>Premium coconut products directly from our farm to your door</p>
-        <a href="#products" class="btn">Shop Now</a>
-    </section>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#products">Products</a>
+        <a href="login.html">Login</a>
+        <a href="admin.html">Admin</a>
+    </nav>
 
     <div class="container">
-        <h2 class="section-title" id="products">Featured Products</h2>
-        <div class="products-grid">
+        <div class="products" id="products">
             <div class="product-card">
-                <div class="product-image">🎮</div>
+                <div class="product-image">🥥</div>
                 <div class="product-info">
                     <h3 class="product-title">Premium Cocopeat Block</h3>
-                    <p class="product-desc">100% natural, eco-friendly coconut coir for gardening and horticulture</p>
-                    <div class="product-price">$24.99</div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <p class="product-description">High-quality compressed cocopeat blocks, perfect for gardening and horticulture. 100% natural and eco-friendly growing medium.</p>
+                    <div class="product-price">₹28.99</div>
+                    <button class="add-to-cart" onclick="addToCart('Premium Cocopeat Block', 28.99)">Add to Cart</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-image">📱</div>
+                <div class="product-image">🌴</div>
                 <div class="product-info">
-                    <h3 class="product-title">Smartphone Pro</h3>Organic Coconut Oil</h3>
-                    <p class="product-desc">Cold-pressed virgin coconut oil - pure, healthy, and multipurpose</p>
-                    <div class="product-price">$18.99</div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <h3 class="product-title">Organic Coconut Oil</h3>
+                    <p class="product-description">Pure, cold-pressed virgin coconut oil. Rich in nutrients, perfect for cooking, skincare, and hair care.</p>
+                    <div class="product-price">₹45.99</div>
+                    <button class="add-to-cart" onclick="addToCart('Organic Coconut Oil', 45.99)">Add to Cart</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-image">💻</div>
+                <div class="product-image">🥥</div>
                 <div class="product-info">
-                    <h3 class="product-title">Laptop Ultra</h3>Desiccated Coconut</h3>
-                    <p class="product-desc">Finely shredded coconut for baking and cooking - unsweetened</p>
-                    <div class="product-price">$12.99</div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <h3 class="product-title">Desiccated Coconut</h3>
+                    <p class="product-description">Premium quality dried and shredded coconut. Ideal for baking, cooking, and adding natural flavor to your dishes.</p>
+                    <div class="product-price">₹18.50</div>
+                    <button class="add-to-cart" onclick="addToCart('Desiccated Coconut', 18.50)">Add to Cart</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-image">🎧</div>
+                <div class="product-image">🌾</div>
                 <div class="product-info">
-                    <h3 class="product-title">Wireless Headphones</h3>Dried Copra</h3>
-                    <p class="product-desc">Sun-dried coconut kernel for oil extraction and animal feed</p>
-                    <div class="product-price">$32.99</div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <h3 class="product-title">Dried Copra</h3>
+                    <p class="product-description">Sun-dried coconut kernel, perfect for oil extraction and commercial use. Premium grade copra from selected coconuts.</p>
+                    <div class="product-price">₹35.00</div>
+                    <button class="add-to-cart" onclick="addToCart('Dried Copra', 35.00)">Add to Cart</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-image">⌚</div>
+                <div class="product-image">🥥</div>
                 <div class="product-info">
                     <h3 class="product-title">Fresh Coconuts</h3>
-                    <p class="product-desc">Farm-fresh coconuts - tender water and sweet meat</p>
-                    <div class="product-price">$3.99</div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <p class="product-description">Farm-fresh tender coconuts delivered to your doorstep. Rich in natural electrolytes and refreshing coconut water.</p>
+                    <div class="product-price">₹12.99</div>
+                    <button class="add-to-cart" onclick="addToCart('Fresh Coconuts', 12.99)">Add to Cart</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <div class="product-image">📷</div>
+                <div class="product-image">⚫</div>
                 <div class="product-info">
-                    >Coconut Shell Charcoal</h3>
-                    <p class="product-desc">High-quality activated charcoal made from coconut shells</p>
-                    <div class="product-price">$28.99</div>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <h3 class="product-title">Coconut Shell Charcoal</h3>
+                    <p class="product-description">High-quality activated charcoal from coconut shells. Perfect for air purification, water filtration, and industrial use.</p>
+                    <div class="product-price">₹22.50</div>
+                    <button class="add-to-cart" onclick="addToCart('Coconut Shell Charcoal', 22.50)">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2025 Coger Enterprises. All rights reserved.</p>
-            <ul class="footer-links">
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Contact Us</a></li>
-            </ul>
-        </div>
+        <p>&copy; 2024 Coger Enterprises. All rights reserved.</p>
+        <p>Natural Coconut Products | Sustainable & Organic</p>
     </footer>
 
     <script>
-        // Simple cart functionality
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const productCard = this.closest('.product-card');
-                const productTitle = productCard.querySelector('.product-title').textContent;
-                const productPrice = productCard.querySelector('.product-price').textContent;
-                
-                alert(`Added to cart: ${productTitle} - ${productPrice}`);
-                
-                // You can add more sophisticated cart functionality here
+        let cartCount = 0;
+
+        function addToCart(productName, price) {
+            cartCount++;
+            document.getElementById('cart-count').textContent = cartCount;
+            
+            // Get existing cart or create new one
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            // Add product to cart
+            cart.push({
+                name: productName,
+                price: price,
+                quantity: 1,
+                timestamp: new Date().toISOString()
             });
-        });
+            
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            alert(`${productName} added to cart! Total items: ${cartCount}`);
+        }
+
+        // Load cart count on page load
+        window.onload = function() {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cartCount = cart.length;
+            document.getElementById('cart-count').textContent = cartCount;
+        };
     </script>
 </body>
 </html>
