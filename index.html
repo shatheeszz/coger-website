@@ -112,11 +112,33 @@
             line-height: 1.5;
         }
 
+        .product-category {
+            display: inline-block;
+            background: #e8dcc8;
+            color: #5c4a33;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
         .product-price {
             font-size: 1.8rem;
             color: #7a5d3a;
             font-weight: bold;
             margin-bottom: 1rem;
+        }
+
+        .product-stock {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .product-stock.low {
+            color: #d9534f;
+            font-weight: bold;
         }
 
         .add-to-cart {
@@ -135,6 +157,11 @@
         .add-to-cart:hover {
             background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
             transform: scale(1.02);
+        }
+
+        .add-to-cart:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
 
         footer {
@@ -170,6 +197,13 @@
             margin-left: 0.5rem;
             font-size: 0.9rem;
         }
+
+        .no-products {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -191,65 +225,7 @@
 
     <div class="container">
         <div class="products" id="products">
-            <div class="product-card">
-                <div class="product-image">🥥</div>
-                <div class="product-info">
-                    <h3 class="product-title">Premium Cocopeat Block</h3>
-                    <p class="product-description">High-quality compressed cocopeat blocks, perfect for gardening and horticulture. 100% natural and eco-friendly growing medium.</p>
-                    <div class="product-price">₹28.99</div>
-                    <button class="add-to-cart" onclick="addToCart('Premium Cocopeat Block', 28.99)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">🌴</div>
-                <div class="product-info">
-                    <h3 class="product-title">Organic Coconut Oil</h3>
-                    <p class="product-description">Pure, cold-pressed virgin coconut oil. Rich in nutrients, perfect for cooking, skincare, and hair care.</p>
-                    <div class="product-price">₹45.99</div>
-                    <button class="add-to-cart" onclick="addToCart('Organic Coconut Oil', 45.99)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">🥥</div>
-                <div class="product-info">
-                    <h3 class="product-title">Desiccated Coconut</h3>
-                    <p class="product-description">Premium quality dried and shredded coconut. Ideal for baking, cooking, and adding natural flavor to your dishes.</p>
-                    <div class="product-price">₹18.50</div>
-                    <button class="add-to-cart" onclick="addToCart('Desiccated Coconut', 18.50)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">🌾</div>
-                <div class="product-info">
-                    <h3 class="product-title">Dried Copra</h3>
-                    <p class="product-description">Sun-dried coconut kernel, perfect for oil extraction and commercial use. Premium grade copra from selected coconuts.</p>
-                    <div class="product-price">₹35.00</div>
-                    <button class="add-to-cart" onclick="addToCart('Dried Copra', 35.00)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">🥥</div>
-                <div class="product-info">
-                    <h3 class="product-title">Fresh Coconuts</h3>
-                    <p class="product-description">Farm-fresh tender coconuts delivered to your doorstep. Rich in natural electrolytes and refreshing coconut water.</p>
-                    <div class="product-price">₹12.99</div>
-                    <button class="add-to-cart" onclick="addToCart('Fresh Coconuts', 12.99)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">⚫</div>
-                <div class="product-info">
-                    <h3 class="product-title">Coconut Shell Charcoal</h3>
-                    <p class="product-description">High-quality activated charcoal from coconut shells. Perfect for air purification, water filtration, and industrial use.</p>
-                    <div class="product-price">₹22.50</div>
-                    <button class="add-to-cart" onclick="addToCart('Coconut Shell Charcoal', 22.50)">Add to Cart</button>
-                </div>
-            </div>
+            <!-- Products will be loaded dynamically from localStorage -->
         </div>
     </div>
 
@@ -261,7 +237,78 @@
     <script>
         let cartCount = 0;
 
-        function addToCart(productName, price) {
+        // Get emoji for category
+        function getCategoryEmoji(category) {
+            const emojiMap = {
+                'Seeds': '🌱',
+                'Fertilizers': '🌿',
+                'Tools': '🔧',
+                'Organic': '🥥',
+                'Equipment': '⚙️',
+                'Coconut': '🥥',
+                'Oil': '🌴',
+                'Cocopeat': '🥥',
+                'Copra': '🌾',
+                'Charcoal': '⚫'
+            };
+            return emojiMap[category] || '🥥';
+        }
+
+        // Load and display products
+        function loadProducts() {
+            // Get products from localStorage (from admin panel)
+            let products = JSON.parse(localStorage.getItem('products') || '[]');
+
+            // If no products in localStorage, use default coconut products
+            if (products.length === 0) {
+                products = [
+                    {id: 1, name: 'Premium Cocopeat Block', category: 'Cocopeat', price: 28.99, stock: 150, desc: 'High-quality compressed cocopeat blocks, perfect for gardening and horticulture. 100% natural and eco-friendly growing medium.'},
+                    {id: 2, name: 'Organic Coconut Oil', category: 'Oil', price: 45.99, stock: 85, desc: 'Pure, cold-pressed virgin coconut oil. Rich in nutrients, perfect for cooking, skincare, and hair care.'},
+                    {id: 3, name: 'Desiccated Coconut', category: 'Coconut', price: 18.50, stock: 120, desc: 'Premium quality dried and shredded coconut. Ideal for baking, cooking, and adding natural flavor to your dishes.'},
+                    {id: 4, name: 'Dried Copra', category: 'Copra', price: 35.00, stock: 60, desc: 'Sun-dried coconut kernel, perfect for oil extraction and commercial use. Premium grade copra from selected coconuts.'},
+                    {id: 5, name: 'Fresh Coconuts', category: 'Coconut', price: 12.99, stock: 200, desc: 'Farm-fresh tender coconuts delivered to your doorstep. Rich in natural electrolytes and refreshing coconut water.'},
+                    {id: 6, name: 'Coconut Shell Charcoal', category: 'Charcoal', price: 22.50, stock: 75, desc: 'High-quality activated charcoal from coconut shells. Perfect for air purification, water filtration, and industrial use.'}
+                ];
+                // Save default products to localStorage
+                localStorage.setItem('products', JSON.stringify(products));
+            }
+
+            const productsContainer = document.getElementById('products');
+            
+            if (products.length === 0) {
+                productsContainer.innerHTML = '<div class="no-products">No products available. Please check back later!</div>';
+                return;
+            }
+
+            productsContainer.innerHTML = '';
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                
+                const emoji = getCategoryEmoji(product.category);
+                const stockClass = product.stock < 10 ? 'low' : '';
+                const isOutOfStock = product.stock === 0;
+                
+                productCard.innerHTML = `
+                    <div class="product-image">${emoji}</div>
+                    <div class="product-info">
+                        <span class="product-category">${product.category}</span>
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.desc || 'Premium quality product from Coger Enterprises.'}</p>
+                        <p class="product-stock ${stockClass}">${isOutOfStock ? 'Out of Stock' : `Stock: ${product.stock} units`}</p>
+                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <button class="add-to-cart" onclick="addToCart('${product.name}', ${product.price}, ${product.id})" ${isOutOfStock ? 'disabled' : ''}>
+                            ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                        </button>
+                    </div>
+                `;
+                
+                productsContainer.appendChild(productCard);
+            });
+        }
+
+        function addToCart(productName, price, productId) {
             cartCount++;
             document.getElementById('cart-count').textContent = cartCount;
             
@@ -273,6 +320,7 @@
                 name: productName,
                 price: price,
                 quantity: 1,
+                productId: productId,
                 timestamp: new Date().toISOString()
             });
             
@@ -287,6 +335,9 @@
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             cartCount = cart.length;
             document.getElementById('cart-count').textContent = cartCount;
+            
+            // Load products
+            loadProducts();
         };
     </script>
 </body>
