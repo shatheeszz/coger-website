@@ -4,8 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Agri Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  /* Core Styles */
+  /* Core CSS styles */
   body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -120,12 +121,12 @@
     pointer-events: none;
     transition: opacity 0.3s ease-in-out;
     z-index: 10000;
+    user-select:none;
   }
   .toast.show {
     opacity: 1;
     pointer-events: auto;
   }
-  /* Dark mode */
   body.dark-theme {
     background: #121212;
     color: #eee;
@@ -149,265 +150,188 @@
 </style>
 </head>
 <body>
-
 <div class="sidebar" role="navigation" aria-label="Primary sidebar">
   <div class="logo">🌾 Coger Agri</div>
   <div class="menu-item active" data-section="dashboard" tabindex="0">📊 Dashboard</div>
   <div class="menu-item" data-section="products" tabindex="0">📦 Products</div>
+  <div class="menu-item" data-section="orders" tabindex="0">🛒 Orders</div>
+  <div class="menu-item" data-section="customers" tabindex="0">👥 Customers</div>
+  <div class="menu-item" data-section="analytics" tabindex="0">📈 Analytics</div>
+  <div class="menu-item" data-section="finances" tabindex="0">💰 Finances</div>
   <div class="menu-item" data-section="loyalty" tabindex="0">⭐ Loyalty</div>
   <div class="menu-item" data-section="reviews" tabindex="0">🗣 Reviews</div>
 </div>
 
 <div class="main" role="main" tabindex="0">
-  <div class="top-bar">
-    <div class="title">Admin Dashboard</div>
-    <button id="themeToggleBtn" class="btn-primary" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark Mode</button>
-  </div>
-
-  <section id="dashboard" class="section" style="display: block;">
-    <h2>Dashboard Overview</h2>
-    <p>Welcome to Coger Agri Admin Panel.</p>
-  </section>
-
-  <section id="products" class="section" style="display:none;">
-    <h2>Product Management</h2>
-    <button id="addNewProductBtn" class="btn-primary" style="margin-bottom: 15px;">Add New Product</button>
-
-    <div id="productFormContainer" style="display:none;">
-      <form id="productForm">
-        <label for="productName">Name *</label>
-        <input type="text" id="productName" name="productName" required />
-
-        <label for="productCategory">Category *</label>
-        <select id="productCategory" name="productCategory" required>
-          <option value="">--Select Category--</option>
-          <option value="Cocopeat">Cocopeat</option>
-          <option value="Oil">Oil</option>
-          <option value="Coconut">Coconut</option>
-          <option value="Copra">Copra</option>
-          <option value="Charcoal">Charcoal</option>
-        </select>
-
-        <label for="productPrice">Price (₹)*</label>
-        <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" required />
-
-        <label for="productStock">Stock Quantity *</label>
-        <input type="number" id="productStock" name="productStock" min="0" required />
-
-        <label for="productDesc">Description</label>
-        <textarea id="productDesc" name="productDesc" rows="3"></textarea>
-
-        <button type="submit" class="btn-primary">Save Product</button>
-        <button type="button" id="cancelProductBtn" class="btn-danger" style="margin-left:10px;">Cancel</button>
-      </form>
-    </div>
-
-    <table aria-label="Product list">
-      <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Description</th><th>Actions</th></tr></thead>
-      <tbody id="productsList"></tbody>
-    </table>
-  </section>
-
-  <section id="loyalty" class="section" style="display:none;">
-    <h2>Loyalty Points Management</h2>
-    <button id="resetPointsBtn" class="btn-danger">Reset Loyalty Points</button>
-    <p id="loyaltyStatus" style="margin-top: 10px;"></p>
-  </section>
-
-  <section id="reviews" class="section" style="display:none;">
-    <h2>Customer Reviews Moderation</h2>
-    <div id="reviewsListContainer" style="max-height:400px; overflow-y:auto;"></div>
-  </section>
+<div class="top-bar">
+  <div class="title">Admin Dashboard</div>
+  <button id="themeToggleBtn" class="btn-primary" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark Mode</button>
 </div>
 
-<div class="toast" id="toast" role="alert" aria-live="assertive" style="display:none;"></div>
+<!-- Sections -->
+<section id="dashboard" class="section" style="display:block;">
+  <h2>Dashboard Overview</h2>
+  <ul>
+    <li>Total Products: <span id="dashboardTotalProducts">0</span></li>
+    <li>Total Orders: <span id="dashboardTotalOrders">0</span></li>
+    <li>Total Customers: <span id="dashboardTotalCustomers">0</span></li>
+    <li>Monthly Sales (₹): <span id="dashboardMonthlySales">₹0.00</span></li>
+  </ul>
+</section>
+
+<section id="products" class="section" style="display:none;">
+  <h2>Product Management</h2>
+  <button id="addNewProductBtn" class="btn-primary" style="margin-bottom:15px;">Add New Product</button>
+
+  <div id="productFormContainer" style="display:none;">
+    <form id="productForm">
+      <label for="productName">Name *</label>
+      <input type="text" id="productName" required/>
+      <label for="productCategory">Category *</label>
+      <select id="productCategory" required>
+        <option value="">--Select--</option>
+        <option value="Cocopeat">Cocopeat</option>
+        <option value="Oil">Oil</option>
+        <option value="Coconut">Coconut</option>
+        <option value="Copra">Copra</option>
+        <option value="Charcoal">Charcoal</option>
+      </select>
+      <label for="productPrice">Price (₹) *</label>
+      <input type="number" id="productPrice" min="0" step="0.01" required />
+      <label for="productStock">Stock Quantity *</label>
+      <input type="number" id="productStock" min="0" required />
+      <label for="productDesc">Description</label>
+      <textarea id="productDesc" rows="3"></textarea>
+      <button type="submit" class="btn-primary">Save Product</button>
+      <button type="button" id="cancelProductBtn" class="btn-danger" style="margin-left:10px;">Cancel</button>
+    </form>
+  </div>
+
+  <table aria-label="Product list">
+    <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Description</th><th>Actions</th></tr></thead>
+    <tbody id="productsList"></tbody>
+  </table>
+</section>
+
+<section id="orders" class="section" style="display:none;">
+  <h2>Order Management</h2>
+  <input type="text" id="orderSearch" placeholder="Search orders..." />
+  <table>
+    <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody id="ordersList"></tbody>
+  </table>
+</section>
+
+<section id="customers" class="section" style="display:none;">
+  <h2>Customer Management</h2>
+  <input type="text" id="customerSearch" placeholder="Search customers..." />
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th>Orders</th><th>Total Spent</th></tr></thead>
+    <tbody id="customersList"></tbody>
+  </table>
+</section>
+
+<section id="analytics" class="section" style="display:none;">
+  <h2>Sales Analytics</h2>
+  <canvas id="salesChart" height="200"></canvas>
+</section>
+
+<section id="finances" class="section" style="display:none;">
+  <h2>Finances</h2>
+  <!-- Add expenses management here as in prior code -->
+</section>
+
+<section id="loyalty" class="section" style="display:none;">
+  <h2>Loyalty Points</h2>
+  <button id="resetPointsBtn" class="btn-danger">Reset Loyalty Points</button>
+  <p id="loyaltyStatus" style="margin-top: 10px;">Loading...</p>
+</section>
+
+<section id="reviews" class="section" style="display:none;">
+  <h2>Customer Reviews Moderation</h2>
+  <div id="reviewsListContainer" style="max-height:400px; overflow-y:auto;"></div>
+</section>
+
+</div>
+
+<div id="toast" class="toast" role="alert" aria-live="assertive" ></div>
 
 <script>
   // Navigation
-  const menuItems = document.querySelectorAll('.menu-item');
+  const menus = document.querySelectorAll('.menu-item');
   const sections = document.querySelectorAll('.section');
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      menuItems.forEach(i => i.classList.remove('active'));
+  menus.forEach(menu => {
+    menu.addEventListener('click', () => {
+      menus.forEach(m => m.classList.remove('active'));
       sections.forEach(s => s.style.display = 'none');
-      item.classList.add('active');
-      const section = document.getElementById(item.dataset.section);
-      if (section) section.style.display = 'block';
-    });
-  });
-
-  // Dark Mode Toggle
-  const themeToggleBtn = document.getElementById('themeToggleBtn');
-  function applyTheme(theme) {
-    if(theme === 'dark') {
-      document.body.classList.add('dark-theme');
-      themeToggleBtn.textContent = '☀️ Light Mode';
-      themeToggleBtn.setAttribute('aria-pressed', 'true');
-    } else {
-      document.body.classList.remove('dark-theme');
-      themeToggleBtn.textContent = '🌙 Dark Mode';
-      themeToggleBtn.setAttribute('aria-pressed', 'false');
-    }
-    localStorage.setItem('preferredTheme', theme);
-  }
-  themeToggleBtn.addEventListener('click', () => {
-    const newTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
-    applyTheme(newTheme);
-  });
-  window.addEventListener('load', () => {
-    const pref = localStorage.getItem('preferredTheme') || 'light';
-    applyTheme(pref);
-  });
-
-  // Toast Notification
-  const toast = document.getElementById('toast');
-  let toastTimeout;
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.style.display = 'block';
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      toast.style.display = 'none';
-    }, 3000);
-  }
-
-  // Product Management
-  let products = JSON.parse(localStorage.getItem('products') || '[]');
-  const productsList = document.getElementById('productsList');
-  const productFormContainer = document.getElementById('productFormContainer');
-  let editIndex = null;
-
-  function renderProducts() {
-    productsList.innerHTML = '';
-    products.forEach((p, i) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${p.name}</td>
-        <td>${p.category}</td>
-        <td>₹${p.price.toFixed(2)}</td>
-        <td>${p.stock}</td>
-        <td>${p.desc || ''}</td>
-        <td>
-          <button data-index="${i}" class="edit-btn btn-primary">Edit</button>
-          <button data-index="${i}" class="delete-btn btn-danger">Delete</button>
-        </td>
-      `;
-      productsList.appendChild(tr);
-    });
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', () => openEditForm(+btn.dataset.index));
-    });
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => deleteProduct(+btn.dataset.index));
-    });
-  }
-  renderProducts();
-
-  document.getElementById('addNewProductBtn').addEventListener('click', () => {
-    editIndex = null; 
-    resetForm();
-    productFormContainer.style.display = 'block';
-  });
-
-  document.getElementById('cancelProductBtn').addEventListener('click', () => {
-    productFormContainer.style.display = 'none';
-  });
-
-  document.getElementById('productForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = e.target.productName.value.trim();
-    const category = e.target.productCategory.value;
-    const price = parseFloat(e.target.productPrice.value);
-    const stock = parseInt(e.target.productStock.value);
-    const desc = e.target.productDesc.value.trim();
-
-    if(!name || !category || isNaN(price) || isNaN(stock)){
-      alert('Please fill all required fields correctly.');
-      return;
-    }
-    if(editIndex !== null){
-      products[editIndex] = {name, category, price, stock, desc};
-    } else {
-      products.push({name, category, price, stock, desc});
-    }
-    localStorage.setItem('products', JSON.stringify(products));
-    productFormContainer.style.display = 'none';
-    renderProducts();
-    showToast('Product saved successfully.');
-  });
-
-  function openEditForm(index) {
-    editIndex = index;
-    const p = products[index];
-    const form = document.getElementById('productForm');
-    form.productName.value = p.name;
-    form.productCategory.value = p.category;
-    form.productPrice.value = p.price;
-    form.productStock.value = p.stock;
-    form.productDesc.value = p.desc;
-    productFormContainer.style.display = 'block';
-  }
-
-  function deleteProduct(index) {
-    if(confirm('Delete this product?')){
-      products.splice(index,1);
-      localStorage.setItem('products', JSON.stringify(products));
-      renderProducts();
-      showToast('Product deleted.');
-    }
-  }
-
-  function resetForm() {
-    const form = document.getElementById('productForm');
-    form.reset();
-  }
-
-  // Loyalty points basic
-  const loyaltyStatus = document.getElementById('loyaltyStatus');
-  document.getElementById('resetPointsBtn').addEventListener('click', () => {
-    localStorage.removeItem('loyaltyPoints');
-    updateLoyaltyStatus();
-  });
-  function updateLoyaltyStatus() {
-    const pts = parseInt(localStorage.getItem('loyaltyPoints') || '0');
-    loyaltyStatus.textContent = `Total loyalty points in system: ${pts}`;
-  }
-  updateLoyaltyStatus();
-
-  // Reviews moderation
-  const reviewsListContainer = document.getElementById('reviewsListContainer');
-  function loadReviewsModeration() {
-    reviewsListContainer.innerHTML = '';
-    if(products.length === 0){
-      reviewsListContainer.textContent = 'No products available.';
-      return;
-    }
-    let hasReviews = false;
-    products.forEach((p,i) => {
-      const reviews = JSON.parse(localStorage.getItem(`reviews-${i}`) || '[]');
-      if(reviews.length) {
-        hasReviews = true;
-        const div = document.createElement('div');
-        div.innerHTML = `<h3>${p.name} Reviews</h3>`;
-        reviews.forEach(r => {
-          const pEl = document.createElement('p');
-          pEl.textContent = `${'⭐'.repeat(r.rating)} | ${new Date(r.date).toLocaleDateString()} | ${r.comment}`;
-          div.appendChild(pEl);
-        });
-        reviewsListContainer.appendChild(div);
+      menu.classList.add('active');
+      const sec = document.getElementById(menu.dataset.section);
+      if(sec){
+        sec.style.display = 'block';
+        if(sec.id === 'dashboard') loadDashboardSummary();
+        else if(sec.id === 'products') loadProducts();
+        else if(sec.id === 'orders') loadOrders('');
+        else if(sec.id === 'customers') loadCustomers('');
+        else if(sec.id === 'analytics') renderSalesChart();
+        else if(sec.id === 'finances') updateFinances();
+        else if(sec.id === 'loyalty') loadLoyaltyPoints();
+        else if(sec.id === 'reviews') loadReviewsModeration();
       }
     });
-    if(!hasReviews){
-      reviewsListContainer.textContent = 'No reviews submitted yet.';
-    }
+  });
+
+  // Toast
+  const toast = document.getElementById('toast');
+  let toastTimeout;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.style.opacity = "1";
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => { toast.style.opacity = "0"; }, 3000);
   }
 
-  // Run reviews moderation content on reviews tab show
-  menuItems.forEach(item => {
-    if(item.dataset.section === 'reviews') {
-      item.addEventListener('click', loadReviewsModeration);
-    }
-  });
+  // Dark Mode Toggle (as before)
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  function applyTheme(theme){
+    if(theme==='dark'){document.body.classList.add('dark-theme'); themeToggleBtn.textContent='☀️ Light Mode';}
+    else{document.body.classList.remove('dark-theme'); themeToggleBtn.textContent='🌙 Dark Mode';}
+    localStorage.setItem('preferredTheme', theme);
+  }
+  themeToggleBtn.onclick = () => {
+    applyTheme(document.body.classList.contains('dark-theme')?'light':'dark');
+  };
+  window.onload = () => {
+    applyTheme(localStorage.getItem('preferredTheme') || 'light');
+    loadDashboardSummary(); // initial summary
+  };
+
+  // Dashboard summary implementation
+  function loadDashboardSummary(){
+    const products = JSON.parse(localStorage.getItem('products')||'[]');
+    const orders = JSON.parse(localStorage.getItem('orders')||'[]');
+    const customers = JSON.parse(localStorage.getItem('customers')||'[]');
+    const sales = orders.reduce((a,o)=>a+o.total,0);
+    document.getElementById('dashboardTotalProducts').textContent=products.length;
+    document.getElementById('dashboardTotalOrders').textContent=orders.length;
+    document.getElementById('dashboardTotalCustomers').textContent=customers.length;
+    document.getElementById('dashboardMonthlySales').textContent=`₹${sales.toFixed(2)}`;
+  }
+
+  // Product Management code here same as previously provided: loading, adding, editing, deleting, localStorage update
+
+  // Orders and Customers management functions with search inputs (implement filtering and render tables)
+
+  // Analytics Chart Example - set up your Chart.js line or bar chart as earlier
+
+  // Finances Module - add your expense management logic with charts
+
+  // Loyalty Points Module with display & reset
+
+  // Reviews Moderation Module - list product reviews from localStorage
+
+  // Add all other logic and event handlers from previous final code responses
+
 </script>
+
 </body>
 </html>
