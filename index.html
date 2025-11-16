@@ -5,18 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Enterprises - Premium Coconut Products</title>
 <style>
-  /* Basic Reset */
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
+  /* Reset and base styles */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f5f0;
-    color: #2c1810;
+    background-color: #f8f5f0; color: #2c1810;
     line-height: 1.6;
     min-height: 100vh;
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
+  /* Header */
   header {
     background: linear-gradient(135deg, #5c4a33 0%, #8b7355 50%, #a0826d 100%);
     color: white;
@@ -30,10 +29,8 @@
     margin-bottom: 0.5rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
   }
-  header p {
-    font-size: 1.1rem;
-    opacity: 0.95;
-  }
+  header p { font-size: 1.1rem; opacity: 0.95; }
+  /* Navigation */
   nav {
     background-color: #6d5d4b;
     padding: 1rem;
@@ -50,14 +47,17 @@
   }
   nav a:hover, nav a:focus {
     color: #d4af37;
-    outline:none;
+    outline: none;
   }
-  .container {
+  /* Container */
+  main.container {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
     flex-grow: 1;
   }
+
+  /* Product cards grid */
   .products {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -66,27 +66,26 @@
   .product-card {
     background: white;
     border-radius: 12px;
-    overflow: hidden;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: 2px solid #d4c5b0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border: 2px solid #d4c5b0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .product-card:hover {
+  .product-card:hover, .product-card:focus-within {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    outline: none;
   }
   .product-image {
-    width: 100%;
     height: 250px;
-    object-fit: cover;
-    background: linear-gradient(135deg, #e8dcc8 0%, #c9b89a 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 5rem;
+    background: linear-gradient(135deg, #e8dcc8 0%, #c9b89a 100%);
     user-select:none;
   }
   .product-info {
@@ -95,41 +94,43 @@
   .product-title {
     font-size: 1.5rem;
     color: #5c4a33;
-    margin-bottom: 0.5rem;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
   }
   .product-description {
     color: #666;
     margin-bottom: 1rem;
     font-size: 0.95rem;
     line-height: 1.5;
+    user-select:none;
   }
   .product-category {
-    display: inline-block;
+    font-weight: 500;
     background: #e8dcc8;
     color: #5c4a33;
     padding: 0.3rem 0.8rem;
     border-radius: 15px;
     font-size: 0.85rem;
     margin-bottom: 0.8rem;
-    font-weight: 500;
     user-select:none;
+    display: inline-block;
   }
   .product-price {
-    font-size: 1.8rem;
-    color: #7a5d3a;
     font-weight: bold;
+    font-size: 1.8rem;
     margin-bottom: 1rem;
+    color: #7a5d3a;
   }
   .product-stock {
+    margin-bottom: 1rem;
     font-size: 0.9rem;
     color: #666;
-    margin-bottom: 1rem;
     user-select:none;
   }
   .product-stock.low {
+    font-weight: 700;
     color: #d9534f;
-    font-weight: bold;
   }
   .add-to-cart {
     background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
@@ -137,11 +138,11 @@
     border: none;
     padding: 0.8rem 2rem;
     border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
     font-weight: 600;
     width: 100%;
-    transition: all 0.3s;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
   }
   .add-to-cart:hover, .add-to-cart:focus {
     background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
@@ -152,15 +153,16 @@
     background: #ccc;
     cursor: not-allowed;
   }
+  /* Reviews Section inside Product Card */
   .reviews-section {
     margin-top: 10px;
     font-size: 0.9rem;
     color: #4a4a4a;
+    user-select:none;
   }
   .average-rating {
-    font-weight: 600;
     margin-bottom: 6px;
-    user-select:none;
+    font-weight: 600;
   }
   .leave-review-button {
     background: #4a7c2c;
@@ -195,6 +197,8 @@
     border-top: 1px solid #ddd;
     padding: 8px 0;
   }
+
+  /* Cart styles */
   .cart {
     position: fixed;
     top: 20px;
@@ -204,14 +208,14 @@
     padding: 1rem 1.5rem;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     font-weight: bold;
     user-select:none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     z-index: 1000;
   }
   .cart:hover, .cart:focus {
     background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
-    outline: none;
+    outline:none;
   }
   #cart-count {
     background-color: #d4af37;
@@ -220,7 +224,8 @@
     margin-left: 0.5rem;
     font-size: 0.9rem;
   }
-  /* Modal for Cart */
+
+  /* Cart modal */
   #cart-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -234,7 +239,7 @@
     display: flex;
   }
   #cart-content {
-    background: #fff;
+    background: white;
     max-width: 400px;
     width: 90%;
     padding: 1rem 1.5rem;
@@ -243,6 +248,7 @@
     overflow-y: auto;
     position: relative;
     color: #2c1810;
+    user-select:none;
   }
   #cart-close-btn {
     position: absolute;
@@ -259,20 +265,19 @@
   .cart-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.8rem;
     align-items: center;
+    margin-bottom: 0.8rem;
   }
   .cart-item button {
     background: #d9534f;
-    border: none;
     color: white;
+    border: none;
     border-radius: 6px;
     padding: 4px 10px;
     cursor: pointer;
-    font-size: 0.8rem;
   }
   .cart-item-qty {
-    width: 40px;
+    width: 50px;
     text-align: center;
     font-size: 1rem;
   }
@@ -284,9 +289,9 @@
   #checkout-btn {
     margin-top: 1rem;
     background: #4a7c2c;
-    border: none;
     color: white;
     font-weight: 700;
+    border: none;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 8px;
@@ -297,19 +302,49 @@
     background: #2d5016;
     outline:none;
   }
-  /* Recommendations and Recently Viewed sections */
-  section h2 {
-    margin-bottom: 15px;
-    color: #5c4a33;
-  }
+
   /* FAQ styles */
   #faq {
     margin-top: 3rem;
   }
+  details summary {
+    cursor: pointer;
+    user-select:none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  details p {
+    margin-left: 1rem;
+    margin-bottom: 15px;
+    color: #444;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4a7c2c;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10000;
+    user-select:none;
+  }
+  .toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
 </style>
 </head>
 <body>
-<div class="cart" role="button" aria-label="View Cart" tabindex="0" id="cart-button">
+
+<div class="cart" role="button" aria-label="View Shopping Cart" tabindex="0" id="cart-button" >
   🛒 Cart <span id="cart-count">0</span>
 </div>
 
@@ -319,38 +354,38 @@
 </header>
 
 <nav>
-  <a href="#products">Products</a>
-  <a href="#recommendations">Recommended</a>
-  <a href="#recentlyViewed">Recently Viewed</a>
-  <a href="#faq">FAQ</a>
+  <a href="#products" tabindex="0">Products</a>
+  <a href="#recommendations" tabindex="0">Recommended</a>
+  <a href="#recentlyViewed" tabindex="0">Recently Viewed</a>
+  <a href="#faq" tabindex="0">FAQ</a>
 </nav>
 
 <main class="container">
   <section id="products" aria-label="Product List" class="products" tabindex="0"></section>
 
-  <section id="recommendations" aria-label="Personalized Recommendations">
+  <section id="recommendations" aria-label="Recommended Products" style="margin-top: 40px;">
     <h2>Recommended For You</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 15px;" id="recommendations-container"></div>
+    <div id="recommendations-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap: 15px;"></div>
   </section>
 
-  <section id="recentlyViewed" aria-label="Recently Viewed Products">
+  <section id="recentlyViewed" aria-label="Recently Viewed Products" style="margin-top: 40px;">
     <h2>Recently Viewed</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 15px;" id="recentlyViewed-container"></div>
+    <div id="recentlyViewed-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap: 15px;"></div>
   </section>
 
-  <section id="faq" aria-label="Frequently Asked Questions">
+  <section id="faq" aria-label="Frequently Asked Questions" style="margin-top: 40px;">
     <h2>Frequently Asked Questions</h2>
     <details>
       <summary>What is virgin coconut oil?</summary>
-      <p>Virgin coconut oil is oil extracted from fresh coconut meat without chemical processing, preserving its nutrients and natural flavor.</p>
+      <p>Virgin coconut oil is oil extracted from fresh coconut meat without chemical processing, preserving nutrients.</p>
     </details>
     <details>
       <summary>How long does shipping take?</summary>
-      <p>Typically 5 to 7 business days within India.</p>
+      <p>Usually 5 to 7 business days within India.</p>
     </details>
     <details>
       <summary>Are your products organic?</summary>
-      <p>Yes, we assure you premium organic coconut products sourced sustainably.</p>
+      <p>Yes, all our coconut products are certified organic and sustainable.</p>
     </details>
   </section>
 </main>
@@ -369,6 +404,8 @@
     <button id="checkout-btn" aria-label="Checkout">Checkout</button>
   </div>
 </div>
+
+<div class="toast" id="toast" role="alert" aria-live="assertive" style="display:none;"></div>
 
 <script>
   const emojiMap = {
@@ -393,11 +430,20 @@
   const cartItemsContainer = document.getElementById('cart-items-container');
   const checkoutBtn = document.getElementById('checkout-btn');
   const cartCountSpan = document.getElementById('cart-count');
+  const toast = document.getElementById('toast');
 
-  // Load products or default data
+  function showToast(message) {
+    toast.textContent = message;
+    toast.style.display = 'block';
+    clearTimeout(toast.timeout);
+    toast.timeout = setTimeout(() => {
+      toast.style.display = 'none';
+    }, 3000);
+  }
+
   function loadProducts(){
     let products = JSON.parse(localStorage.getItem('products') || '[]');
-    if (products.length === 0) {
+    if(products.length === 0){
       products = [
         {id:1, name:'Premium Cocopeat Block', category:'Cocopeat', price:28.99, stock:150, desc:'High-quality compressed cocopeat blocks.'},
         {id:2, name:'Organic Coconut Oil', category:'Oil', price:45.99, stock:85, desc:'Pure, cold-pressed virgin coconut oil.'},
@@ -411,16 +457,16 @@
     renderProducts(products);
     renderRecommendations(products);
     renderRecentlyViewed(products);
+    updateCartCount();
   }
 
-  // Create a product card element
   function createProductCard(product){
     const card = document.createElement('div');
     card.className = 'product-card';
 
     const emoji = emojiMap[product.category] || '🥥';
-    const lowStockClass = product.stock < 10 ? 'low' : '';
     const isOutOfStock = product.stock === 0;
+    const lowStockClass = product.stock < 10 ? 'low' : '';
 
     card.innerHTML = `
       <div class="product-image" aria-label="${product.category}">${emoji}</div>
@@ -486,15 +532,13 @@
     return card;
   }
 
-  // Render all products
   function renderProducts(products){
     productsContainer.innerHTML = '';
-    products.forEach(p =>{
+    products.forEach(p => {
       productsContainer.appendChild(createProductCard(p));
     });
   }
 
-  // Cart functions
   function addToCart(product){
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     let item = cart.find(i=>i.productId === product.id);
@@ -504,14 +548,13 @@
     updateCartCount();
     showToast(`Added ${product.name} to cart.`);
   }
-  
+
   function updateCartCount(){
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     let count = cart.reduce((acc, i) => acc + i.quantity, 0);
     cartCountSpan.textContent = count;
   }
 
-  // Cart modal display and management
   cartButton.addEventListener('click', () => {
     renderCartModal();
     cartModal.classList.add('active');
@@ -532,9 +575,6 @@
     }
   });
 
-  const cartItemsContainer = document.getElementById('cart-items-container');
-  const checkoutBtn = document.getElementById('checkout-btn');
-
   function renderCartModal(){
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if(cart.length === 0){
@@ -553,13 +593,11 @@
         <span>₹${(item.price * item.quantity).toFixed(2)}</span>
         <button aria-label="Remove ${item.name} from cart">&times;</button>
       `;
-      // Change qty
       div.querySelector('.cart-item-qty').addEventListener('change', e => {
         let qty = parseInt(e.target.value);
         if(isNaN(qty) || qty < 1) qty = 1;
         updateCartQuantity(item.productId, qty);
       });
-      // Remove item
       div.querySelector('button').addEventListener('click', () => {
         removeCartItem(item.productId);
       });
@@ -577,7 +615,7 @@
       renderCartModal();
     }
   }
-  
+
   function removeCartItem(productId){
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     cart = cart.filter(i => i.productId !== productId);
@@ -585,31 +623,18 @@
     updateCartCount();
     renderCartModal();
   }
+
   checkoutBtn.addEventListener('click', () => {
-    alert('Checkout coming soon!');
+    alert('Checkout is coming soon!');
   });
 
-  // Toast notifications
-  let toastTimeout;
-  function showToast(message){
-    const toast = document.createElement('div');
-    toast.className = 'toast show';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      toast.classList.remove('show');
-      document.body.removeChild(toast);
-    }, 3000);
-  }
-
-  // Reviews storage and display
+  // Reviews logic
   function saveReview(productId, review){
     let key = `reviews-${productId}`;
     let reviews = JSON.parse(localStorage.getItem(key) || '[]');
-    reviews.unshift(review); // newest first
+    reviews.unshift(review);
     localStorage.setItem(key, JSON.stringify(reviews));
-    showToast('Review saved, thank you!');
+    showToast('Review saved. Thank you!');
   }
   function loadReviews(productId){
     let key = `reviews-${productId}`;
@@ -638,7 +663,7 @@
     });
   }
 
-  // Recommendations and recently viewed
+  // Recently viewed
   function trackViewedProduct(productId){
     let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
     viewed = viewed.filter(id => id !== productId);
@@ -646,60 +671,45 @@
     if(viewed.length > 6) viewed.pop();
     localStorage.setItem('recentlyViewed', JSON.stringify(viewed));
   }
-
   function renderRecentlyViewed(products){
     let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-    const container = recentlyViewedContainer;
-    container.innerHTML = '';
+    recentlyViewedContainer.innerHTML = '';
     if(viewed.length === 0){
-      container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">No recently viewed products.</p>';
+      recentlyViewedContainer.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">No recently viewed products.</p>';
       return;
     }
     viewed.forEach(id => {
-      const p = products.find(prod => prod.id === id);
+      let p = products.find(prod => prod.id === id);
       if(p){
         let card = createProductCard(p);
-        container.appendChild(card);
+        recentlyViewedContainer.appendChild(card);
       }
     });
   }
 
+  // Recommendations
   function renderRecommendations(products){
     const viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-    const container = recommendationsContainer;
-    container.innerHTML = '';
+    recommendationsContainer.innerHTML = '';
     if(viewed.length === 0){
-      container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">No recommendations yet.</p>';
+      recommendationsContainer.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">No recommendations yet.</p>';
       return;
     }
-    let viewedCategories = new Set();
+    let categories = new Set();
     viewed.forEach(id => {
-      const p = products.find(prod => prod.id === id);
-      if(p) viewedCategories.add(p.category);
+      let p = products.find(prod => prod.id === id);
+      if(p) categories.add(p.category);
     });
-    let recommended = products.filter(p => viewedCategories.has(p.category) && !viewed.includes(p.id));
+    let recommended = products.filter(p => categories.has(p.category) && !viewed.includes(p.id));
     if(recommended.length < 4){
-      let additional = products.filter(p => !viewed.includes(p.id) && !recommended.includes(p));
-      recommended = recommended.concat(additional.slice(0, 4 - recommended.length));
+      let fillers = products.filter(p => !viewed.includes(p.id) && !recommended.includes(p));
+      recommended = recommended.concat(fillers.slice(0, 4 - recommended.length));
     }
     recommended.slice(0,6).forEach(p => {
-      container.appendChild(createProductCard(p));
+      recommendationsContainer.appendChild(createProductCard(p));
     });
   }
 
-  // Render products with track views on title/image click to update recently viewed
-  function renderProducts(products){
-    productsContainer.innerHTML = '';
-    products.forEach(p => {
-      const card = createProductCard(p);
-      // Add view tracking on title and image
-      card.querySelector('.product-title').addEventListener('click', () => trackViewedProduct(p.id));
-      card.querySelector('.product-image').addEventListener('click', () => trackViewedProduct(p.id));
-      productsContainer.appendChild(card);
-    });
-  }
-
-  // Initialize on load
   window.addEventListener('load', () => {
     let products = JSON.parse(localStorage.getItem('products') || '[]');
     if(products.length === 0){
