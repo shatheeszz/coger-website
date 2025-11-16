@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Agri Admin Dashboard</title>
 
-<!-- PWA Manifest link (create manifest.json file on your server) -->
+<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#2d5016" />
 
@@ -28,9 +28,11 @@ body {
   font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--dark);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
 }
 
-/* Dark mode overrides */
 body.dark-theme {
   --green: #90ee90;
   --light-green: #6bbf6b;
@@ -47,7 +49,52 @@ body.dark-theme {
   color: var(--white);
 }
 
-/* Basic top-bar style */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, var(--green), var(--light-green));
+  color: white;
+  height: 100vh;
+  position: fixed;
+  top: 0; left: 0;
+  overflow-y: auto;
+  padding-top: 15px;
+  box-sizing: border-box;
+}
+
+.sidebar .logo {
+  font-size: 26px;
+  font-weight: bold;
+  padding: 20px 15px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  user-select: none;
+}
+
+.menu-item {
+  padding: 15px 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 4px solid transparent;
+  transition: background-color 0.3s, border-color 0.3s;
+  user-select: none;
+}
+
+.menu-item:hover, .menu-item.active {
+  background-color: rgba(255,255,255,0.1);
+  border-left-color: var(--yellow);
+}
+
+.main {
+  margin-left: 260px;
+  padding: 20px 30px;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: var(--bg);
+}
+
 .top-bar {
   background: white;
   padding: 15px 25px;
@@ -57,13 +104,15 @@ body.dark-theme {
   align-items: center;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   margin-bottom: 20px;
+  user-select: none;
 }
+
 body.dark-theme .top-bar {
   background: #222;
   box-shadow: 0 2px 12px rgba(255,255,255,0.1);
+  color: var(--white);
 }
 
-/* Buttons style */
 .btn-primary, .btn-warn {
   border: none;
   padding: 10px 20px;
@@ -75,21 +124,12 @@ body.dark-theme .top-bar {
   transition: background-color 0.3s ease;
 }
 
-.btn-primary {
-  background-color: var(--light-green);
-}
-.btn-primary:hover {
-  background-color: var(--green);
-}
+.btn-primary { background-color: var(--light-green); }
+.btn-primary:hover { background-color: var(--green); }
 
-.btn-warn {
-  background-color: var(--orange);
-}
-.btn-warn:hover {
-  background-color: #cf8c46;
-}
+.btn-warn { background-color: var(--orange); }
+.btn-warn:hover { background-color: #cf8c46; }
 
-/* Toast style */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -104,9 +144,24 @@ body.dark-theme .top-bar {
   transition: opacity 0.3s ease-in-out;
   z-index: 4000;
 }
+
 .toast.show {
   opacity: 1;
   pointer-events: auto;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
 
 /* Modal styles */
@@ -119,9 +174,11 @@ body.dark-theme .top-bar {
   justify-content: center;
   z-index: 3000;
 }
+
 .modal.show {
   display: flex;
 }
+
 .modal-content {
   background: var(--white);
   padding: 20px 30px;
@@ -132,19 +189,23 @@ body.dark-theme .top-bar {
   overflow-y: auto;
   color: var(--dark);
 }
+
 body.dark-theme .modal-content {
   background: #222;
   color: var(--white);
 }
+
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
+
 .modal-header h2 {
   margin: 0;
 }
+
 .modal-header button.close {
   background: none;
   border: none;
@@ -152,42 +213,113 @@ body.dark-theme .modal-content {
   cursor: pointer;
   color: #999;
 }
+
 .modal-header button.close:hover {
   color: var(--red);
 }
 
-/* Other styles from your original admin dashboard (tables, sidebar, etc.) should be included here with variables referencing colors, for cleanness */
-
-/* Responsive example */
-@media (max-width: 768px) {
-  .top-bar {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
+/* Additional styles: layouts for each dashboard can be expanded */
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
 
-<!-- Top navigation bar -->
-<div class="top-bar">
-  <div class="title">Admin Dashboard</div>
-  <div>
-    Admin User 🌱
-    <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode" style="margin-left:20px;">
-      🌙 Dark Mode
-    </button>
-  </div>
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="logo">🌾 Coger Agri</div>
+  <div class="menu-item active" data-section="dashboard">📊 Dashboard</div>
+  <div class="menu-item" data-section="products">📦 Products</div>
+  <div class="menu-item" data-section="orders">🛒 Orders</div>
+  <div class="menu-item" data-section="customers">👥 Customers</div>
+  <div class="menu-item" data-section="analytics">📈 Analytics</div>
+  <div class="menu-item" data-section="finances">💰 Finances</div>
 </div>
 
-<!-- Export buttons -->
-<div style="margin: 0 25px 15px 25px; display: flex; gap: 10px;">
-  <button onclick="exportTableToCSV('products.csv', 'productsTable')" class="btn-primary">Export Products</button>
-  <button onclick="exportTableToCSV('orders.csv', 'ordersTable')" class="btn-primary">Export Orders</button>
-  <button onclick="exportTableToCSV('customers.csv', 'customersTable')" class="btn-primary">Export Customers</button>
+<div class="main">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="title">Admin Dashboard</div>
+    <div>
+      Admin User 🌱
+      <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode" style="margin-left:20px;">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </div>
+
+  <!-- Export buttons -->
+  <div style="margin: 0 0 15px 0; display: flex; gap: 10px;">
+    <button onclick="exportTableToCSV('products.csv', 'productsTable')" class="btn-primary">Export Products</button>
+    <button onclick="exportTableToCSV('orders.csv', 'ordersTable')" class="btn-primary">Export Orders</button>
+    <button onclick="exportTableToCSV('customers.csv', 'customersTable')" class="btn-primary">Export Customers</button>
+  </div>
+
+  <!-- ----- Dashboard Section ----- -->
+  <div id="dashboard" class="section active">
+    <h2>Dashboard Overview</h2>
+    <p>Welcome to the Coger Agri Admin Dashboard. Use the menu to navigate sections.</p>
+  </div>
+
+  <!-- ----- Products Section ----- -->
+  <div id="products" class="section">
+    <h2>Product Management</h2>
+    <!-- Your products content here - add product listing, filters, etc. -->
+    <p>Products dashboard goes here...</p>
+    <table id="productsTable" border="1" style="width:100%; border-collapse:collapse; margin-top:15px;">
+      <thead>
+        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Example Product 1</td><td>Category A</td><td>₹100</td><td>40</td></tr>
+        <tr><td>Example Product 2</td><td>Category B</td><td>₹150</td><td>20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ----- Orders Section ----- -->
+  <div id="orders" class="section">
+    <h2>Order Management</h2>
+    <p>Orders dashboard content...</p>
+    <table id="ordersTable" border="1" style="width:100%; border-collapse:collapse; margin-top:15px;">
+      <thead>
+        <tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1234</td><td>John Doe</td><td>₹250</td><td>Pending</td></tr>
+        <tr><td>1235</td><td>Jane Smith</td><td>₹400</td><td>Delivered</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ----- Customers Section ----- -->
+  <div id="customers" class="section">
+    <h2>Customer Management</h2>
+    <p>Customers list goes here...</p>
+    <table id="customersTable" border="1" style="width:100%; border-collapse:collapse; margin-top:15px;">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Orders</th><th>Spent</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>John Doe</td><td>john@example.com</td><td>3</td><td>₹500</td></tr>
+        <tr><td>Jane Smith</td><td>jane@example.com</td><td>5</td><td>₹850</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ----- Analytics Section ----- -->
+  <div id="analytics" class="section">
+    <h2>Sales Analytics</h2>
+    <canvas id="salesChart" height="150"></canvas>
+  </div>
+
+  <!-- ----- Finances Section ----- -->
+  <div id="finances" class="section">
+    <h2>Financial Overview</h2>
+    <canvas id="financeChart" height="150"></canvas>
+  </div>
+
 </div>
 
 <!-- Customer Feedback Modal -->
@@ -218,10 +350,33 @@ body.dark-theme .modal-content {
 <!-- Toast -->
 <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
+  // Sidebar Navigation Logic
+  const menuItems = document.querySelectorAll('.menu-item');
+  const sections = document.querySelectorAll('.section');
+
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      menuItems.forEach(i => i.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+
+      item.classList.add('active');
+      const sectionId = item.getAttribute('data-section');
+      document.getElementById(sectionId).classList.add('active');
+
+      if(sectionId === 'analytics') {
+        renderSalesChart();
+      }
+      if(sectionId === 'finances') {
+        renderFinanceChart();
+      }
+    });
+  });
+
   // Dark mode toggle & persistence
   const themeToggleBtn = document.getElementById("themeToggleBtn");
-
   function applyTheme(theme) {
     if (theme === "dark") {
       document.body.classList.add("dark-theme");
@@ -234,26 +389,17 @@ body.dark-theme .modal-content {
     }
     localStorage.setItem("preferredTheme", theme);
   }
-
   themeToggleBtn.addEventListener("click", () => {
     const currentTheme = localStorage.getItem("preferredTheme") || "light";
     const nextTheme = currentTheme === "dark" ? "light" : "dark";
     applyTheme(nextTheme);
   });
-
   window.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("preferredTheme") || "light";
     applyTheme(savedTheme);
-
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registered'))
-        .catch(() => console.warn('Service Worker registration failed'));
-    }
   });
 
-  // CSV export
+  // Export CSV
   function exportTableToCSV(filename, tableId) {
     let csv = [];
     let rows = document.querySelectorAll(`#${tableId} tr`);
@@ -271,44 +417,80 @@ body.dark-theme .modal-content {
     link.click();
   }
 
-  // Feedback modal logic
+  // Feedback Modal Logic
   const feedbackModal = document.getElementById('feedbackModal');
   const feedbackCloseBtn = document.getElementById('feedbackCloseBtn');
   const submitFeedbackBtn = document.getElementById('submitFeedback');
-
-  function showFeedbackModal() {
-    feedbackModal.style.display = 'flex';
-  }
-  function closeFeedbackModal() {
-    feedbackModal.style.display = 'none';
-  }
-  feedbackCloseBtn.onclick = closeFeedbackModal;
+  feedbackCloseBtn.onclick = () => feedbackModal.style.display = 'none';
   window.onclick = (e) => {
-    if (e.target === feedbackModal) closeFeedbackModal();
+    if(e.target === feedbackModal) feedbackModal.style.display = 'none';
   };
   submitFeedbackBtn.onclick = () => {
     const rating = document.getElementById('rating').value;
     const feedbackText = document.getElementById('feedbackText').value.trim();
-    if (!feedbackText) {
-      alert("Please enter your feedback.");
+    if(!feedbackText) {
+      alert('Please enter your feedback.');
       return;
     }
-    console.log('Feedback submitted', { rating, feedbackText });
-    showToast("Thanks for your feedback!");
-    closeFeedbackModal();
+    console.log('Feedback submitted:', {rating, feedbackText});
+    showToast('Thanks for your feedback!');
+    feedbackModal.style.display = 'none';
   };
 
   // Toast helper
   let toastTimeout;
-  function showToast(message, duration = 3000) {
+  function showToast(msg, duration=3000) {
     const toast = document.getElementById('toast');
-    if (toastTimeout) clearTimeout(toastTimeout);
-    toast.textContent = message;
+    if(toastTimeout) clearTimeout(toastTimeout);
+    toast.textContent = msg;
     toast.classList.add('show');
-    toastTimeout = setTimeout(() => {
-      toast.classList.remove('show');
-    }, duration);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
   }
+
+  // Chart.js dummy sales chart for Analytics
+  function renderSalesChart() {
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    if(window.salesChartInstance) window.salesChartInstance.destroy();
+    window.salesChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Sales',
+          data: [1200, 1900, 1500, 2200, 1700, 1400, 2100],
+          borderColor: '#4a7c2c',
+          backgroundColor: 'rgba(74,124,44,0.3)',
+          fill: true,
+          tension: 0.2
+        }]
+      },
+      options: {responsive: true, scales: {y: {beginAtZero: true}}}
+    });
+  }
+
+  // Chart.js dummy finances chart
+  function renderFinanceChart() {
+    const ctx = document.getElementById('financeChart').getContext('2d');
+    if(window.financeChartInstance) window.financeChartInstance.destroy();
+    window.financeChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Revenue',
+          data: [10000, 12000, 15000, 13000, 16000, 18000],
+          backgroundColor: '#4a7c2c'
+        },{
+          label: 'Expenses',
+          data: [8000, 9000, 11000, 9500, 10500, 7000],
+          backgroundColor: '#d9534f'
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+  }
+
 </script>
+
 </body>
 </html>
