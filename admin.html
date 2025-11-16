@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Agri Admin Dashboard</title>
 
-<!-- PWA Manifest link (create manifest.json separately in your server/public folder) -->
+<!-- PWA Manifest link (create manifest.json file on your server) -->
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#2d5016" />
 
@@ -47,7 +47,7 @@ body.dark-theme {
   color: var(--white);
 }
 
-/* Top bar, buttons and toast style (include your existing styles and override using variables) */
+/* Basic top-bar style */
 .top-bar {
   background: white;
   padding: 15px 25px;
@@ -63,30 +63,33 @@ body.dark-theme .top-bar {
   box-shadow: 0 2px 12px rgba(255,255,255,0.1);
 }
 
-.btn-warn {
-  background: var(--orange);
-  color: white;
-  cursor: pointer;
+/* Buttons style */
+.btn-primary, .btn-warn {
+  border: none;
   padding: 10px 20px;
   border-radius: 6px;
-  border: none;
+  cursor: pointer;
   font-weight: 600;
+  color: white;
+  user-select: none;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary {
-  background: var(--light-green);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
+  background-color: var(--light-green);
 }
-
 .btn-primary:hover {
-  background: var(--green);
+  background-color: var(--green);
 }
 
+.btn-warn {
+  background-color: var(--orange);
+}
+.btn-warn:hover {
+  background-color: #cf8c46;
+}
+
+/* Toast style */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -106,7 +109,7 @@ body.dark-theme .top-bar {
   pointer-events: auto;
 }
 
-/* Modal basic styling */
+/* Modal styles */
 .modal {
   display: none;
   position: fixed;
@@ -137,6 +140,7 @@ body.dark-theme .modal-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 .modal-header h2 {
   margin: 0;
@@ -152,63 +156,70 @@ body.dark-theme .modal-content {
   color: var(--red);
 }
 
-/* Your existing dashboard, tables, and additional styles go here... */
+/* Other styles from your original admin dashboard (tables, sidebar, etc.) should be included here with variables referencing colors, for cleanness */
+
+/* Responsive example */
+@media (max-width: 768px) {
+  .top-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-</head>
 <body>
 
-  <!-- Top bar -->
-  <div class="top-bar">
-    <div class="title">Admin Dashboard</div>
+<!-- Top navigation bar -->
+<div class="top-bar">
+  <div class="title">Admin Dashboard</div>
+  <div>
+    Admin User 🌱
+    <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode" style="margin-left:20px;">
+      🌙 Dark Mode
+    </button>
+  </div>
+</div>
+
+<!-- Export buttons -->
+<div style="margin: 0 25px 15px 25px; display: flex; gap: 10px;">
+  <button onclick="exportTableToCSV('products.csv', 'productsTable')" class="btn-primary">Export Products</button>
+  <button onclick="exportTableToCSV('orders.csv', 'ordersTable')" class="btn-primary">Export Orders</button>
+  <button onclick="exportTableToCSV('customers.csv', 'customersTable')" class="btn-primary">Export Customers</button>
+</div>
+
+<!-- Customer Feedback Modal -->
+<div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="feedbackTitle">Customer Feedback</h2>
+      <button id="feedbackCloseBtn" aria-label="Close feedback modal" class="close">&times;</button>
+    </div>
     <div>
-      Admin User 🌱
-      <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode" style="margin-left:20px;">
-        🌙 Dark Mode
-      </button>
+      <label for="rating">Rating:</label>
+      <select id="rating" style="width:100%; margin:5px 0; padding:8px;">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select>
     </div>
-  </div>
-
-  <!-- Buttons for export -->
-  <div style="margin: 15px 25px; display:flex; gap:10px;">
-    <button onclick="exportTableToCSV('products.csv', 'productsTable')" class="btn-primary">Export Products</button>
-    <button onclick="exportTableToCSV('orders.csv', 'ordersTable')" class="btn-primary">Export Orders</button>
-    <button onclick="exportTableToCSV('customers.csv', 'customersTable')" class="btn-primary">Export Customers</button>
-  </div>
-
-  <!-- Customer Feedback Modal -->
-  <div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="feedbackTitle">Customer Feedback</h2>
-        <button id="feedbackCloseBtn" aria-label="Close feedback modal" class="close">&times;</button>
-      </div>
-      <div>
-        <label for="rating">Rating:</label>
-        <select id="rating" style="width:100%;margin:5px 0;padding:8px;">
-          <option value="5">⭐⭐⭐⭐⭐</option>
-          <option value="4">⭐⭐⭐⭐</option>
-          <option value="3">⭐⭐⭐</option>
-          <option value="2">⭐⭐</option>
-          <option value="1">⭐</option>
-        </select>
-      </div>
-      <div>
-        <label for="feedbackText">Feedback:</label>
-        <textarea id="feedbackText" rows="4" style="width:100%;margin:5px 0;padding:8px;"></textarea>
-      </div>
-      <button id="submitFeedback" class="btn-primary" style="width:100%;margin-top:10px;">Submit</button>
+    <div>
+      <label for="feedbackText">Feedback:</label>
+      <textarea id="feedbackText" rows="4" style="width:100%; margin:5px 0; padding:8px;"></textarea>
     </div>
+    <button id="submitFeedback" class="btn-primary" style="width:100%; margin-top:10px;">Submit</button>
   </div>
+</div>
 
-  <!-- Toast notification -->
-  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
+<!-- Toast -->
+<div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
-
-  <script>
-  // Dark mode toggle and persistence
+<script>
+  // Dark mode toggle & persistence
   const themeToggleBtn = document.getElementById("themeToggleBtn");
 
   function applyTheme(theme) {
@@ -242,7 +253,7 @@ body.dark-theme .modal-content {
     }
   });
 
-  // CSV Export helper
+  // CSV export
   function exportTableToCSV(filename, tableId) {
     let csv = [];
     let rows = document.querySelectorAll(`#${tableId} tr`);
@@ -268,20 +279,17 @@ body.dark-theme .modal-content {
   function showFeedbackModal() {
     feedbackModal.style.display = 'flex';
   }
-
   function closeFeedbackModal() {
     feedbackModal.style.display = 'none';
   }
-
   feedbackCloseBtn.onclick = closeFeedbackModal;
   window.onclick = (e) => {
     if (e.target === feedbackModal) closeFeedbackModal();
   };
-
   submitFeedbackBtn.onclick = () => {
     const rating = document.getElementById('rating').value;
     const feedbackText = document.getElementById('feedbackText').value.trim();
-    if(!feedbackText) {
+    if (!feedbackText) {
       alert("Please enter your feedback.");
       return;
     }
@@ -290,7 +298,7 @@ body.dark-theme .modal-content {
     closeFeedbackModal();
   };
 
-  // Toast notification helper
+  // Toast helper
   let toastTimeout;
   function showToast(message, duration = 3000) {
     const toast = document.getElementById('toast');
@@ -301,6 +309,6 @@ body.dark-theme .modal-content {
       toast.classList.remove('show');
     }, duration);
   }
-  </script>
+</script>
 </body>
 </html>
