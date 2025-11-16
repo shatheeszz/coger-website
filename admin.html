@@ -4,12 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Agri Admin Dashboard</title>
+
+<!-- PWA Manifest link (create manifest.json separately in your server/public folder) -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#2d5016" />
+
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 :root {
   --green: #2d5016;
   --light-green: #4a7c2c;
@@ -23,333 +23,70 @@
   --orange: #f0ad4e;
   --success: #5cb85c;
 }
+
 body {
   font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--dark);
 }
-.notify-bar {
-  background: linear-gradient(135deg, var(--orange), var(--yellow));
-  color: white;
-  padding: 12px 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: space-between;
+
+/* Dark mode overrides */
+body.dark-theme {
+  --green: #90ee90;
+  --light-green: #6bbf6b;
+  --sage: #a3d9a5;
+  --brown: #5a4a3b;
+  --yellow: #f0e68c;
+  --bg: #121212;
+  --white: #eeeeee;
+  --dark: #e0e0e0;
+  --red: #f08080;
+  --orange: #f4a259;
+  --success: #4caf50;
+  background: var(--bg);
+  color: var(--white);
 }
-.notify-bar.show {
-  display: flex;
-}
-.sidebar {
-  width: 260px;
-  height: 100vh;
-  background: linear-gradient(180deg, var(--green), var(--light-green));
-  color: white;
-  position: fixed;
-  left: 0;
-  top: 0;
-  padding-top: 20px;
-  overflow-y: auto;
-}
-.logo {
-  padding: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-.menu-item {
-  padding: 15px 25px;
-  cursor: pointer;
-  transition: 0.3s;
-  border-left: 4px solid transparent;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.menu-item:hover,
-.menu-item.active {
-  background: rgba(255, 255, 255, 0.1);
-  border-left-color: var(--yellow);
-}
-.main {
-  margin-left: 260px;
-  padding: 20px;
-}
+
+/* Top bar, buttons and toast style (include your existing styles and override using variables) */
 .top-bar {
   background: white;
   padding: 15px 25px;
   border-radius: 10px;
-  margin-bottom: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
 }
-.title {
-  font-size: 28px;
-  color: var(--green);
-  font-weight: 600;
+body.dark-theme .top-bar {
+  background: #222;
+  box-shadow: 0 2px 12px rgba(255,255,255,0.1);
 }
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-.stat-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  border-left: 4px solid var(--sage);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.stat-card.warn {
-  border-left-color: var(--orange);
-}
-.stat-icon {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-.stat-value {
-  font-size: 32px;
-  font-weight: bold;
-  color: var(--green);
-  margin: 10px 0;
-}
-.section {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 25px;
-  display: none;
-}
-.section.active {
-  display: block;
-}
-.sec-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid var(--bg);
-}
-.sec-title {
-  font-size: 22px;
-  color: var(--green);
-  font-weight: 600;
-}
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-.filters select.search, .filters input.search {
-  padding: 10px 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 25px;
-  font-size: 14px;
-  width: 200px;
-}
-.filters input.search {
-  flex: 1;
-  max-width: 320px;
-}
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: 0.3s;
-}
-.btn-primary {
-  background: var(--light-green);
-  color: white;
-}
-.btn-primary:hover {
-  background: var(--green);
-  transform: translateY(-2px);
-}
-.btn-success {
-  background: var(--success);
-  color: white;
-}
+
 .btn-warn {
   background: var(--orange);
   color: white;
-}
-.btn-danger {
-  background: var(--red);
-  color: white;
-}
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 12px;
-}
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-.table th {
-  background: var(--sage);
-  color: white;
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-}
-.table td {
-  padding: 12px;
-  border-bottom: 1px solid #e0e0e0;
-  vertical-align: middle;
-}
-.table tr:hover {
-  background: var(--bg);
-}
-.badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  display: inline-block;
-}
-.badge-pending {
-  background: #fff3cd;
-  color: #856404;
-}
-.badge-shipped {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-.badge-delivered {
-  background: #d4edda;
-  color: #155724;
-}
-.badge-delayed {
-  background: #f8d7da;
-  color: #721c24;
-}
-.low-stock {
-  color: var(--red);
-  font-weight: bold;
-}
-.product-img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-.pagination {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-.pagination button {
-  padding: 6px 12px;
-  border: 2px solid var(--light-green);
-  background: white;
-  color: var(--green);
   cursor: pointer;
+  padding: 10px 20px;
   border-radius: 6px;
+  border: none;
   font-weight: 600;
-  transition: background 0.3s;
 }
-.pagination button:hover:not(.active) {
+
+.btn-primary {
   background: var(--light-green);
   color: white;
-}
-.pagination button.active {
-  background: var(--green);
-  color: white;
-  cursor: default;
-}
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
-  align-items: center;
-  justify-content: center;
-}
-.modal.show {
-  display: flex;
-}
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid var(--bg);
-}
-.close {
-  cursor: pointer;
-  font-size: 28px;
-  color: #999;
-  background: none;
   border: none;
-}
-.close:hover {
-  color: var(--red);
-}
-.search {
-  padding: 10px 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 25px;
-  width: 300px;
-  font-size: 14px;
-}
-.search:focus {
-  outline: none;
-  border-color: var(--sage);
-}
-.actions {
-  display: flex;
-  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-  }
-  .main {
-    margin-left: 0;
-  }
-  .stats {
-    grid-template-columns: 1fr;
-  }
+.btn-primary:hover {
+  background: var(--green);
 }
 
-/* Toast styles */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -368,206 +105,202 @@ body {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* Modal basic styling */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+.modal.show {
+  display: flex;
+}
+.modal-content {
+  background: var(--white);
+  padding: 20px 30px;
+  border-radius: 10px;
+  max-width: 420px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: var(--dark);
+}
+body.dark-theme .modal-content {
+  background: #222;
+  color: var(--white);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h2 {
+  margin: 0;
+}
+.modal-header button.close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+}
+.modal-header button.close:hover {
+  color: var(--red);
+}
+
+/* Your existing dashboard, tables, and additional styles go here... */
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
-<div class="notify-bar" id="notifyBar">
-  <div><span id="notifyText"></span></div>
-  <button id="notifyCloseBtn" aria-label="Close notifications">&times;</button>
-</div>
 
-<div class="sidebar">
-  <div class="logo">🌾 Coger Agri</div>
-  <div class="menu-item active" data-section="dashboard">📊 Dashboard</div>
-  <div class="menu-item" data-section="products">📦 Products</div>
-  <div class="menu-item" data-section="orders">🛒 Orders</div>
-  <div class="menu-item" data-section="customers">👥 Customers</div>
-  <div class="menu-item" data-section="analytics">📈 Analytics</div>
-  <div class="menu-item" data-section="finances">💰 Finances</div>
-</div>
-
-<div class="main">
-
-  <!-- Dashboard, Products, Orders, Customers, Analytics sections code as previously built -->
-
-  <!-- Dashboard Overview Section -->
-  <div class="section active" id="dashboard">
-    <div class="sec-header">
-      <div class="sec-title">Dashboard Overview</div>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="title">Admin Dashboard</div>
+    <div>
+      Admin User 🌱
+      <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode" style="margin-left:20px;">
+        🌙 Dark Mode
+      </button>
     </div>
-    <div class="stats">
-      <!-- The dashboard cards as before -->
-    </div>
-    <h3>Sales Trend</h3>
-    <canvas id="salesChart" height="150" aria-label="Sales trend chart" role="img"></canvas>
-    <h3>Recent Activity</h3>
-    <ul id="recentActivity" style="list-style: none; padding-left: 0;"></ul>
   </div>
 
-  <!-- Products, Orders, Customers, Analytics sections here (reuse previous full code versions) -->
-
-  <!-- Finances Section -->
-  <div class="section" id="finances">
-    <div class="sec-header">
-      <div class="sec-title">Financial Overview</div>
-    </div>
-
-    <div class="stats" style="grid-template-columns: repeat(auto-fit,minmax(220px,1fr));">
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-value" id="financesTotalRevenue">₹0</div>
-        <div>Total Revenue</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📉</div>
-        <div class="stat-value" id="financesTotalExpenses">₹0</div>
-        <div>Total Expenses</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📈</div>
-        <div class="stat-value" id="financesNetProfit">₹0</div>
-        <div>Net Profit</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-value" id="financesProfitMargin">0%</div>
-        <div>Profit Margin</div>
-      </div>
-    </div>
-
-    <h3>Income vs Expenses Over Time</h3>
-    <canvas id="incomeExpensesChart" height="150"></canvas>
-
-    <h3>Expense Breakdown</h3>
-    <canvas id="expenseBreakdownChart" height="150"></canvas>
+  <!-- Buttons for export -->
+  <div style="margin: 15px 25px; display:flex; gap:10px;">
+    <button onclick="exportTableToCSV('products.csv', 'productsTable')" class="btn-primary">Export Products</button>
+    <button onclick="exportTableToCSV('orders.csv', 'ordersTable')" class="btn-primary">Export Orders</button>
+    <button onclick="exportTableToCSV('customers.csv', 'customersTable')" class="btn-primary">Export Customers</button>
   </div>
 
-</div>
+  <!-- Customer Feedback Modal -->
+  <div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="feedbackTitle">Customer Feedback</h2>
+        <button id="feedbackCloseBtn" aria-label="Close feedback modal" class="close">&times;</button>
+      </div>
+      <div>
+        <label for="rating">Rating:</label>
+        <select id="rating" style="width:100%;margin:5px 0;padding:8px;">
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+        </select>
+      </div>
+      <div>
+        <label for="feedbackText">Feedback:</label>
+        <textarea id="feedbackText" rows="4" style="width:100%;margin:5px 0;padding:8px;"></textarea>
+      </div>
+      <button id="submitFeedback" class="btn-primary" style="width:100%;margin-top:10px;">Submit</button>
+    </div>
+  </div>
 
-<!-- Modals for product, order edits (unchanged) -->
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
-<div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
-<script>
-(function () {
-  // SAMPLE DATA
-  let products = JSON.parse(localStorage.getItem("products")) || [
-    // Your product objects with imageUrl fields
-  ];
-  let orders = JSON.parse(localStorage.getItem("orders")) || [
-    { id: 101, customer: "John Doe", total: 125.5, status: "pending", courier: "", tracking: "" },
-    { id: 102, customer: "Jane Smith", total: 299.99, status: "shipped", courier: "FedEx", tracking: "FDX123456" },
-    { id: 103, customer: "Bob Johnson", total: 75.0, status: "delivered", courier: "DHL", tracking: "DHL789012" },
-    { id: 104, customer: "Alice Brown", total: 450.0, status: "pending", courier: "", tracking: "" },
-  ];
-  let customers = JSON.parse(localStorage.getItem("customers")) || [
-    { name: "John Doe", email: "john@example.com", orders: 3, spent: 450 },
-    { name: "Jane Smith", email: "jane@example.com", orders: 5, spent: 890 },
-  ];
+  <script>
+  // Dark mode toggle and persistence
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
 
-  // Dummy finance data -- replace with real data source integration
-  const financeData = {
-    totalRevenue: orders.reduce((sum, o) => sum + o.total, 0),
-    totalExpenses: 1250.75,
-    monthlyIncome: [10000, 12000, 14000, 13000, 15000, 16000, 17000],
-    monthlyExpenses: [8000, 9000, 8500, 11000, 9800, 10000, 12000],
-    expenseCategories: {
-      "Raw Materials": 4000,
-      "Labor": 3000,
-      "Marketing": 1500,
-      "Logistics": 1000,
-      "Miscellaneous": 750,
+  function applyTheme(theme) {
+    if (theme === "dark") {
+      document.body.classList.add("dark-theme");
+      themeToggleBtn.textContent = "☀️ Light Mode";
+      themeToggleBtn.setAttribute("aria-pressed", "true");
+    } else {
+      document.body.classList.remove("dark-theme");
+      themeToggleBtn.textContent = "🌙 Dark Mode";
+      themeToggleBtn.setAttribute("aria-pressed", "false");
     }
+    localStorage.setItem("preferredTheme", theme);
+  }
+
+  themeToggleBtn.addEventListener("click", () => {
+    const currentTheme = localStorage.getItem("preferredTheme") || "light";
+    const nextTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("preferredTheme") || "light";
+    applyTheme(savedTheme);
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(() => console.warn('Service Worker registration failed'));
+    }
+  });
+
+  // CSV Export helper
+  function exportTableToCSV(filename, tableId) {
+    let csv = [];
+    let rows = document.querySelectorAll(`#${tableId} tr`);
+    rows.forEach(row => {
+      let cols = row.querySelectorAll("td, th");
+      let rowData = [];
+      cols.forEach(col => rowData.push('"' + col.innerText.replace(/"/g, '""') + '"'));
+      csv.push(rowData.join(","));
+    });
+    let csvString = csv.join("\n");
+    let blob = new Blob([csvString], { type: 'text/csv' });
+    let link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  // Feedback modal logic
+  const feedbackModal = document.getElementById('feedbackModal');
+  const feedbackCloseBtn = document.getElementById('feedbackCloseBtn');
+  const submitFeedbackBtn = document.getElementById('submitFeedback');
+
+  function showFeedbackModal() {
+    feedbackModal.style.display = 'flex';
+  }
+
+  function closeFeedbackModal() {
+    feedbackModal.style.display = 'none';
+  }
+
+  feedbackCloseBtn.onclick = closeFeedbackModal;
+  window.onclick = (e) => {
+    if (e.target === feedbackModal) closeFeedbackModal();
   };
 
-  // Initialization for all dashboards and charts
-  function init() {
-    // Load your products, orders, customers, stats, pagination here (reuse from previous code)
+  submitFeedbackBtn.onclick = () => {
+    const rating = document.getElementById('rating').value;
+    const feedbackText = document.getElementById('feedbackText').value.trim();
+    if(!feedbackText) {
+      alert("Please enter your feedback.");
+      return;
+    }
+    console.log('Feedback submitted', { rating, feedbackText });
+    showToast("Thanks for your feedback!");
+    closeFeedbackModal();
+  };
 
-    initAnalyticsCharts();
-    initFinancesDashboard(financeData);
-
-    // Other initializations...
+  // Toast notification helper
+  let toastTimeout;
+  function showToast(message, duration = 3000) {
+    const toast = document.getElementById('toast');
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toast.textContent = message;
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+    }, duration);
   }
-
-  // Analytics charts from previous code snippet
-  function initAnalyticsCharts() {
-    // ... Your analytics chart initialization code from earlier ...
-  }
-
-  // Finances dashboard initialization as provided earlier
-  function initFinancesDashboard(financeData) {
-    const netProfit = financeData.totalRevenue - financeData.totalExpenses;
-    const profitMargin = financeData.totalRevenue
-      ? ((netProfit / financeData.totalRevenue) * 100).toFixed(1)
-      : 0;
-
-    document.getElementById("financesTotalRevenue").textContent = "₹" + financeData.totalRevenue.toFixed(2);
-    document.getElementById("financesTotalExpenses").textContent = "₹" + financeData.totalExpenses.toFixed(2);
-    document.getElementById("financesNetProfit").textContent = "₹" + netProfit.toFixed(2);
-    document.getElementById("financesProfitMargin").textContent = profitMargin + "%";
-
-    const ctx1 = document.getElementById("incomeExpensesChart").getContext("2d");
-    new Chart(ctx1, {
-      type: "line",
-      data: {
-        labels: financeData.monthlyIncome.map((_, i) => `Month ${i + 1}`),
-        datasets: [
-          {
-            label: "Income",
-            data: financeData.monthlyIncome,
-            borderColor: "#4a7c2c",
-            backgroundColor: "rgba(74,124,44,0.3)",
-            fill: true,
-            tension: 0.3,
-          },
-          {
-            label: "Expenses",
-            data: financeData.monthlyExpenses,
-            borderColor: "#d9534f",
-            backgroundColor: "rgba(217,83,79,0.3)",
-            fill: true,
-            tension: 0.3,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true } },
-      },
-    });
-
-    const ctx2 = document.getElementById("expenseBreakdownChart").getContext("2d");
-    new Chart(ctx2, {
-      type: "doughnut",
-      data: {
-        labels: Object.keys(financeData.expenseCategories),
-        datasets: [
-          {
-            data: Object.values(financeData.expenseCategories),
-            backgroundColor: [
-              "#f4a259",
-              "#7fb069",
-              "#8b7355",
-              "#d9534f",
-              "#4a7c2c",
-              "#f0ad4e",
-            ],
-          },
-        ],
-      },
-      options: { responsive: true },
-    });
-  }
-
-  // Other dashboard functions (product, orders, customers, analytics, modals, pagination, toast etc.) go here – reuse your previous full implementations.
-
-  window.onload = init;
-})();
-</script>
+  </script>
 </body>
 </html>
-
