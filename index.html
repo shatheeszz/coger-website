@@ -1,342 +1,723 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coger Enterprises - Premium Coconut Products</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #2c1810;
-            background-color: #f8f5f0;
-        }
-
-        header {
-            background: linear-gradient(135deg, #5c4a33 0%, #8b7355 50%, #a0826d 100%);
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
-
-        nav {
-            background-color: #6d5d4b;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 1.5rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #d4af37;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 2px solid #d4c5b0;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #e8dcc8 0%, #c9b89a 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-        }
-
-        .product-info {
-            padding: 1.5rem;
-        }
-
-        .product-title {
-            font-size: 1.5rem;
-            color: #5c4a33;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .product-description {
-            color: #666;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .product-category {
-            display: inline-block;
-            background: #e8dcc8;
-            color: #5c4a33;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            margin-bottom: 0.8rem;
-            font-weight: 500;
-        }
-
-        .product-price {
-            font-size: 1.8rem;
-            color: #7a5d3a;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .product-stock {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .product-stock.low {
-            color: #d9534f;
-            font-weight: bold;
-        }
-
-        .add-to-cart {
-            background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        .add-to-cart:hover {
-            background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
-            transform: scale(1.02);
-        }
-
-        .add-to-cart:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        footer {
-            background-color: #5c4a33;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-
-        .cart {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            font-weight: bold;
-            z-index: 1000;
-        }
-
-        .cart:hover {
-            background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
-        }
-
-        #cart-count {
-            background-color: #d4af37;
-            border-radius: 50%;
-            padding: 0.2rem 0.6rem;
-            margin-left: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .no-products {
-            text-align: center;
-            padding: 3rem;
-            font-size: 1.2rem;
-            color: #666;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Coger Enterprises - Premium Coconut Products</title>
+<style>
+  /* Basic Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f5f0;
+    color: #2c1810;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  header {
+    background: linear-gradient(135deg, #5c4a33 0%, #8b7355 50%, #a0826d 100%);
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    user-select:none;
+  }
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  header p {
+    font-size: 1.1rem;
+    opacity: 0.95;
+  }
+  nav {
+    background-color: #6d5d4b;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    user-select:none;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1.5rem;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  nav a:hover, nav a:focus {
+    color: #d4af37;
+    outline:none;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex-grow: 1;
+  }
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  .product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 2px solid #d4c5b0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  }
+  .product-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #e8dcc8 0%, #c9b89a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    user-select:none;
+  }
+  .product-info {
+    padding: 1.5rem;
+  }
+  .product-title {
+    font-size: 1.5rem;
+    color: #5c4a33;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  .product-description {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .product-category {
+    display: inline-block;
+    background: #e8dcc8;
+    color: #5c4a33;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    user-select:none;
+  }
+  .product-price {
+    font-size: 1.8rem;
+    color: #7a5d3a;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  .product-stock {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    user-select:none;
+  }
+  .product-stock.low {
+    color: #d9534f;
+    font-weight: bold;
+  }
+  .add-to-cart {
+    background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s;
+  }
+  .add-to-cart:hover, .add-to-cart:focus {
+    background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
+    transform: scale(1.02);
+    outline:none;
+  }
+  .add-to-cart:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  .reviews-section {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+  }
+  .average-rating {
+    font-weight: 600;
+    margin-bottom: 6px;
+    user-select:none;
+  }
+  .leave-review-button {
+    background: #4a7c2c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    user-select:none;
+  }
+  .leave-review-button[aria-expanded="true"] {
+    background: #2d5016;
+  }
+  .review-form select, .review-form textarea, .review-form button {
+    margin-top: 6px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .review-form button {
+    background-color: #2d5016;
+    color: white;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 8px 10px;
+    margin-top: 10px;
+    border: none;
+  }
+  .reviews-list li {
+    border-top: 1px solid #ddd;
+    padding: 8px 0;
+  }
+  .cart {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    font-weight: bold;
+    user-select:none;
+    z-index: 1000;
+  }
+  .cart:hover, .cart:focus {
+    background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
+    outline: none;
+  }
+  #cart-count {
+    background-color: #d4af37;
+    border-radius: 50%;
+    padding: 0.2rem 0.6rem;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+  }
+  /* Modal for Cart */
+  #cart-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+  #cart-modal.active {
+    display: flex;
+  }
+  #cart-content {
+    background: #fff;
+    max-width: 400px;
+    width: 90%;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    color: #2c1810;
+  }
+  #cart-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  #cart-content h2 {
+    margin-bottom: 1rem;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    align-items: center;
+  }
+  .cart-item button {
+    background: #d9534f;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .cart-item-qty {
+    width: 40px;
+    text-align: center;
+    font-size: 1rem;
+  }
+  .empty-cart {
+    text-align: center;
+    color: #666;
+    margin-top: 2rem;
+  }
+  #checkout-btn {
+    margin-top: 1rem;
+    background: #4a7c2c;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 1.1rem;
+  }
+  #checkout-btn:hover, #checkout-btn:focus {
+    background: #2d5016;
+    outline:none;
+  }
+  /* Recommendations and Recently Viewed sections */
+  section h2 {
+    margin-bottom: 15px;
+    color: #5c4a33;
+  }
+  /* FAQ styles */
+  #faq {
+    margin-top: 3rem;
+  }
+</style>
 </head>
 <body>
-    <div class="cart" onclick="alert('Cart feature coming soon!')">
-        🛒 Cart <span id="cart-count">0</span>
-    </div>
+<div class="cart" role="button" aria-label="View Cart" tabindex="0" id="cart-button">
+  🛒 Cart <span id="cart-count">0</span>
+</div>
 
-    <header>
-        <h1>🥥 Coger Enterprises</h1>
-        <p>Premium Natural Coconut Products - From Nature to You</p>
-    </header>
+<header>
+  <h1>🥥 Coger Enterprises</h1>
+  <p>Premium Natural Coconut Products - From Nature to You</p>
+</header>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="#products">Products</a>
-    </nav>
+<nav>
+  <a href="#products">Products</a>
+  <a href="#recommendations">Recommended</a>
+  <a href="#recentlyViewed">Recently Viewed</a>
+  <a href="#faq">FAQ</a>
+</nav>
 
-    <div class="container">
-        <div class="products" id="products">
-            <!-- Products will be loaded dynamically from localStorage -->
+<main class="container">
+  <section id="products" aria-label="Product List" class="products" tabindex="0"></section>
+
+  <section id="recommendations" aria-label="Personalized Recommendations">
+    <h2>Recommended For You</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 15px;" id="recommendations-container"></div>
+  </section>
+
+  <section id="recentlyViewed" aria-label="Recently Viewed Products">
+    <h2>Recently Viewed</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 15px;" id="recentlyViewed-container"></div>
+  </section>
+
+  <section id="faq" aria-label="Frequently Asked Questions">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>What is virgin coconut oil?</summary>
+      <p>Virgin coconut oil is oil extracted from fresh coconut meat without chemical processing, preserving its nutrients and natural flavor.</p>
+    </details>
+    <details>
+      <summary>How long does shipping take?</summary>
+      <p>Typically 5 to 7 business days within India.</p>
+    </details>
+    <details>
+      <summary>Are your products organic?</summary>
+      <p>Yes, we assure you premium organic coconut products sourced sustainably.</p>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2024 Coger Enterprises. All rights reserved.</p>
+  <p>Natural Coconut Products | Sustainable & Organic</p>
+</footer>
+
+<!-- Cart Modal -->
+<div id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
+  <div id="cart-content">
+    <button id="cart-close-btn" aria-label="Close Cart">&times;</button>
+    <h2 id="cart-title">Your Cart</h2>
+    <div id="cart-items-container"></div>
+    <button id="checkout-btn" aria-label="Checkout">Checkout</button>
+  </div>
+</div>
+
+<script>
+  const emojiMap = {
+    'Seeds': '🌱',
+    'Fertilizers': '🌿',
+    'Tools': '🔧',
+    'Organic': '🥥',
+    'Equipment': '⚙️',
+    'Coconut': '🥥',
+    'Oil': '🌴',
+    'Cocopeat': '🥥',
+    'Copra': '🌾',
+    'Charcoal': '⚫'
+  };
+
+  const productsContainer = document.getElementById('products');
+  const recommendationsContainer = document.getElementById('recommendations-container');
+  const recentlyViewedContainer = document.getElementById('recentlyViewed-container');
+  const cartButton = document.getElementById('cart-button');
+  const cartModal = document.getElementById('cart-modal');
+  const cartCloseBtn = document.getElementById('cart-close-btn');
+  const cartItemsContainer = document.getElementById('cart-items-container');
+  const checkoutBtn = document.getElementById('checkout-btn');
+  const cartCountSpan = document.getElementById('cart-count');
+
+  // Load products or default data
+  function loadProducts(){
+    let products = JSON.parse(localStorage.getItem('products') || '[]');
+    if (products.length === 0) {
+      products = [
+        {id:1, name:'Premium Cocopeat Block', category:'Cocopeat', price:28.99, stock:150, desc:'High-quality compressed cocopeat blocks.'},
+        {id:2, name:'Organic Coconut Oil', category:'Oil', price:45.99, stock:85, desc:'Pure, cold-pressed virgin coconut oil.'},
+        {id:3, name:'Desiccated Coconut', category:'Coconut', price:18.5, stock:120, desc:'Premium dried shredded coconut.'},
+        {id:4, name:'Dried Copra', category:'Copra', price:35, stock:60, desc:'Sun-dried coconut kernel.'},
+        {id:5, name:'Fresh Coconuts', category:'Coconut', price:12.99, stock:200, desc:'Farm-fresh tender coconuts.'},
+        {id:6, name:'Coconut Shell Charcoal', category:'Charcoal', price:22.5, stock:75, desc:'Activated charcoal from coconut shells.'}
+      ];
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+    renderProducts(products);
+    renderRecommendations(products);
+    renderRecentlyViewed(products);
+  }
+
+  // Create a product card element
+  function createProductCard(product){
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    const emoji = emojiMap[product.category] || '🥥';
+    const lowStockClass = product.stock < 10 ? 'low' : '';
+    const isOutOfStock = product.stock === 0;
+
+    card.innerHTML = `
+      <div class="product-image" aria-label="${product.category}">${emoji}</div>
+      <div class="product-info">
+        <span class="product-category">${product.category}</span>
+        <h3 class="product-title" tabindex="0">${product.name}</h3>
+        <p class="product-description">${product.desc}</p>
+        <p class="product-stock ${lowStockClass}">${isOutOfStock ? 'Out of Stock' : 'Stock: ' + product.stock}</p>
+        <div class="product-price">₹${product.price.toFixed(2)}</div>
+        <button class="add-to-cart" ${isOutOfStock ? 'disabled' : ''} aria-pressed="false" aria-label="Add ${product.name} to cart">Add to Cart</button>
+
+        <div class="reviews-section" aria-live="polite" aria-label="Customer Reviews">
+          <div class="average-rating" aria-label="Average rating: 0 stars">
+            <span id="avg-rating-${product.id}">0</span>/5 ⭐
+          </div>
+          <button aria-expanded="false" aria-controls="review-form-${product.id}" class="leave-review-button">
+            Leave a Review
+          </button>
+          <form id="review-form-${product.id}" class="review-form" style="display:none; margin-top:1rem;" aria-hidden="true">
+            <label for="rating-${product.id}">Rating:</label>
+            <select id="rating-${product.id}" name="rating" required>
+              <option value="">Select stars</option>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - Average</option>
+              <option value="2">2 - Poor</option>
+              <option value="1">1 - Terrible</option>
+            </select>
+            <label for="comment-${product.id}">Comment:</label>
+            <textarea id="comment-${product.id}" rows="3" required></textarea>
+            <button type="submit">Submit Review</button>
+          </form>
+          <ul id="reviews-list-${product.id}" class="reviews-list"></ul>
         </div>
-    </div>
+      </div>
+    `;
 
-    <footer>
-        <p>&copy; 2024 Coger Enterprises. All rights reserved.</p>
-        <p>Natural Coconut Products | Sustainable & Organic</p>
-    </footer>
+    card.querySelector('.add-to-cart').addEventListener('click', ()=> addToCart(product));
+    card.querySelector('.leave-review-button').addEventListener('click', (e)=>{
+      const btn = e.target;
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !expanded);
+      const form = card.querySelector('.review-form');
+      form.style.display = expanded ? 'none' : 'block';
+      form.setAttribute('aria-hidden', expanded);
+    });
+    const form = card.querySelector('.review-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const rating = form.querySelector('select').value;
+      const comment = form.querySelector('textarea').value.trim();
+      if (!rating || !comment) {
+        alert('Please fill out rating and comment.');
+        return;
+      }
+      saveReview(product.id, {rating: +rating, comment, date: new Date().toISOString()});
+      form.reset();
+      form.style.display = 'none';
+      card.querySelector('.leave-review-button').setAttribute('aria-expanded', 'false');
+      loadReviews(product.id);
+    });
+    loadReviews(product.id);
+    return card;
+  }
 
-    <script>
-        let cartCount = 0;
+  // Render all products
+  function renderProducts(products){
+    productsContainer.innerHTML = '';
+    products.forEach(p =>{
+      productsContainer.appendChild(createProductCard(p));
+    });
+  }
 
-        // Get emoji for category
-        function getCategoryEmoji(category) {
-            const emojiMap = {
-                'Seeds': '🌱',
-                'Fertilizers': '🌿',
-                'Tools': '🔧',
-                'Organic': '🥥',
-                'Equipment': '⚙️',
-                'Coconut': '🥥',
-                'Oil': '🌴',
-                'Cocopeat': '🥥',
-                'Copra': '🌾',
-                'Charcoal': '⚫'
-            };
-            return emojiMap[category] || '🥥';
-        }
+  // Cart functions
+  function addToCart(product){
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let item = cart.find(i=>i.productId === product.id);
+    if(item) item.quantity++;
+    else cart.push({productId:product.id, name: product.name, price: product.price, quantity:1});
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    showToast(`Added ${product.name} to cart.`);
+  }
+  
+  function updateCartCount(){
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let count = cart.reduce((acc, i) => acc + i.quantity, 0);
+    cartCountSpan.textContent = count;
+  }
 
-        // Load and display products
-        function loadProducts() {
-            // Get products from localStorage (from admin panel)
-            let products = JSON.parse(localStorage.getItem('products') || '[]');
+  // Cart modal display and management
+  cartButton.addEventListener('click', () => {
+    renderCartModal();
+    cartModal.classList.add('active');
+    cartModal.focus();
+  });
 
-            // If no products in localStorage, use default coconut products
-            if (products.length === 0) {
-                products = [
-                    {id: 1, name: 'Premium Cocopeat Block', category: 'Cocopeat', price: 28.99, stock: 150, desc: 'High-quality compressed cocopeat blocks, perfect for gardening and horticulture. 100% natural and eco-friendly growing medium.'},
-                    {id: 2, name: 'Organic Coconut Oil', category: 'Oil', price: 45.99, stock: 85, desc: 'Pure, cold-pressed virgin coconut oil. Rich in nutrients, perfect for cooking, skincare, and hair care.'},
-                    {id: 3, name: 'Desiccated Coconut', category: 'Coconut', price: 18.50, stock: 120, desc: 'Premium quality dried and shredded coconut. Ideal for baking, cooking, and adding natural flavor to your dishes.'},
-                    {id: 4, name: 'Dried Copra', category: 'Copra', price: 35.00, stock: 60, desc: 'Sun-dried coconut kernel, perfect for oil extraction and commercial use. Premium grade copra from selected coconuts.'},
-                    {id: 5, name: 'Fresh Coconuts', category: 'Coconut', price: 12.99, stock: 200, desc: 'Farm-fresh tender coconuts delivered to your doorstep. Rich in natural electrolytes and refreshing coconut water.'},
-                    {id: 6, name: 'Coconut Shell Charcoal', category: 'Charcoal', price: 22.50, stock: 75, desc: 'High-quality activated charcoal from coconut shells. Perfect for air purification, water filtration, and industrial use.'}
-                ];
-                // Save default products to localStorage
-                localStorage.setItem('products', JSON.stringify(products));
-            }
+  cartCloseBtn.addEventListener('click', () => {
+    cartModal.classList.remove('active');
+  });
 
-            const productsContainer = document.getElementById('products');
-            
-            if (products.length === 0) {
-                productsContainer.innerHTML = '<div class="no-products">No products available. Please check back later!</div>';
-                return;
-            }
+  cartModal.addEventListener('click', e => {
+    if(e.target === cartModal) cartModal.classList.remove('active');
+  });
 
-            productsContainer.innerHTML = '';
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && cartModal.classList.contains('active')){
+      cartModal.classList.remove('active');
+    }
+  });
 
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
-                const emoji = getCategoryEmoji(product.category);
-                const stockClass = product.stock < 10 ? 'low' : '';
-                const isOutOfStock = product.stock === 0;
-                
-                productCard.innerHTML = `
-                    <div class="product-image">${emoji}</div>
-                    <div class="product-info">
-                        <span class="product-category">${product.category}</span>
-                        <h3 class="product-title">${product.name}</h3>
-                        <p class="product-description">${product.desc || 'Premium quality product from Coger Enterprises.'}</p>
-                        <p class="product-stock ${stockClass}">${isOutOfStock ? 'Out of Stock' : `Stock: ${product.stock} units`}</p>
-                        <div class="product-price">₹${product.price.toFixed(2)}</div>
-                        <button class="add-to-cart" onclick="addToCart('${product.name}', ${product.price}, ${product.id})" ${isOutOfStock ? 'disabled' : ''}>
-                            ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-                        </button>
-                    </div>
-                `;
-                
-                productsContainer.appendChild(productCard);
-            });
-        }
+  const cartItemsContainer = document.getElementById('cart-items-container');
+  const checkoutBtn = document.getElementById('checkout-btn');
 
-        function addToCart(productName, price, productId) {
-            cartCount++;
-            document.getElementById('cart-count').textContent = cartCount;
-            
-            // Get existing cart or create new one
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            
-            // Add product to cart
-            cart.push({
-                name: productName,
-                price: price,
-                quantity: 1,
-                productId: productId,
-                timestamp: new Date().toISOString()
-            });
-            
-            // Save to localStorage
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            alert(`${productName} added to cart! Total items: ${cartCount}`);
-        }
+  function renderCartModal(){
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if(cart.length === 0){
+      cartItemsContainer.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
+      checkoutBtn.disabled = true;
+      return;
+    }
+    checkoutBtn.disabled = false;
+    cartItemsContainer.innerHTML = '';
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <span>${item.name}</span>
+        <input type="number" min="1" class="cart-item-qty" aria-label="Quantity of ${item.name}" value="${item.quantity}">
+        <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+        <button aria-label="Remove ${item.name} from cart">&times;</button>
+      `;
+      // Change qty
+      div.querySelector('.cart-item-qty').addEventListener('change', e => {
+        let qty = parseInt(e.target.value);
+        if(isNaN(qty) || qty < 1) qty = 1;
+        updateCartQuantity(item.productId, qty);
+      });
+      // Remove item
+      div.querySelector('button').addEventListener('click', () => {
+        removeCartItem(item.productId);
+      });
+      cartItemsContainer.appendChild(div);
+    });
+  }
 
-        // Load cart count on page load
-        window.onload = function() {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            cartCount = cart.length;
-            document.getElementById('cart-count').textContent = cartCount;
-            
-            // Load products
-            loadProducts();
-        };
-    </script>
+  function updateCartQuantity(productId, qty){
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const item = cart.find(i => i.productId === productId);
+    if(item){
+      item.quantity = qty;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      renderCartModal();
+    }
+  }
+  
+  function removeCartItem(productId){
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart = cart.filter(i => i.productId !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    renderCartModal();
+  }
+  checkoutBtn.addEventListener('click', () => {
+    alert('Checkout coming soon!');
+  });
+
+  // Toast notifications
+  let toastTimeout;
+  function showToast(message){
+    const toast = document.createElement('div');
+    toast.className = 'toast show';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+      document.body.removeChild(toast);
+    }, 3000);
+  }
+
+  // Reviews storage and display
+  function saveReview(productId, review){
+    let key = `reviews-${productId}`;
+    let reviews = JSON.parse(localStorage.getItem(key) || '[]');
+    reviews.unshift(review); // newest first
+    localStorage.setItem(key, JSON.stringify(reviews));
+    showToast('Review saved, thank you!');
+  }
+  function loadReviews(productId){
+    let key = `reviews-${productId}`;
+    let reviewsList = document.getElementById(`reviews-list-${productId}`);
+    let avgSpan = document.getElementById(`avg-rating-${productId}`);
+    if(!reviewsList || !avgSpan) return;
+
+    let reviews = JSON.parse(localStorage.getItem(key) || '[]');
+    reviewsList.innerHTML = '';
+
+    if(reviews.length === 0){
+      reviewsList.innerHTML = '<li>No reviews yet.</li>';
+      avgSpan.textContent = '0';
+      avgSpan.setAttribute('aria-label', 'Average rating: 0 stars');
+      return;
+    }
+
+    let avg = reviews.reduce((a, r) => a + r.rating, 0) / reviews.length;
+    avgSpan.textContent = avg.toFixed(1);
+    avgSpan.setAttribute('aria-label', `Average rating: ${avg.toFixed(1)} stars`);
+
+    reviews.forEach(r => {
+      let li = document.createElement('li');
+      li.innerHTML = `<strong>${'⭐'.repeat(r.rating)}</strong> | <em>${new Date(r.date).toLocaleDateString()}</em><br>${r.comment}`;
+      reviewsList.appendChild(li);
+    });
+  }
+
+  // Recommendations and recently viewed
+  function trackViewedProduct(productId){
+    let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    viewed = viewed.filter(id => id !== productId);
+    viewed.unshift(productId);
+    if(viewed.length > 6) viewed.pop();
+    localStorage.setItem('recentlyViewed', JSON.stringify(viewed));
+  }
+
+  function renderRecentlyViewed(products){
+    let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    const container = recentlyViewedContainer;
+    container.innerHTML = '';
+    if(viewed.length === 0){
+      container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">No recently viewed products.</p>';
+      return;
+    }
+    viewed.forEach(id => {
+      const p = products.find(prod => prod.id === id);
+      if(p){
+        let card = createProductCard(p);
+        container.appendChild(card);
+      }
+    });
+  }
+
+  function renderRecommendations(products){
+    const viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    const container = recommendationsContainer;
+    container.innerHTML = '';
+    if(viewed.length === 0){
+      container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">No recommendations yet.</p>';
+      return;
+    }
+    let viewedCategories = new Set();
+    viewed.forEach(id => {
+      const p = products.find(prod => prod.id === id);
+      if(p) viewedCategories.add(p.category);
+    });
+    let recommended = products.filter(p => viewedCategories.has(p.category) && !viewed.includes(p.id));
+    if(recommended.length < 4){
+      let additional = products.filter(p => !viewed.includes(p.id) && !recommended.includes(p));
+      recommended = recommended.concat(additional.slice(0, 4 - recommended.length));
+    }
+    recommended.slice(0,6).forEach(p => {
+      container.appendChild(createProductCard(p));
+    });
+  }
+
+  // Render products with track views on title/image click to update recently viewed
+  function renderProducts(products){
+    productsContainer.innerHTML = '';
+    products.forEach(p => {
+      const card = createProductCard(p);
+      // Add view tracking on title and image
+      card.querySelector('.product-title').addEventListener('click', () => trackViewedProduct(p.id));
+      card.querySelector('.product-image').addEventListener('click', () => trackViewedProduct(p.id));
+      productsContainer.appendChild(card);
+    });
+  }
+
+  // Initialize on load
+  window.addEventListener('load', () => {
+    let products = JSON.parse(localStorage.getItem('products') || '[]');
+    if(products.length === 0){
+      products = [
+        {id:1, name:'Premium Cocopeat Block', category:'Cocopeat', price:28.99, stock:150, desc:'High-quality compressed cocopeat blocks.'},
+        {id:2, name:'Organic Coconut Oil', category:'Oil', price:45.99, stock:85, desc:'Pure, cold-pressed virgin coconut oil.'},
+        {id:3, name:'Desiccated Coconut', category:'Coconut', price:18.5, stock:120, desc:'Premium dried shredded coconut.'},
+        {id:4, name:'Dried Copra', category:'Copra', price:35, stock:60, desc:'Sun-dried coconut kernel.'},
+        {id:5, name:'Fresh Coconuts', category:'Coconut', price:12.99, stock:200, desc:'Farm-fresh tender coconuts.'},
+        {id:6, name:'Coconut Shell Charcoal', category:'Charcoal', price:22.5, stock:75, desc:'Activated charcoal from coconut shells.'}
+      ];
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+    renderProducts(products);
+    renderRecommendations(products);
+    renderRecentlyViewed(products);
+    updateCartCount();
+  });
+</script>
 </body>
 </html>
