@@ -456,19 +456,6 @@
   let budgetBarChart=null;
   let attachmentBase64 = null;
 
-  // Sidebar navigation
-  const menuItems = document.querySelectorAll('.menu-item');
-  const sections = document.querySelectorAll('.section');
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      menuItems.forEach(i => i.classList.remove('active'));
-      sections.forEach(s => s.classList.remove('active'));
-      item.classList.add('active');
-      const sectionId = item.getAttribute('data-section');
-      document.getElementById(sectionId).classList.add('active');
-      if(sectionId === 'analytics') renderSalesChart();
-      if(sectionId === 'finances') updateFinances();
-    });
   });
 
   // Theme toggle code
@@ -492,9 +479,11 @@
   });
 
   // Load default theme on start
-  window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("482
+                          ", () => {
     const storedTheme = localStorage.getItem("preferredTheme") || "light";
     applyTheme(storedTheme);
+        document.querySelectorAll('.menu-item').forEach(item=>item.addEventListener('click',()=>{document.querySelectorAll('.menu-item').forEach(i=>i.classList.remove('active'));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));item.classList.add('active');const sectionId=item.getAttribute('data-section');document.getElementById(sectionId).classList.add('active');if(sectionId==='analytics')renderSalesChart();if(sectionId==='finances')updateFinances();}));
     loadProductsTable('');
     loadOrdersTable('');
     loadCustomersTable('');
