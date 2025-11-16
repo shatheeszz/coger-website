@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#2d5016" />
 
 <style>
+/* CSS Variables and Themes */
 :root {
   --green: #2d5016;
   --light-green: #4a7c2c;
@@ -28,11 +29,10 @@ body {
   font-family: Arial, sans-serif;
   background: var(--bg);
   color: var(--dark);
-  min-height: 100vh;
   margin: 0;
   display: flex;
+  min-height: 100vh;
 }
-
 body.dark-theme {
   --green: #90ee90;
   --light-green: #6bbf6b;
@@ -49,52 +49,57 @@ body.dark-theme {
   color: var(--white);
 }
 
+/* Sidebar */
 .sidebar {
   width: 260px;
   background: linear-gradient(180deg, var(--green), var(--light-green));
   color: white;
-  height: 100vh;
   position: fixed;
   top: 0; left: 0;
+  height: 100vh;
   overflow-y: auto;
-  padding-top: 15px;
+  padding-top: 20px;
   box-sizing: border-box;
 }
 
 .sidebar .logo {
   font-size: 26px;
   font-weight: bold;
-  padding: 20px 15px;
+  padding: 20px 0;
   text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
   user-select: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
 .menu-item {
-  padding: 15px 30px;
+  padding: 15px 25px;
   cursor: pointer;
+  border-left: 4px solid transparent;
   display: flex;
   align-items: center;
-  gap: 12px;
-  border-left: 4px solid transparent;
-  transition: background-color 0.3s, border-color 0.3s;
+  gap: 10px;
+  transition: all 0.3s;
   user-select: none;
 }
 
-.menu-item:hover, .menu-item.active {
-  background-color: rgba(255,255,255,0.1);
+.menu-item:hover,
+.menu-item.active {
+  background: rgba(255, 255, 255, 0.1);
   border-left-color: var(--yellow);
 }
 
+/* Main content */
 .main {
   margin-left: 260px;
   padding: 20px 30px;
-  width: calc(100% - 260px);
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
   min-height: 100vh;
   box-sizing: border-box;
-  background: var(--bg);
 }
 
+/* Top bar */
 .top-bar {
   background: white;
   padding: 15px 25px;
@@ -102,18 +107,18 @@ body.dark-theme {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  user-select: none;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   margin-bottom: 20px;
-  user-select: none;
 }
-
 body.dark-theme .top-bar {
   background: #222;
   box-shadow: 0 2px 12px rgba(255,255,255,0.1);
   color: var(--white);
 }
 
-.btn-primary, .btn-warn {
+/* Buttons */
+.btn-primary, .btn-warn, .btn-success, .btn-danger {
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
@@ -123,13 +128,14 @@ body.dark-theme .top-bar {
   user-select: none;
   transition: background-color 0.3s ease;
 }
-
-.btn-primary { background-color: var(--light-green); }
-.btn-primary:hover { background-color: var(--green); }
-
-.btn-warn { background-color: var(--orange); }
+.btn-primary { background-color: var(--light-green);}
+.btn-primary:hover { background-color: var(--green);}
+.btn-success { background-color: var(--success);}
+.btn-danger { background-color: var(--red);}
+.btn-warn { background-color: var(--orange);}
 .btn-warn:hover { background-color: #cf8c46; }
 
+/* Toast */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -142,83 +148,146 @@ body.dark-theme .top-bar {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease-in-out;
-  z-index: 4000;
+  z-index: 10000;
 }
-
 .toast.show {
   opacity: 1;
   pointer-events: auto;
 }
 
+/* General section container */
 .section {
   display: none;
 }
-
 .section.active {
   display: block;
   animation: fadeIn 0.3s ease;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: left;
+}
+body.dark-theme table th,
+body.dark-theme table td {
+  border-color: #555;
+}
+
+/* Form Controls */
+.search, select, input[type="text"], input[type="number"], textarea {
+  padding: 8px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.search:focus, select:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+  outline: none;
+  border-color: var(--sage);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal.show {
+  display: flex;
+}
+.modal-content {
+  background: var(--white);
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: var(--dark);
+}
+body.dark-theme .modal-content {
+  background: #222;
+  color: var(--white);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.modal-header h2 {
+  margin: 0;
+}
+.close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 28px;
+  color: #999;
+}
+.close:hover {
+  color: var(--red);
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.pagination button {
+  padding: 6px 12px;
+  border: 2px solid var(--light-green);
+  background: white;
+  color: var(--green);
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+.pagination button:hover:not(.active) {
+  background: var(--light-green);
+  color: white;
+}
+.pagination button.active {
+  background: var(--green);
+  color: white;
+  cursor: default;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+  .sidebar {
+    width: 100%;
+    height:auto;
+    position: relative;
+  }
+  .top-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 @keyframes fadeIn {
   from {opacity: 0;}
   to {opacity: 1;}
 }
-
-/* Modal styles */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  align-items: center;
-  justify-content: center;
-  z-index: 3000;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--white);
-  padding: 20px 30px;
-  border-radius: 10px;
-  max-width: 420px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  color: var(--dark);
-}
-
-body.dark-theme .modal-content {
-  background: #222;
-  color: var(--white);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.modal-header h2 {
-  margin: 0;
-}
-
-.modal-header button.close {
-  background: none;
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  color: #999;
-}
-
-.modal-header button.close:hover {
-  color: var(--red);
-}
-
-/* Additional styles: layouts for each dashboard can be expanded */
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -238,83 +307,72 @@ body.dark-theme .modal-content {
 
 <div class="main">
 
-  <!-- Top bar -->
   <div class="top-bar">
     <div class="title">Admin Dashboard</div>
     <div>
       Admin User 🌱
-      <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode" style="margin-left:20px;">
-        🌙 Dark Mode
-      </button>
+      <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark Mode</button>
     </div>
   </div>
 
-  <!-- Export buttons -->
-  <div style="margin: 0 0 15px 0; display: flex; gap: 10px;">
+  <div style="margin-bottom:15px;display:flex;gap:10px;">
     <button onclick="exportTableToCSV('products.csv', 'productsTable')" class="btn-primary">Export Products</button>
     <button onclick="exportTableToCSV('orders.csv', 'ordersTable')" class="btn-primary">Export Orders</button>
     <button onclick="exportTableToCSV('customers.csv', 'customersTable')" class="btn-primary">Export Customers</button>
   </div>
 
-  <!-- ----- Dashboard Section ----- -->
+  <!-- Dashboard -->
   <div id="dashboard" class="section active">
-    <h2>Dashboard Overview</h2>
-    <p>Welcome to the Coger Agri Admin Dashboard. Use the menu to navigate sections.</p>
+    <h2>Welcome to Coger Agri Admin Dashboard</h2>
+    <p>This is your dashboard overview.</p>
   </div>
 
-  <!-- ----- Products Section ----- -->
+  <!-- Products -->
   <div id="products" class="section">
     <h2>Product Management</h2>
-    <!-- Your products content here - add product listing, filters, etc. -->
-    <p>Products dashboard goes here...</p>
-    <table id="productsTable" border="1" style="width:100%; border-collapse:collapse; margin-top:15px;">
+    <input type="text" id="productSearch" placeholder="Search products..." class="search" />
+    <table id="productsTable">
       <thead>
-        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
+        <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
       </thead>
-      <tbody>
-        <tr><td>Example Product 1</td><td>Category A</td><td>₹100</td><td>40</td></tr>
-        <tr><td>Example Product 2</td><td>Category B</td><td>₹150</td><td>20</td></tr>
-      </tbody>
+      <tbody id="productsList"></tbody>
     </table>
+    <div class="pagination" id="productPagination"></div>
   </div>
 
-  <!-- ----- Orders Section ----- -->
+  <!-- Orders -->
   <div id="orders" class="section">
     <h2>Order Management</h2>
-    <p>Orders dashboard content...</p>
-    <table id="ordersTable" border="1" style="width:100%; border-collapse:collapse; margin-top:15px;">
+    <input type="text" id="orderSearch" placeholder="Search orders..." class="search" />
+    <table id="ordersTable">
       <thead>
         <tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th></tr>
       </thead>
-      <tbody>
-        <tr><td>1234</td><td>John Doe</td><td>₹250</td><td>Pending</td></tr>
-        <tr><td>1235</td><td>Jane Smith</td><td>₹400</td><td>Delivered</td></tr>
-      </tbody>
+      <tbody id="ordersList"></tbody>
     </table>
+    <div class="pagination" id="orderPagination"></div>
   </div>
 
-  <!-- ----- Customers Section ----- -->
+  <!-- Customers -->
   <div id="customers" class="section">
     <h2>Customer Management</h2>
-    <p>Customers list goes here...</p>
-    <table id="customersTable" border="1" style="width:100%; border-collapse:collapse; margin-top:15px;">
+    <input type="text" id="customerSearch" placeholder="Search customers..." class="search" />
+    <table id="customersTable">
       <thead>
-        <tr><th>Name</th><th>Email</th><th>Orders</th><th>Spent</th></tr>
+        <tr><th>Name</th><th>Email</th><th>Orders</th><th>Total Spent</th></tr>
       </thead>
-      <tbody>
-        <tr><td>John Doe</td><td>john@example.com</td><td>3</td><td>₹500</td></tr>
-        <tr><td>Jane Smith</td><td>jane@example.com</td><td>5</td><td>₹850</td></tr>
-      </tbody>
+      <tbody id="customersList"></tbody>
     </table>
+    <div class="pagination" id="customerPagination"></div>
   </div>
 
-  <!-- ----- Analytics Section ----- -->
+  <!-- Analytics -->
   <div id="analytics" class="section">
     <h2>Sales Analytics</h2>
     <canvas id="salesChart" height="150"></canvas>
   </div>
 
-  <!-- ----- Finances Section ----- -->
+  <!-- Finances -->
   <div id="finances" class="section">
     <h2>Financial Overview</h2>
     <canvas id="financeChart" height="150"></canvas>
@@ -323,7 +381,7 @@ body.dark-theme .modal-content {
 </div>
 
 <!-- Customer Feedback Modal -->
-<div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+<div id="feedbackModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle" >
   <div class="modal-content">
     <div class="modal-header">
       <h2 id="feedbackTitle">Customer Feedback</h2>
@@ -353,29 +411,38 @@ body.dark-theme .modal-content {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // Sidebar Navigation Logic
+  // Sample data for demos
+  const products = [
+    { id: 1, name: "Organic Seeds", category: "Seeds", price: 29.99, stock: 150, imageUrl:"https://via.placeholder.com/50?text=Seeds" },
+    { id: 2, name: "Bio Fertilizer", category: "Fertilizers", price: 45.5, stock: 8, imageUrl:"https://via.placeholder.com/50?text=Fertilizer" },
+    { id: 3, name: "Garden Tools Set", category: "Tools", price: 89.99, stock: 45, imageUrl:"https://via.placeholder.com/50?text=Tools" }
+  ];
+  const orders = [
+    { id: 101, customer: "John Doe", total: 125.5, status: "Pending" },
+    { id: 102, customer: "Jane Smith", total: 299.99, status: "Shipped" },
+    { id: 103, customer: "Bob Johnson", total: 75.0, status: "Delivered" },
+  ];
+  const customers = [
+    { name: "John Doe", email: "john@example.com", orders: 3, spent: 450 },
+    { name: "Jane Smith", email: "jane@example.com", orders: 5, spent: 890 },
+  ];
+
+  // Sidebar navigation
   const menuItems = document.querySelectorAll('.menu-item');
   const sections = document.querySelectorAll('.section');
-
   menuItems.forEach(item => {
     item.addEventListener('click', () => {
       menuItems.forEach(i => i.classList.remove('active'));
       sections.forEach(s => s.classList.remove('active'));
-
       item.classList.add('active');
       const sectionId = item.getAttribute('data-section');
       document.getElementById(sectionId).classList.add('active');
-
-      if(sectionId === 'analytics') {
-        renderSalesChart();
-      }
-      if(sectionId === 'finances') {
-        renderFinanceChart();
-      }
+      if(sectionId === 'analytics') renderSalesChart();
+      if(sectionId === 'finances') renderFinanceChart();
     });
   });
 
-  // Dark mode toggle & persistence
+  // Dark mode implementation
   const themeToggleBtn = document.getElementById("themeToggleBtn");
   function applyTheme(theme) {
     if (theme === "dark") {
@@ -395,66 +462,65 @@ body.dark-theme .modal-content {
     applyTheme(nextTheme);
   });
   window.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("preferredTheme") || "light";
-    applyTheme(savedTheme);
+    const storedTheme = localStorage.getItem("preferredTheme") || "light";
+    applyTheme(storedTheme);
+    loadProductsTable();
+    loadOrdersTable();
+    loadCustomersTable();
   });
 
-  // Export CSV
-  function exportTableToCSV(filename, tableId) {
-    let csv = [];
-    let rows = document.querySelectorAll(`#${tableId} tr`);
-    rows.forEach(row => {
-      let cols = row.querySelectorAll("td, th");
-      let rowData = [];
-      cols.forEach(col => rowData.push('"' + col.innerText.replace(/"/g, '""') + '"'));
-      csv.push(rowData.join(","));
+  // Loaders for product/order/customer tables
+  function loadProductsTable(filter='') {
+    const tbody = document.getElementById('productsList');
+    tbody.innerHTML = '';
+    const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><img src="${p.imageUrl}" alt="${p.name}" style="width:50px; border-radius:6px;"></td>
+        <td>${p.name}</td><td>${p.category}</td><td>₹${p.price.toFixed(2)}</td><td>${p.stock}</td>
+      `;
+      tbody.appendChild(tr);
     });
-    let csvString = csv.join("\n");
-    let blob = new Blob([csvString], { type: 'text/csv' });
-    let link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
   }
 
-  // Feedback Modal Logic
-  const feedbackModal = document.getElementById('feedbackModal');
-  const feedbackCloseBtn = document.getElementById('feedbackCloseBtn');
-  const submitFeedbackBtn = document.getElementById('submitFeedback');
-  feedbackCloseBtn.onclick = () => feedbackModal.style.display = 'none';
-  window.onclick = (e) => {
-    if(e.target === feedbackModal) feedbackModal.style.display = 'none';
-  };
-  submitFeedbackBtn.onclick = () => {
-    const rating = document.getElementById('rating').value;
-    const feedbackText = document.getElementById('feedbackText').value.trim();
-    if(!feedbackText) {
-      alert('Please enter your feedback.');
-      return;
-    }
-    console.log('Feedback submitted:', {rating, feedbackText});
-    showToast('Thanks for your feedback!');
-    feedbackModal.style.display = 'none';
-  };
-
-  // Toast helper
-  let toastTimeout;
-  function showToast(msg, duration=3000) {
-    const toast = document.getElementById('toast');
-    if(toastTimeout) clearTimeout(toastTimeout);
-    toast.textContent = msg;
-    toast.classList.add('show');
-    toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
+  function loadOrdersTable(filter='') {
+    const tbody = document.getElementById('ordersList');
+    tbody.innerHTML = '';
+    const filtered = orders.filter(o => o.customer.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(o => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${o.id}</td><td>${o.customer}</td><td>₹${o.total.toFixed(2)}</td><td>${o.status}</td>`;
+      tbody.appendChild(tr);
+    });
   }
 
-  // Chart.js dummy sales chart for Analytics
+  function loadCustomersTable(filter='') {
+    const tbody = document.getElementById('customersList');
+    tbody.innerHTML = '';
+    const filtered = customers.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(c => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${c.name}</td><td>${c.email}</td><td>${c.orders}</td><td>₹${c.spent}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Search inputs event listeners
+  document.getElementById('productSearch').addEventListener('input', e => loadProductsTable(e.target.value));
+  document.getElementById('orderSearch').addEventListener('input', e => loadOrdersTable(e.target.value));
+  document.getElementById('customerSearch').addEventListener('input', e => loadCustomersTable(e.target.value));
+
+  // Charts for Analytics and Finances
+  let salesChartInstance, financeChartInstance;
+
   function renderSalesChart() {
     const ctx = document.getElementById('salesChart').getContext('2d');
-    if(window.salesChartInstance) window.salesChartInstance.destroy();
-    window.salesChartInstance = new Chart(ctx, {
+    if(salesChartInstance) salesChartInstance.destroy();
+    salesChartInstance = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
         datasets: [{
           label: 'Sales',
           data: [1200, 1900, 1500, 2200, 1700, 1400, 2100],
@@ -468,28 +534,74 @@ body.dark-theme .modal-content {
     });
   }
 
-  // Chart.js dummy finances chart
   function renderFinanceChart() {
     const ctx = document.getElementById('financeChart').getContext('2d');
-    if(window.financeChartInstance) window.financeChartInstance.destroy();
-    window.financeChartInstance = new Chart(ctx, {
+    if(financeChartInstance) financeChartInstance.destroy();
+    financeChartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-          label: 'Revenue',
-          data: [10000, 12000, 15000, 13000, 16000, 18000],
-          backgroundColor: '#4a7c2c'
-        },{
-          label: 'Expenses',
-          data: [8000, 9000, 11000, 9500, 10500, 7000],
-          backgroundColor: '#d9534f'
-        }]
+        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets: [
+          {label:'Revenue', data:[10000, 12000, 15000, 13000, 16000, 18000], backgroundColor:'#4a7c2c'},
+          {label:'Expenses', data:[8000, 9000, 11000, 9500, 10500, 7000], backgroundColor:'#d9534f'}
+        ]
       },
-      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+      options: {responsive:true, scales: {y: {beginAtZero: true}}}
     });
   }
 
+  // Feedback Modal
+  const feedbackModal = document.getElementById('feedbackModal');
+  const feedbackCloseBtn = document.getElementById('feedbackCloseBtn');
+  const submitFeedbackBtn = document.getElementById('submitFeedback');
+  feedbackCloseBtn.onclick = () => feedbackModal.style.display = 'none';
+  window.onclick = e => { if(e.target===feedbackModal) feedbackModal.style.display='none'; };
+  submitFeedbackBtn.onclick = () => {
+    const rating = document.getElementById('rating').value;
+    const feedbackText = document.getElementById('feedbackText').value.trim();
+    if(!feedbackText) {
+      alert('Please enter your feedback.');
+      return;
+    }
+    console.log('Feedback:', {rating, feedbackText});
+    showToast('Thanks for your feedback!');
+    feedbackModal.style.display='none';
+  };
+
+  // Toast notification
+  let toastTimeout;
+  function showToast(msg, duration = 3000) {
+    const toast = document.getElementById('toast');
+    if(toastTimeout) clearTimeout(toastTimeout);
+    toast.textContent = msg;
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  // CSV Export utility
+  function exportTableToCSV(filename, tableId) {
+    const rows = document.querySelectorAll(`#${tableId} tr`);
+    const csv = [];
+    rows.forEach(row => {
+      const cols = row.querySelectorAll('td,th');
+      const rowData = [];
+      cols.forEach(col => rowData.push('"' + col.innerText.replace(/"/g, '""') + '"'));
+      csv.push(rowData.join(','));
+    });
+    const csvString = csv.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  // Register service worker for PWA
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js')
+      .then(()=>console.log('Service Worker registered'))
+      .catch(()=>console.warn('Service Worker registration failed'));
+  }
 </script>
 
 </body>
