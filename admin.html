@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Agri Admin Dashboard</title>
 
-<!-- PWA Manifest -->
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#2d5016" />
-
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -17,212 +13,197 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
 <style>
-/* CSS Variables and Themes */
-:root {
-  --green: #2d5016;
-  --light-green: #4a7c2c;
-  --sage: #7fb069;
-  --brown: #8b7355;
-  --yellow: #f4a259;
-  --bg: #f8f9f0;
-  --white: #fff;
-  --dark: #2c3e1f;
-  --red: #d9534f;
-  --orange: #f0ad4e;
-  --success: #5cb85c;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: var(--dark);
-  margin: 0;
-  display: flex;
-  min-height: 100vh;
-}
-body.dark-theme {
-  --green: #90ee90;
-  --light-green: #6bbf6b;
-  --sage: #a3d9a5;
-  --brown: #5a4a3b;
-  --yellow: #f0e68c;
-  --bg: #121212;
-  --white: #eeeeee;
-  --dark: #e0e0e0;
-  --red: #f08080;
-  --orange: #f4a259;
-  --success: #4caf50;
-  background: var(--bg);
-  color: var(--white);
-}
-
-/* Sidebar */
-.sidebar {
-  width: 260px;
-  background: linear-gradient(180deg, var(--green), var(--light-green));
-  color: white;
-  position: fixed;
-  top: 0; left: 0;
-  height: 100vh;
-  overflow-y: auto;
-  padding-top: 20px;
-  box-sizing: border-box;
-}
-
-.sidebar .logo {
-  font-size: 26px;
-  font-weight: bold;
-  padding: 20px 0;
-  text-align: center;
-  user-select: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-
-.menu-item {
-  padding: 15px 25px;
-  cursor: pointer;
-  border-left: 4px solid transparent;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.3s;
-  user-select: none;
-}
-
-.menu-item:hover,
-.menu-item.active {
-  background: rgba(255, 255, 255, 0.1);
-  border-left-color: var(--yellow);
-}
-
-/* Main content */
-.main {
-  margin-left: 260px;
-  padding: 20px 30px;
-  flex: 1;
-  overflow-y: auto;
-  background: var(--bg);
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-
-/* Top bar */
-.top-bar {
-  background: white;
-  padding: 15px 25px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  margin-bottom: 20px;
-}
-body.dark-theme .top-bar {
-  background: #222;
-  box-shadow: 0 2px 12px rgba(255,255,255,0.1);
-  color: var(--white);
-}
-
-/* Buttons */
-.btn-primary, .btn-warn, .btn-success, .btn-danger {
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  color: white;
-  user-select: none;
-  transition: background-color 0.3s ease;
-}
-.btn-primary { background-color: var(--light-green);}
-.btn-primary:hover { background-color: var(--green);}
-.btn-success { background-color: var(--success);}
-.btn-danger { background-color: var(--red);}
-.btn-warn { background-color: var(--orange);}
-.btn-warn:hover { background-color: #cf8c46; }
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: var(--green);
-  color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease-in-out;
-  z-index: 10000;
-}
-.toast.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* General section container */
-.section {
-  display: none;
-}
-.section.active {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-/* Tables */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-table th, table td {
-  border: 1px solid #ccc;
-  padding: 8px 10px;
-  text-align: left;
-  vertical-align: middle;
-}
-body.dark-theme table th,
-body.dark-theme table td {
-  border-color: #555;
-}
-
-/* Form Controls */
-.search, select, input[type="text"], input[type="number"], input[type="date"], textarea {
-  padding: 8px 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-.search:focus, select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus {
-  outline: none;
-  border-color: var(--sage);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .main {
-    margin-left: 0;
-    width: 100%;
+  /* CSS Variables and Themes */
+  :root {
+    --green: #2d5016;
+    --light-green: #4a7c2c;
+    --sage: #7fb069;
+    --brown: #8b7355;
+    --yellow: #f4a259;
+    --bg: #f8f9f0;
+    --white: #fff;
+    --dark: #2c3e1f;
+    --red: #d9534f;
+    --orange: #f0ad4e;
+    --success: #5cb85c;
   }
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+  }
+  body.dark-theme {
+    --green: #90ee90;
+    --light-green: #6bbf6b;
+    --sage: #a3d9a5;
+    --brown: #5a4a3b;
+    --yellow: #f0e68c;
+    --bg: #121212;
+    --white: #eeeeee;
+    --dark: #e0e0e0;
+    --red: #f08080;
+    --orange: #f4a259;
+    --success: #4caf50;
+    background: var(--bg);
+    color: var(--white);
+  }
+  /* Sidebar */
   .sidebar {
-    width: 100%;
-    height:auto;
-    position: relative;
+    width: 260px;
+    background: linear-gradient(180deg, var(--green), var(--light-green));
+    color: white;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-sizing: border-box;
   }
-  .top-bar {
-    flex-direction: column;
+  .sidebar .logo {
+    font-size: 26px;
+    font-weight: bold;
+    padding: 20px 0;
+    text-align: center;
+    user-select: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+  .menu-item {
+    padding: 15px 25px;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    display: flex;
+    align-items: center;
     gap: 10px;
+    transition: all 0.3s;
+    user-select: none;
   }
-}
-
-/* Misc */
-h2, h3 {
-  margin-top: 0;
-}
+  .menu-item:hover,
+  .menu-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: var(--yellow);
+  }
+  /* Main content */
+  .main {
+    margin-left: 260px;
+    padding: 20px 30px;
+    flex: 1;
+    overflow-y: auto;
+    background: var(--bg);
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  /* Top bar */
+  .top-bar {
+    background: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+  }
+  body.dark-theme .top-bar {
+    background: #222;
+    box-shadow: 0 2px 12px rgba(255,255,255,0.1);
+    color: var(--white);
+  }
+  /* Buttons */
+  .btn-primary, .btn-warn, .btn-success, .btn-danger {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: white;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .btn-primary { background-color: var(--light-green);}
+  .btn-primary:hover { background-color: var(--green);}
+  .btn-success { background-color: var(--success);}
+  .btn-danger { background-color: var(--red);}
+  .btn-warn { background-color: var(--orange);}
+  .btn-warn:hover { background-color: #cf8c46; }
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--green);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 10000;
+  }
+  .toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* General section container */
+  .section {
+    display: none;
+  }
+  .section.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  table th, table td {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  body.dark-theme table th,
+  body.dark-theme table td {
+    border-color: #555;
+  }
+  /* Form Controls */
+  .search, select, input[type="text"], input[type="number"], input[type="date"], textarea {
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  .search:focus, select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--sage);
+  }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main {
+      margin-left: 0;
+      width: 100%;
+    }
+    .sidebar {
+      width: 100%;
+      height:auto;
+      position: relative;
+    }
+    .top-bar {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
 </style>
 </head>
 <body>
@@ -238,7 +219,7 @@ h2, h3 {
   <div class="menu-item" data-section="finances" tabindex="0">💰 Finances</div>
 </div>
 
-<div class="main" role="main">
+<div class="main" role="main" tabindex="0">
 
   <div class="top-bar">
     <div class="title">Admin Dashboard</div>
@@ -248,20 +229,19 @@ h2, h3 {
     </div>
   </div>
 
-  <!-- Dashboard Section -->
+  <!-- Dashboard -->
   <div id="dashboard" class="section active" tabindex="0">
     <h2>Welcome to Coger Agri Admin Dashboard</h2>
     <p>This is your dashboard overview.</p>
-    <p><strong>Summary:</strong></p>
     <ul>
-      <li>Total Products: <span id="dashboardTotalProducts">0</span></li>
-      <li>Total Orders: <span id="dashboardTotalOrders">0</span></li>
-      <li>Total Customers: <span id="dashboardTotalCustomers">0</span></li>
-      <li>Monthly Sales (₹): <span id="dashboardMonthlySales">0.00</span></li>
+      <li>Total Products: <span id="dashboardTotalProducts"></span></li>
+      <li>Total Orders: <span id="dashboardTotalOrders"></span></li>
+      <li>Total Customers: <span id="dashboardTotalCustomers"></span></li>
+      <li>Monthly Sales (₹): <span id="dashboardMonthlySales"></span></li>
     </ul>
   </div>
 
-  <!-- Products Section -->
+  <!-- Products -->
   <div id="products" class="section" tabindex="0">
     <h2>Product Management</h2>
     <input type="text" id="productSearch" placeholder="Search products..." class="search" />
@@ -273,7 +253,7 @@ h2, h3 {
     </table>
   </div>
 
-  <!-- Orders Section -->
+  <!-- Orders -->
   <div id="orders" class="section" tabindex="0">
     <h2>Order Management</h2>
     <input type="text" id="orderSearch" placeholder="Search orders..." class="search" />
@@ -285,7 +265,7 @@ h2, h3 {
     </table>
   </div>
 
-  <!-- Customers Section -->
+  <!-- Customers -->
   <div id="customers" class="section" tabindex="0">
     <h2>Customer Management</h2>
     <input type="text" id="customerSearch" placeholder="Search customers..." class="search" />
@@ -297,13 +277,13 @@ h2, h3 {
     </table>
   </div>
 
-  <!-- Analytics Section -->
+  <!-- Analytics -->
   <div id="analytics" class="section" tabindex="0">
     <h2>Sales Analytics</h2>
     <canvas id="salesChart" height="150"></canvas>
   </div>
 
-  <!-- Finances Section -->
+  <!-- Finances -->
   <div id="finances" class="section" tabindex="0" style="outline:none;">
     <h2>Financial Overview</h2>
 
@@ -361,41 +341,59 @@ h2, h3 {
     </div>
 
     <!-- Add Expense Form -->
-    <div style="margin-bottom: 20px; border:1px solid #ccc; padding:15px; border-radius:10px; max-width:700px;">
-      <h3>Add New Expense</h3>
-      <form id="addExpenseForm" style="display:flex; flex-wrap: wrap; gap:10px; align-items: flex-end;">
-        <div style="flex:1; min-width:120px;">
-          <label for="expenseDate">Date</label>
-          <input type="date" id="expenseDate" required style="width:100%; padding:6px;" />
+    <div style="margin-bottom: 20px; border:1px solid var(--light-green); box-shadow: 0 2px 12px rgba(74,124,44,0.2); padding:20px; border-radius:16px; max-width:750px; background: var(--white); color: var(--dark);">
+      <h3 style="margin-bottom: 15px; color: var(--green); font-weight: 700;">Add New Expense</h3>
+      <form id="addExpenseForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); grid-gap: 16px; align-items: end;">
+        <div>
+          <label for="expenseDate" style="display:block; font-weight:600; margin-bottom:4px;">Date</label>
+          <input type="date" id="expenseDate" required style="width:100%; padding:10px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px;" />
         </div>
-        <div style="flex:1; min-width:150px;">
-          <label for="expenseCategory">Category</label>
-          <select id="expenseCategory" required style="width:100%; padding:6px;"></select>
+        <div style="position:relative;">
+          <label for="expenseCategory" style="display:block; font-weight:600; margin-bottom:4px;">Category</label>
+          <input type="text" id="categorySearch" placeholder="Search categories..." style="width:100%; padding:8px 10px; border:2px solid var(--sage); border-radius:8px; font-size:14px; margin-bottom:6px;" autocomplete="off" />
+          <select id="expenseCategory" required style="width:100%; padding:10px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px; cursor: pointer;">
+            <option value="" disabled selected>Select Category</option>
+            <optgroup label="Core Business">
+              <option value="Processing">Processing</option>
+              <option value="Labor">Labor</option>
+              <option value="Maintenance">Maintenance</option>
+            </optgroup>
+            <optgroup label="Operations">
+              <option value="Travel">Travel</option>
+              <option value="Transport">Transport</option>
+              <option value="Packaging">Packaging</option>
+              <option value="Utilities">Utilities</option>
+            </optgroup>
+            <optgroup label="Marketing & Sales">
+              <option value="Marketing">Marketing</option>
+            </optgroup>
+            <option value="Other">Other</option>
+          </select>
         </div>
-        <div style="flex:1; min-width:100px;">
-          <label for="expenseAmount">Amount</label>
-          <input type="number" id="expenseAmount" min="0" step="0.01" required style="width:100%; padding:6px;" />
+        <div>
+          <label for="expenseAmount" style="display:block; font-weight:600; margin-bottom:4px;">Amount</label>
+          <input type="number" id="expenseAmount" min="0" step="0.01" required style="width:100%; padding:10px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px;" placeholder="₹0.00" />
         </div>
-        <div style="flex:2; min-width:200px;">
-          <label for="expenseNotes">Notes</label>
-          <input type="text" id="expenseNotes" placeholder="Optional notes" style="width:100%; padding:6px;" />
+        <div style="grid-column: span 2;">
+          <label for="expenseNotes" style="display:block; font-weight:600; margin-bottom:4px;">Notes</label>
+          <input type="text" id="expenseNotes" placeholder="Optional notes (description, etc.)" style="width:100%; padding:10px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px;" />
         </div>
-        <div style="flex:1; min-width:120px; text-align:center;">
-          <label for="recurringExpense" style="display:block;">Recurring?</label>
-          <input type="checkbox" id="recurringExpense" />
+        <div style="display:flex; flex-direction: column; align-items: center;">
+          <label for="recurringExpense" style="font-weight:600; margin-bottom:6px;">Recurring?</label>
+          <input type="checkbox" id="recurringExpense" style="width: 20px; height: 20px;" />
         </div>
-        <div style="flex:1; min-width:150px;">
-          <label for="expenseAttachment">Receipt (Image)</label>
-          <input type="file" id="expenseAttachment" accept="image/*" style="width:100%; padding:4px;" />
+        <div>
+          <label for="expenseAttachment" style="display:block; font-weight:600; margin-bottom:4px;">Receipt (Image)</label>
+          <input type="file" id="expenseAttachment" accept="image/*" style="width:100%; padding:6px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px;"/>
         </div>
-        <div style="flex:1; min-width:120px; text-align:right;">
-          <button type="submit" class="btn-primary" style="width:100%;">Add Expense</button>
+        <div style="display:flex; justify-content:flex-end; align-items:center;">
+          <button type="submit" class="btn-primary" style="min-width: 120px; padding:12px 24px; font-weight: 700; font-size: 16px; border-radius: 8px;">Add Expense</button>
         </div>
       </form>
-      <div id="attachmentPreviewContainer" style="margin-top:8px;"></div>
+      <div id="attachmentPreviewContainer" style="margin-top:10px;"></div>
     </div>
 
-    <!-- Expense Table -->
+    <!-- Expenses Table -->
     <table id="expenseTable" style="width:100%; margin-bottom:20px;">
       <thead>
         <tr>
@@ -425,13 +423,11 @@ h2, h3 {
     <!-- Notifications -->
     <div id="financeNotification" role="alert" style="position: fixed; bottom: 20px; right: 20px; background: var(--yellow); color: black; padding: 12px 20px; border-radius: 10px; display:none; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index:10000;"></div>
   </div>
+
 </div>
 
-<!-- JavaScript -->
 <script>
-  // Sidebar and theme toggle omitted here for brevity (same as previous snippet)
-
-  // Sample dummy data for demo
+  // Core Data Samples
   const products = [
     { id: 1, name: "Organic Seeds", category: "Seeds", price: 29.99, stock: 150, imageUrl:"https://via.placeholder.com/50?text=Seeds" },
     { id: 2, name: "Bio Fertilizer", category: "Fertilizers", price: 45.5, stock: 8, imageUrl:"https://via.placeholder.com/50?text=Fertilizer" },
@@ -447,41 +443,509 @@ h2, h3 {
     { name: "Jane Smith", email: "jane@example.com", orders: 5, spent: 890 },
   ];
 
-  // Finance data structures and functions are integrated from previous advanced snippet 
-  // Including expenses, budgets, roles, charts, exports, notifications, and event listeners.
+  // Finance variables (initial sample)
+  let expenseCategories = ["Processing", "Labor", "Maintenance", "Travel", "Transport", "Packaging", "Utilities", "Marketing", "Other"];
+  let budgetLimits = { "Processing": 40000, "Labor": 30000, "Maintenance": 10000, "Travel": 20000, "Transport": 15000, "Packaging": 10000, "Utilities": 5000, "Marketing": 7000, "Other": 5000 };
+  let expenses = [];
+  let expenseIdCounter = 1;
+  let totalReturns = 100000;
+  let currencyRates = {INR: 1, USD:0.012, EUR:0.011, GBP:0.0097};
+  let baseCurrency = "INR";
+  let currentUserRole = "admin";
+  let pieChart=null;
+  let budgetBarChart=null;
+  let attachmentBase64 = null;
 
-  // For full readability and to avoid exceeding message length,
-  // the full advanced Finance tab JavaScript code is in the next message.
+  // Sidebar navigation
+  const menuItems = document.querySelectorAll('.menu-item');
+  const sections = document.querySelectorAll('.section');
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      menuItems.forEach(i => i.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      item.classList.add('active');
+      const sectionId = item.getAttribute('data-section');
+      document.getElementById(sectionId).classList.add('active');
+      if(sectionId === 'analytics') renderSalesChart();
+      if(sectionId === 'finances') updateFinances();
+    });
+  });
 
-  // Initialize UI data and event listeners on DOMContentLoaded
-  window.addEventListener('DOMContentLoaded', () => {
-    // Load dashboard summary
+  // Theme toggle code
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  function applyTheme(theme) {
+    if (theme === "dark") {
+      document.body.classList.add("dark-theme");
+      themeToggleBtn.textContent = "☀️ Light Mode";
+      themeToggleBtn.setAttribute("aria-pressed", "true");
+    } else {
+      document.body.classList.remove("dark-theme");
+      themeToggleBtn.textContent = "🌙 Dark Mode";
+      themeToggleBtn.setAttribute("aria-pressed", "false");
+    }
+    localStorage.setItem("preferredTheme", theme);
+  }
+  themeToggleBtn.addEventListener("click", () => {
+    const currentTheme = localStorage.getItem("preferredTheme") || "light";
+    const nextTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+  });
+
+  // Load default theme on start
+  window.addEventListener("DOMContentLoaded", () => {
+    const storedTheme = localStorage.getItem("preferredTheme") || "light";
+    applyTheme(storedTheme);
+    loadProductsTable('');
+    loadOrdersTable('');
+    loadCustomersTable('');
+    renderSalesChart();
+    initializeFinanceUI();
+    updateDashboardSummary();
+  });
+
+  // Dashboard summary update
+  function updateDashboardSummary(){
     document.getElementById('dashboardTotalProducts').textContent = products.length;
     document.getElementById('dashboardTotalOrders').textContent = orders.length;
     document.getElementById('dashboardTotalCustomers').textContent = customers.length;
-    const monthlySales = orders.reduce((sum,o) => sum + o.total, 0);
-    document.getElementById('dashboardMonthlySales').textContent = `₹${monthlySales.toFixed(2)}`;
-    
-    // Load Products table
-    loadProductsTable('');
-    // Load Orders table
-    loadOrdersTable('');
-    // Load Customers table
-    loadCustomersTable('');
+    const sales = orders.reduce((s,o)=>s+o.total,0);
+    document.getElementById('dashboardMonthlySales').textContent = `₹${sales.toFixed(2)}`;
+  }
 
-    // Render sales chart
-    renderSalesChart();
+  // Loaders for tables with search
+  function loadProductsTable(filter=''){
+    const tbody = document.getElementById('productsList');
+    tbody.innerHTML='';
+    const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML=`
+        <td><img src="${p.imageUrl}" alt="${p.name}" style="width:50px; border-radius:6px;"></td>
+        <td>${p.name}</td><td>${p.category}</td><td>₹${p.price.toFixed(2)}</td><td>${p.stock}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+  function loadOrdersTable(filter=''){
+    const tbody = document.getElementById('ordersList');
+    tbody.innerHTML = '';
+    const filtered = orders.filter(o=> o.customer.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(o => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${o.id}</td><td>${o.customer}</td><td>₹${o.total.toFixed(2)}</td><td>${o.status}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+  function loadCustomersTable(filter=''){
+    const tbody = document.getElementById('customersList');
+    tbody.innerHTML='';
+    const filtered=customers.filter(c=> c.name.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(c => {
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${c.name}</td><td>${c.email}</td><td>${c.orders}</td><td>₹${c.spent}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
 
-    // Initialize finance tab UI, charts etc.
-    loadFinanceData();
+  document.getElementById('productSearch').addEventListener('input', e => loadProductsTable(e.target.value));
+  document.getElementById('orderSearch').addEventListener('input', e => loadOrdersTable(e.target.value));
+  document.getElementById('customerSearch').addEventListener('input', e => loadCustomersTable(e.target.value));
 
-    // Apply stored theme
-    const storedTheme = localStorage.getItem('preferredTheme') || "light";
-    applyTheme(storedTheme);
+  // Sales Chart setup
+  let salesChartInstance;
+  function renderSalesChart() {
+    const ctx=document.getElementById('salesChart').getContext('2d');
+    if(salesChartInstance) salesChartInstance.destroy();
+    salesChartInstance=new Chart(ctx,{
+      type:'line',
+      data:{
+        labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets:[{
+          label:'Sales',
+          data:[1200,1900,1500,2200,1700,1400,2100],
+          borderColor:'#4a7c2c',
+          backgroundColor:'rgba(74,124,44,0.3)',
+          fill:true,
+          tension:0.2
+        }]
+      },
+      options:{responsive:true,scales:{y:{beginAtZero:true}}}
+    });
+  }
+
+  /*--------------- Finances Module ---------------*/
+
+  // Initialize finance UI components and handlers
+  function initializeFinanceUI() {
+    populateCategoryDropdown();
+    populateBudgetInputs();
+    setupFinanceEventListeners();
+    setDefaultMonthFilter();
+  }
+
+  // Category dropdown with search
+  const categorySearchInput = document.getElementById('categorySearch');
+  const expenseCategorySelect = document.getElementById('expenseCategory');
+
+  function populateCategoryDropdown(){
+    // Clear existing (except placeholder)
+    const placeholder = expenseCategorySelect.querySelector('option[value=""]');
+    expenseCategorySelect.innerHTML = '';
+    expenseCategorySelect.appendChild(placeholder);
+    expenseCategories.forEach(c=>{
+      const opt=document.createElement('option');
+      opt.value=c;
+      opt.textContent=c;
+      expenseCategorySelect.appendChild(opt);
+    });
+  }
+
+  // Filter categories dynamically as user types
+  categorySearchInput.addEventListener('input', () => {
+    const filter = categorySearchInput.value.toLowerCase();
+    Array.from(expenseCategorySelect.options).forEach(opt => {
+      if(opt.value === '') return; // keep placeholder visible
+      opt.style.display = opt.text.toLowerCase().includes(filter) ? 'block' : 'none';
+    });
+    // Reset selected option if currently hidden
+    if(expenseCategorySelect.selectedIndex >= 0){
+      const selOpt = expenseCategorySelect.options[expenseCategorySelect.selectedIndex];
+      if(selOpt && selOpt.style.display === 'none') expenseCategorySelect.selectedIndex = 0;
+    }
   });
 
-  // Rest of the frontend finance tab JS will follow in the next message.
-</script>
+  // Populate budget limits inputs
+  function populateBudgetInputs(){
+    const container=document.getElementById('budgetLimitsContainer');
+    container.innerHTML='';
+    expenseCategories.forEach(cat=>{
+      const div=document.createElement('div');
+      div.style.minWidth = '140px';
+      div.style.backgroundColor= 'var(--sage)';
+      div.style.color = '#000';
+      div.style.padding = '10px';
+      div.style.borderRadius = '8px';
+      div.style.textAlign = 'center';
+      div.style.userSelect = 'none';
 
-</body>
-</html>
+      const label=document.createElement('div');
+      label.textContent = cat;
+      label.style.fontWeight = '600';
+      label.style.marginBottom = '8px';
+
+      const input=document.createElement('input');
+      input.type='number';
+      input.min='0';
+      input.value = budgetLimits[cat] || 0;
+      input.dataset.cat = cat;
+      input.style.width='100%';
+      input.style.padding = '6px';
+      input.style.fontSize = '14px';
+      input.style.textAlign = 'center';
+
+      input.addEventListener('input', e => {
+        const val = parseFloat(e.target.value);
+        if(!isNaN(val) && val>=0) {
+          budgetLimits[e.target.dataset.cat] = val;
+          updateFinances();
+        }
+      });
+
+      div.appendChild(label);
+      div.appendChild(input);
+      container.appendChild(div);
+    });
+  }
+
+  // Set current month filter control to current month
+  function setDefaultMonthFilter(){
+    const monthFilter = document.getElementById('monthFilter');
+    const today = new Date();
+    monthFilter.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`;
+    monthFilter.addEventListener('change', updateFinances);
+  }
+
+  // Event handlers for finances
+  function setupFinanceEventListeners(){
+    // Role selector
+    document.getElementById('roleSelect').addEventListener('change', e => {
+      currentUserRole = e.target.value;
+      updateFinances();
+    });
+    // Currency selector
+    document.getElementById('currencySelect').addEventListener('change', e => {
+      baseCurrency = e.target.value;
+      updateFinances();
+    });
+    // Total returns input handler
+    const totalReturnsInput = document.getElementById('widgetTotalReturns');
+    // We will allow returns updates via prompt on clicking the widget for simplicity
+    totalReturnsInput.parentElement.addEventListener('click', () => {
+      if(currentUserRole === 'viewer') return;
+      const val = prompt('Enter total returns amount:', totalReturns.toString());
+      if(val !== null){
+        const num = parseFloat(val);
+        if(!isNaN(num) && num >=0){
+          totalReturns = num;
+          updateFinances();
+          showToast('Total returns updated');
+        }
+      }
+    });
+
+    // Add expense form submission
+    document.getElementById('addExpenseForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if(currentUserRole === 'viewer'){
+        alert('You do not have permission to add expenses.');
+        return;
+      }
+      addExpenseFromForm();
+    });
+
+    // Expense attachment preview
+    const attInput = document.getElementById('expenseAttachment');
+    const attPreview = document.getElementById('attachmentPreviewContainer');
+    attInput.addEventListener('change', () => {
+      attPreview.innerHTML = '';
+      attachmentBase64 = null;
+      if(attInput.files.length >0){
+        const file = attInput.files[0];
+        const fr = new FileReader();
+        fr.onload = e => {
+          attachmentBase64 = e.target.result;
+          const img = document.createElement('img');
+          img.src = attachmentBase64;
+          img.alt = 'Receipt Preview';
+          img.style.maxHeight = '120px';
+          img.style.borderRadius = '8px';
+          attPreview.appendChild(img);
+        };
+        fr.readAsDataURL(file);
+      }
+    });
+
+    // Export buttons
+    document.getElementById('exportExpensesCSV').addEventListener('click', exportExpensesCSV);
+    document.getElementById('exportSummaryCSV').addEventListener('click', exportSummaryCSV);
+    document.getElementById('exportPDF').addEventListener('click', exportPDFReport);
+  }
+
+  // Add expense from form inputs
+  function addExpenseFromForm(){
+    const date= document.getElementById('expenseDate').value;
+    const category= document.getElementById('expenseCategory').value;
+    const amount = parseFloat(document.getElementById('expenseAmount').value);
+    const notes = document.getElementById('expenseNotes').value.trim();
+    const recurring = document.getElementById('recurringExpense').checked;
+
+    if(!date || !category || isNaN(amount) || amount<=0){
+      alert('Please enter all required fields correctly.');
+      return;
+    }
+    expenses.push({
+      id: expenseIdCounter++,
+      date,
+      category,
+      amount,
+      notes,
+      recurring,
+      attachment: attachmentBase64
+    });
+
+    // Reset form and attachment preview
+    document.getElementById('addExpenseForm').reset();
+    document.getElementById('attachmentPreviewContainer').innerHTML = '';
+    attachmentBase64 = null;
+
+    updateFinances();
+    showToast('Expense added successfully.');
+  }
+
+  // Toast notification helper
+  let toastTimeout=null;
+  function showToast(msg, duration=3000){
+    const toast = document.createElement('div');
+    toast.className = 'toast show';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    if(toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+      document.body.removeChild(toast);
+    }, duration);
+  }
+
+  // Format number to currency string currency-aware
+  function formatCurrency(amount, currency){
+    const symbols = {INR:'₹', USD:'$', EUR:'€', GBP:'£'};
+    return symbols[currency] + amount.toFixed(2);
+  }
+
+  // Update all finance UI elements including widgets, tables, charts
+  function updateFinances(){
+    const rate = currencyRates[baseCurrency]||1;
+    const monthFilter = document.getElementById('monthFilter').value;
+    let filteredExpenses = monthFilter ?
+      expenses.filter(e=>e.date.startsWith(monthFilter)) : expenses;
+    const totalExpenses = filteredExpenses.reduce((a,b)=>a+b.amount, 0);
+    document.getElementById('widgetTotalExpenses').textContent = formatCurrency(totalExpenses*rate, baseCurrency);
+    document.getElementById('widgetTotalReturns').textContent = formatCurrency(totalReturns*rate, baseCurrency);
+    const profitLoss = totalReturns - totalExpenses;
+    document.getElementById('widgetProfitLoss').textContent = formatCurrency(profitLoss*rate, baseCurrency);
+    document.getElementById('widgetROI').textContent = totalReturns ? ((profitLoss/totalReturns)*100).toFixed(2) + '%' : '0.00%';
+    const profitLossBtn = document.getElementById('profitLossBtn');
+    profitLossBtn.textContent = `Profit/Loss: ` + formatCurrency(profitLoss*rate, baseCurrency);
+    if(profitLoss >=0){
+      profitLossBtn.style.backgroundColor = 'var(--success)';
+      profitLossBtn.style.color = 'white';
+    } else {
+      profitLossBtn.style.backgroundColor = 'var(--red)';
+      profitLossBtn.style.color = 'white';
+    }
+    renderExpensesTable(filteredExpenses, rate);
+    renderPieChart(filteredExpenses, rate);
+    renderBudgetBarChart(filteredExpenses, rate);
+    adjustUIForRole();
+    checkBudgetAlerts(filteredExpenses, rate);
+  }
+
+  // Render expenses table
+  function renderExpensesTable(expList, rate){
+    const tbody = document.getElementById('expenseLogBody');
+    tbody.innerHTML='';
+    expList.forEach(e=>{
+      let receiptLink = e.attachment ? `<a href="${e.attachment}" target="_blank" style="color:var(--green);">View</a>` : '—';
+      let canEdit = currentUserRole==='admin' || currentUserRole==='accountant';
+      let delBtn = canEdit ? `<button class="btn-danger" style="font-size:12px; padding:4px 8px;" onclick="deleteExpense(${e.id})">Delete</button>` : '';
+      let tr = document.createElement('tr');
+      tr.innerHTML=`
+        <td>${e.date}</td>
+        <td>${e.category}</td>
+        <td>${formatCurrency(e.amount*rate, baseCurrency)}</td>
+        <td>${e.notes}</td>
+        <td>${e.recurring ? 'Yes' : 'No'}</td>
+        <td style="text-align:center;">${receiptLink}</td>
+        <td style="text-align:center;">${delBtn}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Delete Expense by ID
+  function deleteExpense(id){
+    if(confirm('Delete this expense?')){
+      expenses = expenses.filter(e=> e.id!==id);
+      updateFinances();
+      showToast('Expense deleted.');
+    }
+  }
+
+  // Adjust UI controls based on role
+  function adjustUIForRole(){
+    const isEditable = (currentUserRole==='admin' || currentUserRole==='accountant');
+    // Add expense form inputs disable/enable
+    let inputs = document.querySelectorAll('#addExpenseForm input, #addExpenseForm select, #addExpenseForm button');
+    inputs.forEach(i=> { 
+      if(i.type!=='submit') i.disabled = !isEditable;
+    });
+    // Delete buttons visibility
+    document.querySelectorAll('#expenseLogBody button.btn-danger').forEach(btn=>{
+      btn.style.display = isEditable ? 'inline-block' : 'none';
+    });
+  }
+
+  // Pie chart rendering
+  let pieChartInstance=null;
+  function renderPieChart(expList, rate){
+    let ctx = document.getElementById('expensesPieChart').getContext('2d');
+    if(pieChartInstance) pieChartInstance.destroy();
+    let dataByCat = {};
+    expenseCategories.forEach(c => dataByCat[c] = 0);
+    expList.forEach(e => {
+      if(e.category in dataByCat) dataByCat[e.category]+= e.amount * rate;
+      else dataByCat['Other'] += e.amount * rate;
+    });
+    pieChartInstance = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(dataByCat),
+        datasets: [{ data: Object.values(dataByCat),
+          backgroundColor: ['#4a7c2c','#f4a259','#8b7355','#7fb069','#d9534f','#d0a85a','#739668','#a3c19c','#789262'] }]
+      },
+      options: { responsive:true, plugins:{ legend:{ position: 'bottom', labels: { color: getComputedStyle(document.body).color }}} }
+    });
+  }
+
+  // Budget Bar chart rendering
+  let budgetBarChartInstance=null;
+  function renderBudgetBarChart(expList, rate){
+    let ctx = document.getElementById('budgetBarChart').getContext('2d');
+    if(budgetBarChartInstance) budgetBarChartInstance.destroy();
+    let spentPerCat = {};
+    expenseCategories.forEach(c => spentPerCat[c]=0);
+    expList.forEach(e=>{
+      spentPerCat[e.category] = (spentPerCat[e.category]||0) + e.amount * rate;
+    });
+    const budgetsScaled = expenseCategories.map(c => (budgetLimits[c]||0) * rate);
+    const spentArray = expenseCategories.map(c => spentPerCat[c]||0);
+  
+    budgetBarChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: expenseCategories,
+        datasets: [
+          { label: 'Spent', data: spentArray, backgroundColor: '#4a7c2c' },
+          { label: 'Budget', data: budgetsScaled, backgroundColor: '#f4a259' }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true }, x: { stacked: false } }
+      }
+    });
+  }
+
+  // Budget alert notifications
+  function checkBudgetAlerts(expList, rate){
+    let messages = [];
+    expenseCategories.forEach(cat => {
+      const spent = expList.filter(e=>e.category===cat).reduce((a,b)=>a+b.amount,0) * rate;
+      const budget = (budgetLimits[cat]||0)*rate;
+      if (budget > 0 && spent > budget*0.9) {
+        messages.push(`Warning: Spending in "${cat}" reached ${Math.round(spent/budget*100)}% of budget.`);
+      }
+    });
+    if(messages.length>0) showFinanceNotification(messages.join(' '));
+    else hideFinanceNotification();
+  }
+  let notificationTimeout=null;
+  function showFinanceNotification(msg){
+    const notif = document.getElementById('financeNotification');
+    notif.textContent = msg;
+    notif.style.display = 'block';
+    if(notificationTimeout) clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+      notif.style.display = 'none';
+      notif.textContent = '';
+    }, 8000);
+  }
+  function hideFinanceNotification(){
+    const notif = document.getElementById('financeNotification');
+    notif.style.display = 'none';
+    notif.textContent = '';
+  }
+
+  // Exports
+  function exportTableToCSV(filename, rows){
+    const csv = rows.map(row => row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv],{type:'text/csv'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+  document.getElementById('exportExpensesCSV').addEventListener('click', () => {
+    const month = document.getElementById('monthFilter').value;
+    let filtered = month ? expenses.filter(e=>e.date.startsWith(month)) : expenses;
+    const rate = currencyRates[baseCurrency]||
