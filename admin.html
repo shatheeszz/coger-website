@@ -220,7 +220,6 @@
 </div>
 
 <div class="main" role="main" tabindex="0">
-
   <div class="top-bar">
     <div class="title">Admin Dashboard</div>
     <div>
@@ -376,7 +375,7 @@
         </div>
         <div style="grid-column: span 2;">
           <label for="expenseNotes" style="display:block; font-weight:600; margin-bottom:4px;">Notes</label>
-          <input type="text" id="expenseNotes" placeholder="Optional notes" style="width:100%; padding:10px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px;" />
+          <input type="text" id="expenseNotes" placeholder="Optional notes (description, etc.)" style="width:100%; padding:10px; border: 2px solid var(--sage); border-radius: 8px; font-size: 14px;" />
         </div>
         <div style="display:flex; flex-direction: column; align-items: center;">
           <label for="recurringExpense" style="font-weight:600; margin-bottom:6px;">Recurring?</label>
@@ -427,11 +426,585 @@
 </div>
 
 <script>
-  // Core data and functions are included below...
+  // Sidebar navigation with toggling
+  document.querySelectorAll('.menu-item').forEach(menuItem => {
+    menuItem.addEventListener('click', () => {
+      document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      menuItem.classList.add('active');
+      const sectionId = menuItem.getAttribute('data-section');
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.classList.add('active');
+        section.focus();
+      }
+      if(sectionId === 'analytics' && typeof renderSalesChart === 'function') renderSalesChart();
+      if(sectionId === 'finances' && typeof updateFinances === 'function') updateFinances();
+    });
+  });
 
-  // This snippet is limited due to message size,
-  // For full JavaScript including all handlers, charts and exports,
-  // please refer to the previous full code messages or ask to provide separately.
+  // Dark mode toggle
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggleBtn.textContent = '☀️ Light Mode';
+      themeToggleBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      document.body.classList.remove('dark-theme');
+      themeToggleBtn.textContent = '🌙 Dark Mode';
+      themeToggleBtn.setAttribute('aria-pressed', 'false');
+    }
+    localStorage.setItem('preferredTheme', theme);
+  }
+  themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = localStorage.getItem('preferredTheme') || 'light';
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(localStorage.getItem('preferredTheme') || 'light');
+    loadAllData();
+  });
+
+  // Data samples
+  const products = [
+    { id: 1, name: 'Organic Seeds', category: 'Seeds', price: 29.99, stock: 150, imageUrl: 'https://via.placeholder.com/50?text=Seeds' },
+    { id: 2, name: 'Bio Fertilizer', category: 'Fertilizers', price: 45.5, stock: 8, imageUrl: 'https://via.placeholder.com/50?text=Fertilizer' },
+    { id: 3, name: 'Garden Tools Set', category: 'Tools', price: 89.99, stock: 45, imageUrl: 'https://via.placeholder.com/50?text=Tools' },
+  ];
+  const orders = [
+    { id: 101, customer: 'John Doe', total: 125.5, status: 'Pending' },
+    { id: 102, customer: 'Jane Smith', total: 299.99, status: 'Shipped' },
+    { id: 103, customer: 'Bob Johnson', total: 75.0, status: 'Delivered' },
+  ];
+  const customers = [
+    { name: 'John Doe', email: 'john@example.com', orders: 3, spent: 450 },
+    { name: 'Jane Smith', email: 'jane@example.com', orders: 5, spent: 890 },
+  ];
+
+  let expenseCategories = ['Processing', 'Labor', 'Maintenance', 'Travel', 'Transport', 'Packaging', 'Utilities', 'Marketing', 'Other'];
+  let budgetLimits = {
+    Processing: 40000,
+    Labor: 30000,
+    Maintenance: 10000,
+    Travel: 20000,
+    Transport: 15000,
+    Packaging: 10000,
+    Utilities: 5000,
+    Marketing: 7000,
+    Other: 5000,
+  };
+  let expenses = [];
+  let expenseIdCounter = 1;
+  let totalReturns = 100000;
+  let currencyRates = { INR: 1, USD: 0.012, EUR: 0.011, GBP: 0.0097 };
+  let baseCurrency = 'INR';
+  let currentUserRole = 'admin';
+  let pieChart = null;
+  let budgetBarChart = null;
+  let attachmentBase64 = null;
+
+  // Load all initial data & setup event listeners
+  function loadAllData() {
+    updateDashboardSummary();
+    loadProductsTable('');
+    loadOrdersTable('');
+    loadCustomersTable('');
+    renderSalesChart();
+    initializeFinanceUI();
+    updateFinances();
+    setupSearchFilters();
+  }
+
+  function updateDashboardSummary() {
+    document.getElementById('dashboardTotalProducts').textContent = products.length;
+    document.getElementById('dashboardTotalOrders').textContent = orders.length;
+    document.getElementById('dashboardTotalCustomers').textContent = customers.length;
+    const sales = orders.reduce((s, o) => s + o.total, 0);
+    document.getElementById('dashboardMonthlySales').textContent = `₹${sales.toFixed(2)}`;
+  }
+
+  function loadProductsTable(filter) {
+    const tbody = document.getElementById('productsList');
+    tbody.innerHTML = '';
+    products
+      .filter(p => p.name.toLowerCase().includes(filter.toLowerCase()))
+      .forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><img src="${p.imageUrl}" alt="${p.name}" style="width:50px; border-radius:6px;" /></td>
+          <td>${p.name}</td><td>${p.category}</td><td>₹${p.price.toFixed(2)}</td><td>${p.stock}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  }
+
+  function loadOrdersTable(filter) {
+    const tbody = document.getElementById('ordersList');
+    tbody.innerHTML = '';
+    orders
+      .filter(o => o.customer.toLowerCase().includes(filter.toLowerCase()))
+      .forEach(o => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${o.id}</td><td>${o.customer}</td><td>₹${o.total.toFixed(2)}</td><td>${o.status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  }
+
+  function loadCustomersTable(filter) {
+    const tbody = document.getElementById('customersList');
+    tbody.innerHTML = '';
+    customers
+      .filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
+      .forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.name}</td><td>${c.email}</td><td>${c.orders}</td><td>₹${c.spent}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  }
+
+  function setupSearchFilters() {
+    document.getElementById('productSearch').addEventListener('input', e => loadProductsTable(e.target.value));
+    document.getElementById('orderSearch').addEventListener('input', e => loadOrdersTable(e.target.value));
+    document.getElementById('customerSearch').addEventListener('input', e => loadCustomersTable(e.target.value));
+  }
+
+  // Sales chart
+  let salesChartInstance;
+  function renderSalesChart() {
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    if (salesChartInstance) salesChartInstance.destroy();
+    salesChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Sales',
+          data: [1200, 1900, 1500, 2200, 1700, 1400, 2100],
+          borderColor: '#4a7c2c',
+          backgroundColor: 'rgba(74,124,44,0.3)',
+          fill: true,
+          tension: 0.2
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+  }
+
+  // Finances initialization
+  function initializeFinanceUI() {
+    populateCategoryDropdown();
+    populateBudgetInputs();
+    setupFinanceEventListeners();
+    setDefaultMonthFilter();
+  }
+
+  function populateCategoryDropdown() {
+    const placeholder = expenseCategorySelect.querySelector('option[value=""]');
+    expenseCategorySelect.innerHTML = '';
+    expenseCategorySelect.appendChild(placeholder);
+    expenseCategories.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      expenseCategorySelect.appendChild(opt);
+    });
+  }
+
+  categorySearchInput.addEventListener('input', () => {
+    const filter = categorySearchInput.value.toLowerCase();
+    Array.from(expenseCategorySelect.options).forEach(opt => {
+      if (opt.value === '') return;
+      opt.style.display = opt.text.toLowerCase().includes(filter) ? 'block' : 'none';
+    });
+    if (expenseCategorySelect.selectedIndex >= 0) {
+      const selOpt = expenseCategorySelect.options[expenseCategorySelect.selectedIndex];
+      if (selOpt && selOpt.style.display === 'none')
+        expenseCategorySelect.selectedIndex = 0;
+    }
+  });
+
+  function populateBudgetInputs() {
+    const container = document.getElementById('budgetLimitsContainer');
+    container.innerHTML = '';
+    expenseCategories.forEach(cat => {
+      const div = document.createElement('div');
+      div.style.minWidth = '140px';
+      div.style.backgroundColor = 'var(--sage)';
+      div.style.color = '#000';
+      div.style.padding = '10px';
+      div.style.borderRadius = '8px';
+      div.style.textAlign = 'center';
+      div.style.userSelect = 'none';
+
+      const label = document.createElement('div');
+      label.textContent = cat;
+      label.style.fontWeight = '600';
+      label.style.marginBottom = '8px';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '0';
+      input.value = budgetLimits[cat] || 0;
+      input.dataset.cat = cat;
+      input.style.width = '100%';
+      input.style.padding = '6px';
+      input.style.fontSize = '14px';
+      input.style.textAlign = 'center';
+
+      input.addEventListener('input', e => {
+        const val = parseFloat(e.target.value);
+        if (!isNaN(val) && val >= 0) {
+          budgetLimits[e.target.dataset.cat] = val;
+          updateFinances();
+        }
+      });
+
+      div.appendChild(label);
+      div.appendChild(input);
+      container.appendChild(div);
+    });
+  }
+
+  function setDefaultMonthFilter() {
+    const monthFilter = document.getElementById('monthFilter');
+    const today = new Date();
+    monthFilter.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    monthFilter.addEventListener('change', updateFinances);
+  }
+
+  function setupFinanceEventListeners() {
+    document.getElementById('roleSelect').addEventListener('change', e => {
+      currentUserRole = e.target.value;
+      updateFinances();
+    });
+    document.getElementById('currencySelect').addEventListener('change', e => {
+      baseCurrency = e.target.value;
+      updateFinances();
+    });
+    const totalReturnsInput = document.getElementById('widgetTotalReturns');
+    totalReturnsInput.parentElement.addEventListener('click', () => {
+      if (currentUserRole === 'viewer') return;
+      const val = prompt('Enter total returns amount:', totalReturns.toString());
+      if (val !== null) {
+        const num = parseFloat(val);
+        if (!isNaN(num) && num >= 0) {
+          totalReturns = num;
+          updateFinances();
+          showToast('Total returns updated');
+        }
+      }
+    });
+
+    document.getElementById('addExpenseForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (currentUserRole === 'viewer') {
+        alert('You do not have permission to add expenses.');
+        return;
+      }
+      addExpenseFromForm();
+    });
+
+    const attInput = document.getElementById('expenseAttachment');
+    const attPreview = document.getElementById('attachmentPreviewContainer');
+    attInput.addEventListener('change', () => {
+      attPreview.innerHTML = '';
+      attachmentBase64 = null;
+      if (attInput.files.length > 0) {
+        const file = attInput.files[0];
+        const fr = new FileReader();
+        fr.onload = e => {
+          attachmentBase64 = e.target.result;
+          const img = document.createElement('img');
+          img.src = attachmentBase64;
+          img.alt = 'Receipt Preview';
+          img.style.maxHeight = '120px';
+          img.style.borderRadius = '8px';
+          attPreview.appendChild(img);
+        };
+        fr.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('exportExpensesCSV').addEventListener('click', exportExpensesCSV);
+    document.getElementById('exportSummaryCSV').addEventListener('click', exportSummaryCSV);
+    document.getElementById('exportPDF').addEventListener('click', exportPDFReport);
+  }
+
+  function addExpenseFromForm() {
+    const date = document.getElementById('expenseDate').value;
+    const category = document.getElementById('expenseCategory').value;
+    const amount = parseFloat(document.getElementById('expenseAmount').value);
+    const notes = document.getElementById('expenseNotes').value.trim();
+    const recurring = document.getElementById('recurringExpense').checked;
+
+    if (!date || !category || isNaN(amount) || amount <= 0) {
+      alert('Please enter all required fields correctly.');
+      return;
+    }
+    expenses.push({
+      id: expenseIdCounter++,
+      date,
+      category,
+      amount,
+      notes,
+      recurring,
+      attachment: attachmentBase64
+    });
+
+    document.getElementById('addExpenseForm').reset();
+    document.getElementById('attachmentPreviewContainer').innerHTML = '';
+    attachmentBase64 = null;
+
+    updateFinances();
+    showToast('Expense added successfully.');
+  }
+
+  let toastTimeout = null;
+  function showToast(msg, duration = 3000) {
+    const toast = document.createElement('div');
+    toast.className = 'toast show';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+      document.body.removeChild(toast);
+    }, duration);
+  }
+
+  function formatCurrency(amount, currency) {
+    const symbols = { INR: '₹', USD: '$', EUR: '€', GBP: '£' };
+    return symbols[currency] + amount.toFixed(2);
+  }
+
+  function updateFinances() {
+    const rate = currencyRates[baseCurrency] || 1;
+    const monthFilter = document.getElementById('monthFilter').value;
+    let filteredExpenses = monthFilter ?
+      expenses.filter(e => e.date.startsWith(monthFilter)) : expenses;
+    const totalExpenses = filteredExpenses.reduce((a, b) => a + b.amount, 0);
+    document.getElementById('widgetTotalExpenses').textContent = formatCurrency(totalExpenses * rate, baseCurrency);
+    document.getElementById('widgetTotalReturns').textContent = formatCurrency(totalReturns * rate, baseCurrency);
+    const profitLoss = totalReturns - totalExpenses;
+    document.getElementById('widgetProfitLoss').textContent = formatCurrency(profitLoss * rate, baseCurrency);
+    document.getElementById('widgetROI').textContent = totalReturns ? ((profitLoss / totalReturns) * 100).toFixed(2) + '%' : '0.00%';
+    const profitLossBtn = document.getElementById('profitLossBtn');
+    profitLossBtn.textContent = `Profit/Loss: ` + formatCurrency(profitLoss * rate, baseCurrency);
+    if (profitLoss >= 0) {
+      profitLossBtn.style.backgroundColor = 'var(--success)';
+      profitLossBtn.style.color = 'white';
+    } else {
+      profitLossBtn.style.backgroundColor = 'var(--red)';
+      profitLossBtn.style.color = 'white';
+    }
+    renderExpensesTable(filteredExpenses, rate);
+    renderPieChart(filteredExpenses, rate);
+    renderBudgetBarChart(filteredExpenses, rate);
+    adjustUIForRole();
+    checkBudgetAlerts(filteredExpenses, rate);
+  }
+
+  function renderExpensesTable(expList, rate) {
+    const tbody = document.getElementById('expenseLogBody');
+    tbody.innerHTML = '';
+    expList.forEach(e => {
+      let receiptLink = e.attachment ? `<a href="${e.attachment}" target="_blank" style="color:var(--green);">View</a>` : '—';
+      let canEdit = currentUserRole === 'admin' || currentUserRole === 'accountant';
+      let delBtn = canEdit ? `<button class="btn-danger" style="font-size:12px; padding:4px 8px;" onclick="deleteExpense(${e.id})">Delete</button>` : '';
+      let tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${e.date}</td>
+        <td>${e.category}</td>
+        <td>${formatCurrency(e.amount * rate, baseCurrency)}</td>
+        <td>${e.notes}</td>
+        <td>${e.recurring ? 'Yes' : 'No'}</td>
+        <td style="text-align:center;">${receiptLink}</td>
+        <td style="text-align:center;">${delBtn}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function deleteExpense(id) {
+    if (confirm('Delete this expense?')) {
+      expenses = expenses.filter(e => e.id !== id);
+      updateFinances();
+      showToast('Expense deleted.');
+    }
+  }
+
+  function adjustUIForRole() {
+    const isEditable = (currentUserRole === 'admin' || currentUserRole === 'accountant');
+    let inputs = document.querySelectorAll('#addExpenseForm input, #addExpenseForm select, #addExpenseForm button');
+    inputs.forEach(i => {
+      if (i.type !== 'submit') i.disabled = !isEditable;
+    });
+    document.querySelectorAll('#expenseLogBody button.btn-danger').forEach(btn => {
+      btn.style.display = isEditable ? 'inline-block' : 'none';
+    });
+  }
+
+  let pieChartInstance = null;
+  function renderPieChart(expList, rate) {
+    let ctx = document.getElementById('expensesPieChart').getContext('2d');
+    if (pieChartInstance) pieChartInstance.destroy();
+    let dataByCat = {};
+    expenseCategories.forEach(c => dataByCat[c] = 0);
+    expList.forEach(e => {
+      if (e.category in dataByCat) dataByCat[e.category] += e.amount * rate;
+      else dataByCat['Other'] += e.amount * rate;
+    });
+    pieChartInstance = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(dataByCat),
+        datasets: [{ data: Object.values(dataByCat),
+          backgroundColor: ['#4a7c2c','#f4a259','#8b7355','#7fb069','#d9534f','#d0a85a','#739668','#a3c19c','#789262'] }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).color } } } }
+    });
+  }
+
+  let budgetBarChartInstance = null;
+  function renderBudgetBarChart(expList, rate) {
+    let ctx = document.getElementById('budgetBarChart').getContext('2d');
+    if (budgetBarChartInstance) budgetBarChartInstance.destroy();
+    let spentPerCat = {};
+    expenseCategories.forEach(c => spentPerCat[c] = 0);
+    expList.forEach(e => {
+      spentPerCat[e.category] = (spentPerCat[e.category] || 0) + e.amount * rate;
+    });
+    const budgetsScaled = expenseCategories.map(c => (budgetLimits[c] || 0) * rate);
+    const spentArray = expenseCategories.map(c => spentPerCat[c] || 0);
+
+    budgetBarChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: expenseCategories,
+        datasets: [
+          { label: 'Spent', data: spentArray, backgroundColor: '#4a7c2c' },
+          { label: 'Budget', data: budgetsScaled, backgroundColor: '#f4a259' }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true }, x: { stacked: false } }
+      }
+    });
+  }
+
+  function checkBudgetAlerts(expList, rate) {
+    let messages = [];
+    expenseCategories.forEach(cat => {
+      const spent = expList.filter(e => e.category === cat).reduce((a, b) => a + b.amount, 0) * rate;
+      const budget = (budgetLimits[cat] || 0) * rate;
+      if (budget > 0 && spent > budget * 0.9) {
+        messages.push(`Warning: Spending in "${cat}" reached ${Math.round(spent / budget * 100)}% of budget.`);
+      }
+    });
+    if (messages.length > 0) showFinanceNotification(messages.join(' '));
+    else hideFinanceNotification();
+  }
+
+  let notificationTimeout = null;
+  function showFinanceNotification(msg) {
+    const notif = document.getElementById('financeNotification');
+    notif.textContent = msg;
+    notif.style.display = 'block';
+    if (notificationTimeout) clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+      notif.style.display = 'none';
+      notif.textContent = '';
+    }, 8000);
+  }
+  function hideFinanceNotification() {
+    const notif = document.getElementById('financeNotification');
+    notif.style.display = 'none';
+    notif.textContent = '';
+  }
+
+  function exportTableToCSV(filename, rows) {
+    const csv = rows.map(row => row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  document.getElementById('exportExpensesCSV').addEventListener('click', () => {
+    const month = document.getElementById('monthFilter').value;
+    let filtered = month ? expenses.filter(e => e.date.startsWith(month)) : expenses;
+    const rate = currencyRates[baseCurrency] || 1;
+
+    const rows = [['Date', 'Category', `Amount (${baseCurrency})`, 'Notes', 'Recurring']];
+    filtered.forEach(e => rows.push([e.date, e.category, (e.amount * rate).toFixed(2), e.notes, e.recurring ? 'Yes' : 'No']));
+    exportTableToCSV('expenses.csv', rows);
+  });
+
+  document.getElementById('exportSummaryCSV').addEventListener('click', () => {
+    const month = document.getElementById('monthFilter').value;
+    let filtered = month ? expenses.filter(e => e.date.startsWith(month)) : expenses;
+    const rate = currencyRates[baseCurrency] || 1;
+
+    const totalExpenses = filtered.reduce((a, b) => a + b.amount, 0) * rate;
+    const profitLoss = totalReturns * rate - totalExpenses;
+    const roi = totalReturns ? (profitLoss / (totalReturns * rate)) * 100 : 0;
+
+    const rows = [
+      ['Metric', 'Value'],
+      ['Total Expenses', totalExpenses.toFixed(2)],
+      ['Total Returns', (totalReturns * rate).toFixed(2)],
+      ['Profit / Loss', profitLoss.toFixed(2)],
+      ['ROI %', roi.toFixed(2)]
+    ];
+    exportTableToCSV('financial_summary.csv', rows);
+  });
+
+  document.getElementById('exportPDF').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Financial Summary Report', 14, 20);
+    const monthFilter = document.getElementById('monthFilter').value || 'All Months';
+    doc.setFontSize(12);
+    doc.text(`Month Filter: ${monthFilter}`, 14, 30);
+    doc.text(`Currency: ${baseCurrency}`, 14, 38);
+    const rate = currencyRates[baseCurrency] || 1;
+    let filteredExpenses = monthFilter ?
+      expenses.filter(e => e.date.startsWith(monthFilter)) : expenses;
+    const rows = filteredExpenses.map(e => [
+      e.date,
+      e.category,
+      formatCurrency(e.amount * rate, baseCurrency),
+      e.notes,
+      e.recurring ? 'Yes' : 'No'
+    ]);
+
+    doc.autoTable({
+      head: [['Date', 'Category', 'Amount', 'Notes', 'Recurring']],
+      body: rows,
+      startY: 45,
+      theme: 'grid',
+      styles: { fontSize: 9 }
+    });
+
+    const totalExpenses = filteredExpenses.reduce((a, b) => a + b.amount, 0) * rate;
+    const profitLoss = totalReturns * rate - totalExpenses;
+    const roi = totalReturns ? (profitLoss / (totalReturns * rate)) * 100 : 0;
+
+    doc.text(`Total Expenses: ${formatCurrency(totalExpenses, baseCurrency)}`, 14, doc.lastAutoTable.finalY + 15);
+    doc.text(`Total Returns: ${formatCurrency(totalReturns * rate, baseCurrency)}`, 14, doc.lastAutoTable.finalY + 23);
+    doc.text(`Profit / Loss: ${formatCurrency(profitLoss, baseCurrency)}`, 14, doc.lastAutoTable.finalY + 31);
+    doc.text(`ROI %: ${roi.toFixed(2)}%`, 14, doc.lastAutoTable.finalY + 39);
+
+    doc.save('financial_report.pdf');
+  });
 </script>
 
 </body>
