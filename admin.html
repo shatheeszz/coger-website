@@ -107,6 +107,11 @@ body {
   border-radius: 12px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
   border-left: 4px solid var(--sage);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .stat-card.warn {
   border-left-color: var(--orange);
@@ -349,6 +354,10 @@ body {
   pointer-events: auto;
 }
 </style>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
 <div class="notify-bar" id="notifyBar">
@@ -371,35 +380,56 @@ body {
     <div class="title">Admin Dashboard</div>
     <div>Admin User 🌱</div>
   </div>
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-icon">💰</div>
-      <div class="stat-value" id="totalRevenue">₹0</div>
-      <div>Total Revenue</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">📦</div>
-      <div class="stat-value" id="totalProducts">0</div>
-      <div>Total Products</div>
-    </div>
-    <div class="stat-card warn">
-      <div class="stat-icon">⚠️</div>
-      <div class="stat-value" id="lowStock">0</div>
-      <div>Low Stock Items</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">🛒</div>
-      <div class="stat-value" id="pendingOrders">0</div>
-      <div>Pending Orders</div>
-    </div>
-  </div>
 
   <div class="section active" id="dashboard">
     <div class="sec-header">
       <div class="sec-title">Dashboard Overview</div>
     </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="totalRevenue">₹0</div>
+        <div>Total Revenue</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-value" id="totalProducts">0</div>
+        <div>Total Products</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-value" id="lowStock">0</div>
+        <div>Low Stock Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛒</div>
+        <div class="stat-value" id="pendingOrders">0</div>
+        <div>Pending Orders</div>
+      </div>
+      <!-- New stat cards -->
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="totalCustomers">0</div>
+        <div>Total Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛍️</div>
+        <div class="stat-value" id="totalOrders">0</div>
+        <div>Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value" id="avgOrderValue">₹0</div>
+        <div>Average Order Value</div>
+      </div>
+    </div>
+
+    <h3>Sales Trend</h3>
+    <canvas id="salesChart" height="150" aria-label="Sales trend chart" role="img"></canvas>
+
     <h3>Recent Activity</h3>
-    <p>Welcome to Coger Agri Admin Dashboard. Manage your agriculture e-commerce platform efficiently.</p>
+    <ul id="recentActivity" style="list-style: none; padding-left: 0;"></ul>
   </div>
 
   <div class="section" id="products">
@@ -559,7 +589,7 @@ body {
       { id: 103, customer: "Bob Johnson", total: 75.0, status: "delivered", courier: "DHL", tracking: "DHL789012" },
       { id: 104, customer: "Alice Brown", total: 450.0, status: "pending", courier: "", tracking: "" },
     ];
-  let customers = [
+  let customers = JSON.parse(localStorage.getItem("customers")) || [
     { name: "John Doe", email: "john@example.com", orders: 3, spent: 450 },
     { name: "Jane Smith", email: "jane@example.com", orders: 5, spent: 890 },
   ];
@@ -585,6 +615,8 @@ body {
     loadOrders();
     loadCustomers();
     updateStats();
+    loadRecentActivity();
+    initSalesChart();
     checkNotifications();
     bindEvents();
   }
@@ -682,6 +714,12 @@ body {
     let lowStock = products.filter((p) => p.stock < 10).length;
     document.getElementById("lowStock").textContent = lowStock;
     document.getElementById("pendingOrders").textContent = orders.filter((o) => o.status === "pending").length;
+
+    document.getElementById("totalCustomers").textContent = customers.length;
+    document.getElementById("totalOrders").textContent = orders.length;
+
+    let avgOrder = orders.length ? (orders.reduce((s, o) => s + o.total, 0) / orders.length).toFixed(2) : 0;
+    document.getElementById("avgOrderValue").textContent = "₹" + avgOrder;
   }
 
   function checkNotifications() {
@@ -884,6 +922,50 @@ body {
         const id = parseInt(e.target.getAttribute("data-id"));
         editOrder(id);
       });
+    });
+  }
+
+  function loadRecentActivity() {
+    const recent = orders.slice(-5).reverse(); // last 5 orders
+    const ul = document.getElementById("recentActivity");
+    ul.innerHTML = recent.map(o =>
+      `<li><strong>Order #${o.id}</strong> by ${o.customer} - ₹${o.total.toFixed(2)} - <em>${o.status.toUpperCase()}</em></li>`
+    ).join("");
+  }
+
+  let salesChartInstance = null;
+  function initSalesChart() {
+    const ctx = document.getElementById("salesChart").getContext("2d");
+    // Destroy previous chart instance if exists (handles reloads)
+    if (salesChartInstance) {
+      salesChartInstance.destroy();
+    }
+    salesChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], // Example labels
+        datasets: [{
+          label: 'Revenue',
+          data: [1200, 1900, 1500, 2200, 1700, 1400, 2100], // Example data
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
     });
   }
 
