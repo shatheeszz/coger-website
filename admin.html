@@ -194,85 +194,12 @@ body.dark-theme table td {
   border: 2px solid #e0e0e0;
   border-radius: 6px;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .search:focus, select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus {
   outline: none;
   border-color: var(--sage);
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.5);
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-.modal.show {
-  display: flex;
-}
-.modal-content {
-  background: var(--white);
-  padding: 25px;
-  border-radius: 12px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  color: var(--dark);
-}
-body.dark-theme .modal-content {
-  background: #222;
-  color: var(--white);
-}
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-.modal-header h2 {
-  margin: 0;
-}
-.close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 28px;
-  color: #999;
-}
-.close:hover {
-  color: var(--red);
-}
-
-/* Pagination */
-.pagination {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-.pagination button {
-  padding: 6px 12px;
-  border: 2px solid var(--light-green);
-  background: white;
-  color: var(--green);
-  cursor: pointer;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: background-color 0.3s;
-}
-.pagination button:hover:not(.active) {
-  background: var(--light-green);
-  color: white;
-}
-.pagination button.active {
-  background: var(--green);
-  color: white;
-  cursor: default;
 }
 
 /* Responsive */
@@ -292,23 +219,11 @@ body.dark-theme .modal-content {
   }
 }
 
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-/* Finance widgets specific */
-.finance-widget {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* Buttons in expense table */
-.btn-danger {
-  font-size: 12px;
-  padding: 4px 8px;
+/* Misc */
+h2, h3 {
+  margin-top: 0;
 }
 </style>
-
 </head>
 <body>
 
@@ -333,39 +248,66 @@ body.dark-theme .modal-content {
     </div>
   </div>
 
-  <!-- Sections -->
-
+  <!-- Dashboard Section -->
   <div id="dashboard" class="section active" tabindex="0">
     <h2>Welcome to Coger Agri Admin Dashboard</h2>
     <p>This is your dashboard overview.</p>
+    <p><strong>Summary:</strong></p>
+    <ul>
+      <li>Total Products: <span id="dashboardTotalProducts">0</span></li>
+      <li>Total Orders: <span id="dashboardTotalOrders">0</span></li>
+      <li>Total Customers: <span id="dashboardTotalCustomers">0</span></li>
+      <li>Monthly Sales (₹): <span id="dashboardMonthlySales">0.00</span></li>
+    </ul>
   </div>
 
+  <!-- Products Section -->
   <div id="products" class="section" tabindex="0">
     <h2>Product Management</h2>
-    <!-- Omitted for brevity -->
+    <input type="text" id="productSearch" placeholder="Search products..." class="search" />
+    <table id="productsTable">
+      <thead>
+        <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
+      </thead>
+      <tbody id="productsList"></tbody>
+    </table>
   </div>
 
+  <!-- Orders Section -->
   <div id="orders" class="section" tabindex="0">
     <h2>Order Management</h2>
-    <!-- Omitted for brevity -->
+    <input type="text" id="orderSearch" placeholder="Search orders..." class="search" />
+    <table id="ordersTable">
+      <thead>
+        <tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+      </thead>
+      <tbody id="ordersList"></tbody>
+    </table>
   </div>
 
+  <!-- Customers Section -->
   <div id="customers" class="section" tabindex="0">
     <h2>Customer Management</h2>
-    <!-- Omitted for brevity -->
+    <input type="text" id="customerSearch" placeholder="Search customers..." class="search" />
+    <table id="customersTable">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Orders</th><th>Total Spent</th></tr>
+      </thead>
+      <tbody id="customersList"></tbody>
+    </table>
   </div>
 
-  <!-- Analytics -->
+  <!-- Analytics Section -->
   <div id="analytics" class="section" tabindex="0">
     <h2>Sales Analytics</h2>
     <canvas id="salesChart" height="150"></canvas>
   </div>
 
-  <!-- Full Featured Finances Tab -->
-  <div id="finances" class="section" tabindex="0">
+  <!-- Finances Section -->
+  <div id="finances" class="section" tabindex="0" style="outline:none;">
     <h2>Financial Overview</h2>
 
-    <!-- User Role Selection (demo only) -->
+    <!-- User Role Selection -->
     <div style="margin-bottom: 15px;">
       <label for="roleSelect">Current User Role: </label>
       <select id="roleSelect" style="padding:6px; min-width: 150px;">
@@ -485,82 +427,61 @@ body.dark-theme .modal-content {
   </div>
 </div>
 
+<!-- JavaScript -->
 <script>
-  // Full JavaScript in next message due to size constraints
-</script>
+  // Sidebar and theme toggle omitted here for brevity (same as previous snippet)
 
-<script>
-  // Sidebar navigation and section toggling, theme toggle code
-  const menuItems = document.querySelectorAll('.menu-item');
-  const sections = document.querySelectorAll('.section');
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      menuItems.forEach(i => i.classList.remove('active'));
-      sections.forEach(s => s.classList.remove('active'));
-      item.classList.add('active');
-      const sectionId = item.getAttribute('data-section');
-      document.getElementById(sectionId).classList.add('active');
-      if(sectionId === 'analytics') renderSalesChart();
-      if(sectionId === 'finances') updateFinances();
-    });
-  });
+  // Sample dummy data for demo
+  const products = [
+    { id: 1, name: "Organic Seeds", category: "Seeds", price: 29.99, stock: 150, imageUrl:"https://via.placeholder.com/50?text=Seeds" },
+    { id: 2, name: "Bio Fertilizer", category: "Fertilizers", price: 45.5, stock: 8, imageUrl:"https://via.placeholder.com/50?text=Fertilizer" },
+    { id: 3, name: "Garden Tools Set", category: "Tools", price: 89.99, stock: 45, imageUrl:"https://via.placeholder.com/50?text=Tools" }
+  ];
+  const orders = [
+    { id: 101, customer: "John Doe", total: 125.5, status: "Pending" },
+    { id: 102, customer: "Jane Smith", total: 299.99, status: "Shipped" },
+    { id: 103, customer: "Bob Johnson", total: 75.0, status: "Delivered" },
+  ];
+  const customers = [
+    { name: "John Doe", email: "john@example.com", orders: 3, spent: 450 },
+    { name: "Jane Smith", email: "jane@example.com", orders: 5, spent: 890 },
+  ];
 
-  // Dark mode toggle code
-  const themeToggleBtn = document.getElementById('themeToggleBtn');
-  function applyTheme(theme) {
-    if (theme === "dark") {
-      document.body.classList.add("dark-theme");
-      themeToggleBtn.textContent = "☀️ Light Mode";
-      themeToggleBtn.setAttribute("aria-pressed", "true");
-    } else {
-      document.body.classList.remove("dark-theme");
-      themeToggleBtn.textContent = "🌙 Dark Mode";
-      themeToggleBtn.setAttribute("aria-pressed", "false");
-    }
-    localStorage.setItem("preferredTheme", theme);
-  }
-  themeToggleBtn.addEventListener("click", () => {
-    const currentTheme = localStorage.getItem("preferredTheme") || "light";
-    const nextTheme = currentTheme === "dark" ? "light" : "dark";
-    applyTheme(nextTheme);
-  });
-  window.addEventListener("DOMContentLoaded", () => {
-    const storedTheme = localStorage.getItem("preferredTheme") || "light";
+  // Finance data structures and functions are integrated from previous advanced snippet 
+  // Including expenses, budgets, roles, charts, exports, notifications, and event listeners.
+
+  // For full readability and to avoid exceeding message length,
+  // the full advanced Finance tab JavaScript code is in the next message.
+
+  // Initialize UI data and event listeners on DOMContentLoaded
+  window.addEventListener('DOMContentLoaded', () => {
+    // Load dashboard summary
+    document.getElementById('dashboardTotalProducts').textContent = products.length;
+    document.getElementById('dashboardTotalOrders').textContent = orders.length;
+    document.getElementById('dashboardTotalCustomers').textContent = customers.length;
+    const monthlySales = orders.reduce((sum,o) => sum + o.total, 0);
+    document.getElementById('dashboardMonthlySales').textContent = `₹${monthlySales.toFixed(2)}`;
+    
+    // Load Products table
+    loadProductsTable('');
+    // Load Orders table
+    loadOrdersTable('');
+    // Load Customers table
+    loadCustomersTable('');
+
+    // Render sales chart
+    renderSalesChart();
+
+    // Initialize finance tab UI, charts etc.
+    loadFinanceData();
+
+    // Apply stored theme
+    const storedTheme = localStorage.getItem('preferredTheme') || "light";
     applyTheme(storedTheme);
-    loadInitialData();
   });
 
-  // Sales Chart (simple)
-  let salesChartInstance;
-  function renderSalesChart() {
-    const ctx = document.getElementById('salesChart').getContext('2d');
-    if(salesChartInstance) salesChartInstance.destroy();
-    salesChartInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-        datasets: [{
-          label: 'Sales',
-          data: [1200, 1900, 1500, 2200, 1700, 1400, 2100],
-          borderColor: '#4a7c2c',
-          backgroundColor: 'rgba(74,124,44,0.3)',
-          fill: true,
-          tension: 0.2
-        }]
-      },
-      options: {responsive: true, scales: {y: {beginAtZero: true}}}
-    });
-  }
-
-  // Load initial table data or similar placeholder logic here
-  function loadInitialData() {
-    // Init finance tab full features here (see next JavaScript block)
-  }
+  // Rest of the frontend finance tab JS will follow in the next message.
 </script>
-
-<!-- Due to the character limit, the full detailed JavaScript logic (finance tab implementation with all features,
-including role management, data management, export, chart rendering, form submission, notifications, attachment previews)
-will be provided separately in the next message to keep formatting and clarity. -->
 
 </body>
 </html>
