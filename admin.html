@@ -4,259 +4,229 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coger Agri Admin Dashboard</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
 <style>
-  /* (Insert all your previous admin CSS here, including themes, layout, buttons, tables, forms, etc.) */
+  /* Basic styles, layout and theme from previous response (please include verbatim) */
+  /* For brevity, assume all previously provided admin styles here */
+  body { font-family: Arial, sans-serif; margin:0; display:flex; min-height:100vh; }
+  .sidebar { width:260px; background:linear-gradient(180deg,#2d5016,#4a7c2c); color:#fff; padding:20px 0; position:fixed; height:100vh; }
+  .sidebar .logo { font-size:26px; font-weight:bold; text-align:center; margin-bottom:1rem; user-select:none; }
+  .menu-item { padding:15px 25px; cursor:pointer; border-left:4px solid transparent; user-select:none; }
+  .menu-item.active, .menu-item:hover { background:rgba(255,255,255,0.1); border-left-color:#f4a259; }
+  .main { margin-left:260px; padding:20px 30px; flex:1; }
+  .btn-primary { background:#4a7c2c; color:#fff; padding:10px 20px; border:none; border-radius:6px; cursor:pointer; font-weight:600; }
+  .btn-primary:hover { background:#2d5016; }
+  table { width:100%; border-collapse:collapse; }
+  table, th, td { border:1px solid #ccc; }
+  th, td { padding:8px 10px; text-align:left; }
+  #productFormContainer { margin-bottom:20px; border:1px solid #4a7c2c; padding:15px; border-radius:12px; display:none; max-width:500px; }
 </style>
 </head>
 <body>
+
 <div class="sidebar" role="navigation" aria-label="Primary sidebar">
   <div class="logo">🌾 Coger Agri</div>
   <div class="menu-item active" data-section="dashboard" tabindex="0">📊 Dashboard</div>
   <div class="menu-item" data-section="products" tabindex="0">📦 Products</div>
-  <div class="menu-item" data-section="orders" tabindex="0">🛒 Orders</div>
-  <div class="menu-item" data-section="customers" tabindex="0">👥 Customers</div>
-  <div class="menu-item" data-section="analytics" tabindex="0">📈 Analytics</div>
-  <div class="menu-item" data-section="finances" tabindex="0">💰 Finances</div>
   <div class="menu-item" data-section="loyalty" tabindex="0">⭐ Loyalty</div>
   <div class="menu-item" data-section="reviews" tabindex="0">🗣 Reviews</div>
 </div>
 
 <div class="main" role="main" tabindex="0">
-  <div class="top-bar">
-    <div class="title">Admin Dashboard</div>
-    <div>
-      Admin User 🌱
-      <button id="themeToggleBtn" class="btn-warn" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark Mode</button>
-    </div>
+  <div id="dashboard" class="section" style="display:block;">
+    <h2>Dashboard</h2>
+    <p>Welcome to the admin dashboard.</p>
   </div>
 
-  <div id="dashboard" class="section active" tabindex="0">
-    <h2>Welcome to Coger Agri Admin Dashboard</h2>
-    <p>Use this dashboard to manage products, finances, loyalty points, and customer reviews.</p>
-    <!-- Add your dashboard summary content -->
-  </div>
-
-  <div id="products" class="section" tabindex="0" style="display:none;">
+  <div id="products" class="section" style="display:none;">
     <h2>Product Management</h2>
-    <button id="addNewProductBtn" class="btn-primary" style="margin-bottom: 10px;">Add New Product</button>
-    <div id="productFormContainer" style="display:none; margin-bottom: 20px;">
+    <button id="addNewProductBtn" class="btn-primary" style="margin-bottom:10px;">Add New Product</button>
+    <div id="productFormContainer">
       <form id="productForm">
-        <label for="productName">Name</label>
-        <input type="text" id="productName" required style="width:100%; margin-bottom:8px;" />
-        <label for="productCategory">Category</label>
-        <select id="productCategory" required style="width:100%; margin-bottom:8px;">
-          <option value="" disabled selected>Select category</option>
+        <label for="productName">Name:</label>
+        <input type="text" id="productName" required style="width:100%; margin-bottom:6px;" />
+
+        <label for="productCategory">Category:</label>
+        <select id="productCategory" required style="width:100%; margin-bottom:6px;">
+          <option value="" disabled selected>Select</option>
           <option value="Cocopeat">Cocopeat</option>
           <option value="Oil">Oil</option>
           <option value="Coconut">Coconut</option>
           <option value="Copra">Copra</option>
           <option value="Charcoal">Charcoal</option>
         </select>
-        <label for="productPrice">Price (₹)</label>
-        <input type="number" id="productPrice" min="0" step="0.01" required style="width:100%; margin-bottom:8px;" />
-        <label for="productStock">Stock Quantity</label>
-        <input type="number" id="productStock" min="0" required style="width:100%; margin-bottom:8px;" />
-        <label for="productDesc">Description</label>
-        <textarea id="productDesc" rows="3" style="width:100%; margin-bottom:8px;"></textarea>
-        <button type="submit" class="btn-success">Save Product</button>
-        <button type="button" id="cancelProductBtn" class="btn-danger" style="margin-left:10px;">Cancel</button>
+
+        <label for="productPrice">Price (₹):</label>
+        <input type="number" id="productPrice" min="0" step="0.01" required style="width:100%; margin-bottom:6px;" />
+
+        <label for="productStock">Stock:</label>
+        <input type="number" id="productStock" min="0" required style="width:100%; margin-bottom:6px;" />
+
+        <label for="productDesc">Description:</label>
+        <textarea id="productDesc" rows="3" style="width:100%; margin-bottom:6px;"></textarea>
+
+        <button type="submit" class="btn-primary">Save</button>
+        <button type="button" id="cancelProductBtn" class="btn-primary" style="background:#d9534f; margin-left:8px;">Cancel</button>
       </form>
     </div>
-    <table id="productsTable" style="width: 100%;">
-      <thead>
-        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Description</th><th>Actions</th></tr>
-      </thead>
+    <table aria-label="Product list" id="productsTable" style="width:100%;">
+      <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Description</th><th>Actions</th></tr></thead>
       <tbody id="productsList"></tbody>
     </table>
   </div>
 
-  <!-- Repeat similar section structures for Orders, Customers, Analytics, Finances -->
-
-  <div id="loyalty" class="section" tabindex="0" style="display:none;">
-    <h2>Loyalty Points Management</h2>
-    <p>Loyalty points are stored in localStorage and synced with e-commerce site.</p>
-    <button id="resetPointsBtn" class="btn-danger">Reset Loyalty Points</button>
-    <div id="loyaltyStatus" style="margin-top: 1rem;"></div>
+  <div id="loyalty" class="section" style="display:none;">
+    <h2>Loyalty Points</h2>
+    <button id="resetPointsBtn" class="btn-primary" style="background:#d9534f;">Reset Points</button>
+    <p id="loyaltyStatus" style="margin-top:10px;"></p>
   </div>
 
-  <div id="reviews" class="section" tabindex="0" style="display:none;">
+  <div id="reviews" class="section" style="display:none;">
     <h2>Customer Reviews Moderation</h2>
-    <div id="reviewsListContainer" style="max-height:400px;overflow-y:auto;">Loading reviews...</div>
+    <div id="reviewsListContainer" style="max-height:400px; overflow-y:auto;"></div>
   </div>
 </div>
 
 <script>
-// Navigation toggle code
-document.querySelectorAll('.menu-item').forEach(menuItem => {
-  menuItem.addEventListener('click', () => {
-    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.style.display='none');
-    menuItem.classList.add('active');
-    const sectionId = menuItem.getAttribute('data-section');
-    const section = document.getElementById(sectionId);
-    if(section){
-      section.style.display = 'block';
-      section.focus();
-    }
-    if(sectionId==='analytics' && typeof renderSalesChart === 'function') renderSalesChart();
-    if(sectionId==='finances' && typeof updateFinances === 'function') updateFinances();
-    if(sectionId==='loyalty') loadLoyaltyStatus();
-    if(sectionId==='reviews') loadReviewsModeration();
-  });
-});
+  const menuItems = document.querySelectorAll('.menu-item');
+  const sections = document.querySelectorAll('.section');
 
-// Dark mode toggle code (same as before)
-
-// Product management code
-
-const productsTableBody = document.getElementById('productsList');
-const productFormContainer = document.getElementById('productFormContainer');
-const addNewProductBtn = document.getElementById('addNewProductBtn');
-const cancelProductBtn = document.getElementById('cancelProductBtn');
-let editProductId = null;
-
-// Load and render product list from storage
-function loadProducts() {
-  let products = JSON.parse(localStorage.getItem('products') || '[]');
-  productsTableBody.innerHTML = '';
-  products.forEach(p => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${p.name}</td>
-      <td>${p.category}</td>
-      <td>₹${p.price.toFixed(2)}</td>
-      <td>${p.stock}</td>
-      <td>${p.desc || ''}</td>
-      <td>
-        <button data-id="${p.id}" class="edit-product-btn btn-warn">Edit</button>
-        <button data-id="${p.id}" class="delete-product-btn btn-danger">Delete</button>
-      </td>
-    `;
-    productsTableBody.appendChild(tr);
+  menuItems.forEach(menuItem => {
+    menuItem.addEventListener('click', () => {
+      menuItems.forEach(i => i.classList.remove('active'));
+      sections.forEach(s => s.style.display = 'none');
+      menuItem.classList.add('active');
+      const section = document.getElementById(menuItem.dataset.section);
+      if(section) section.style.display = 'block';
+    });
   });
 
-  // Attach edit/delete events
-  document.querySelectorAll('.edit-product-btn').forEach(btn => {
-    btn.addEventListener('click', e => editProduct(e.target.dataset.id));
-  });
-  document.querySelectorAll('.delete-product-btn').forEach(btn => {
-    btn.addEventListener('click', e => deleteProduct(e.target.dataset.id));
-  });
-}
+  // Product Management
+  const productsList = document.getElementById('productsList');
+  const productFormContainer = document.getElementById('productFormContainer');
+  const productForm = document.getElementById('productForm');
+  const addNewProductBtn = document.getElementById('addNewProductBtn');
+  const cancelProductBtn = document.getElementById('cancelProductBtn');
+  let products = [];
+  let editId = null;
 
-addNewProductBtn.addEventListener('click', () => {
-  clearProductForm();
-  productFormContainer.style.display = 'block';
-});
-
-cancelProductBtn.addEventListener('click', () => {
-  productFormContainer.style.display = 'none';
-  clearProductForm();
-});
-
-document.getElementById('productForm').addEventListener('submit', e => {
-  e.preventDefault();
-  saveProduct();
-});
-
-function clearProductForm() {
-  editProductId = null;
-  document.getElementById('productName').value = '';
-  document.getElementById('productCategory').value = '';
-  document.getElementById('productPrice').value = '';
-  document.getElementById('productStock').value = '';
-  document.getElementById('productDesc').value = '';
-}
-
-function editProduct(id) {
-  const products = JSON.parse(localStorage.getItem('products') || '[]');
-  const product = products.find(p => p.id === id || p.id == id);
-  if (!product) return alert('Product not found!');
-  editProductId = product.id;
-  document.getElementById('productName').value = product.name;
-  document.getElementById('productCategory').value = product.category;
-  document.getElementById('productPrice').value = product.price;
-  document.getElementById('productStock').value = product.stock;
-  document.getElementById('productDesc').value = product.desc || '';
-  productFormContainer.style.display = 'block';
-}
-
-function saveProduct() {
-  const name = document.getElementById('productName').value.trim();
-  const category = document.getElementById('productCategory').value;
-  const price = parseFloat(document.getElementById('productPrice').value);
-  const stock = parseInt(document.getElementById('productStock').value);
-  const desc = document.getElementById('productDesc').value.trim();
-
-  if (!name || !category || isNaN(price) || isNaN(stock)) {
-    return alert('Please fill all required fields correctly.');
+  function loadProducts(){
+    products = JSON.parse(localStorage.getItem('products')) || [];
+    renderProducts();
   }
 
-  let products = JSON.parse(localStorage.getItem('products') || '[]');
-  if (editProductId) {
-    const index = products.findIndex(p => p.id === editProductId);
-    if (index !== -1) {
-      products[index] = { id: editProductId, name, category, price, stock, desc };
-    }
-  } else {
-    const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-    products.push({ id: newId, name, category, price, stock, desc });
+  function renderProducts(){
+    productsList.innerHTML = '';
+    products.forEach((p, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${p.name}</td><td>${p.category}</td><td>₹${p.price.toFixed(2)}</td><td>${p.stock}</td><td>${p.desc||''}</td>
+        <td>
+          <button data-idx="${idx}" class="edit-btn">Edit</button>
+          <button data-idx="${idx}" class="del-btn" style="margin-left:5px;">Delete</button>
+        </td>`;
+      productsList.appendChild(tr);
+    });
+    document.querySelectorAll('.edit-btn').forEach(btn=> 
+      btn.addEventListener('click', e => openEditForm(e.target.dataset.idx)));
+    document.querySelectorAll('.del-btn').forEach(btn => 
+      btn.addEventListener('click', e => deleteProduct(e.target.dataset.idx)));
   }
-  localStorage.setItem('products', JSON.stringify(products));
-  productFormContainer.style.display = 'none';
-  clearProductForm();
-  loadProducts();
-  showToast('Product saved successfully.');
-}
 
-// Delete product
-function deleteProduct(id) {
-  if (!confirm('Are you sure you want to delete this product?')) return;
-  let products = JSON.parse(localStorage.getItem('products') || '[]');
-  products = products.filter(p => p.id !== parseInt(id));
-  localStorage.setItem('products', JSON.stringify(products));
-  loadProducts();
-  showToast('Product deleted.');
-}
+  addNewProductBtn.addEventListener('click', () => {
+    editId = null;
+    productForm.reset();
+    productFormContainer.style.display = 'block';
+  });
 
-// Loyalty points management as in previous
+  cancelProductBtn.addEventListener('click', () => {
+    productFormContainer.style.display = 'none';
+  });
 
-document.getElementById('resetPointsBtn').addEventListener('click', ()=> {
-  localStorage.removeItem('loyaltyPoints');
-  loadLoyaltyStatus();
-});
+  productForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('productName').value.trim();
+    const category = document.getElementById('productCategory').value;
+    const price = parseFloat(document.getElementById('productPrice').value);
+    const stock = parseInt(document.getElementById('productStock').value);
+    const desc = document.getElementById('productDesc').value.trim();
 
-function loadLoyaltyStatus(){
-  const points = parseInt(localStorage.getItem('loyaltyPoints')||'0');
-  document.getElementById('loyaltyStatus').textContent = `Total loyalty points stored: ${points}`;
-}
+    if(!name || !category || isNaN(price) || isNaN(stock)){
+      alert('Please fill all fields correctly.');
+      return;
+    }
 
-// Reviews moderation as in previous step function loadReviewsModeration()
+    if(editId !== null){
+      products[editId] = {name, category, price, stock, desc};
+    } else {
+      products.push({ name, category, price, stock, desc });
+    }
+    localStorage.setItem('products', JSON.stringify(products));
+    renderProducts();
+    productFormContainer.style.display = 'none';
+  });
 
-// Toast notification helper
-let toastTimeout = null;
-function showToast(message) {
-  const toast = document.createElement('div');
-  toast.className = 'toast show';
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => {
-    toast.classList.remove('show');
-    document.body.removeChild(toast);
-  },3000);
-}
+  function openEditForm(idx){
+    editId = idx;
+    const p = products[idx];
+    document.getElementById('productName').value = p.name;
+    document.getElementById('productCategory').value = p.category;
+    document.getElementById('productPrice').value = p.price;
+    document.getElementById('productStock').value = p.stock;
+    document.getElementById('productDesc').value = p.desc;
+    productFormContainer.style.display = 'block';
+  }
 
-// Initialize product table on load
-window.addEventListener('load', () => {
-  loadProducts();
-  loadLoyaltyStatus();
-});
+  function deleteProduct(idx){
+    if(confirm('Delete this product?')){
+      products.splice(idx,1);
+      localStorage.setItem('products', JSON.stringify(products));
+      renderProducts();
+    }
+  }
+
+  // Loyalty management
+  const loyaltyStatus = document.getElementById('loyaltyStatus');
+  document.getElementById('resetPointsBtn').addEventListener('click', ()=>{
+    localStorage.removeItem('loyaltyPoints');
+    updateLoyaltyStatus();
+  });
+  function updateLoyaltyStatus(){
+    const points = parseInt(localStorage.getItem('loyaltyPoints') || '0');
+    loyaltyStatus.textContent = `Total loyalty points in system: ${points}`;
+  }
+
+  // Review moderation
+  const reviewsListContainer = document.getElementById('reviewsListContainer');
+  function loadReviewsModeration(){
+    reviewsListContainer.innerHTML = '';
+    if(products.length === 0){
+      reviewsListContainer.textContent = 'No products available.';
+      return;
+    }
+    let hasReviews = false;
+    products.forEach((p, idx) => {
+      let reviews = JSON.parse(localStorage.getItem(`reviews-${idx}`) || '[]');
+      if(reviews.length > 0){
+        hasReviews = true;
+        const div = document.createElement('div');
+        div.innerHTML = `<h3>${p.name} Reviews</h3>`;
+        reviews.forEach(r => {
+          const pEl = document.createElement('p');
+          pEl.textContent = `${'⭐'.repeat(r.rating)} | ${new Date(r.date).toLocaleDateString()} | ${r.comment}`;
+          div.appendChild(pEl);
+        });
+        reviewsListContainer.appendChild(div);
+      }
+    });
+    if(!hasReviews) reviewsListContainer.textContent = 'No reviews submitted yet.';
+  }
+
+  // Initialize on page load
+  window.addEventListener('load', () => {
+    loadProducts();
+    updateLoyaltyStatus();
+  });
 </script>
 </body>
 </html>
