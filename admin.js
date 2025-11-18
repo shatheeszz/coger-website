@@ -6,14 +6,12 @@ const API_BASE_URL = 'http://localhost:3000/api';
 
 async function apiCall(endpoint, options = {}) {
     const token = localStorage.getItem('authToken');
-    
     const defaultOptions = {
         headers: {
             'Content-Type': 'application/json',
             ...(token && { 'Authorization': `Bearer ${token}` })
         }
     };
-
     const config = {
         ...defaultOptions,
         ...options,
@@ -22,15 +20,12 @@ async function apiCall(endpoint, options = {}) {
             ...options.headers
         }
     };
-
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
         const data = await response.json();
-        
         if (!response.ok) {
             throw new Error(data.error || 'API request failed');
         }
-        
         return data;
     } catch (error) {
         console.error('API Error:', error);
@@ -60,12 +55,12 @@ function showToast(message, type = 'success') {
     toast.textContent = message;
     toast.style.background = type === 'error' ? '#d9534f' : '#2d5016';
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.style.opacity = '1';
         toast.style.pointerEvents = 'auto';
     }, 100);
-    
+
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
@@ -73,10 +68,10 @@ function showToast(message, type = 'success') {
 }
 
 // ========================================
-// PART 2: Dashboard Data Loading & Analytics
+// PART 2: Dashboard Stats & Analytics
 // ========================================
 
-async function loadDashboardStats() {
+async function updateDashboard() {
     try {
         const data = await apiCall('/dashboard');
         if (data.success && data.data) {
@@ -87,7 +82,6 @@ async function loadDashboardStats() {
             document.getElementById('dashboardMonthlySales').textContent = `₹${stats.totalRevenue?.toLocaleString() || 0}`;
             document.getElementById('dashboardLowStock').textContent = stats.lowStockProducts || 0;
             document.getElementById('dashboardPendingOrders').textContent = stats.pendingOrders || 0;
-            showToast('Dashboard loaded successfully!');
         }
     } catch (error) {
         console.error('Failed to load dashboard:', error);
@@ -95,20 +89,20 @@ async function loadDashboardStats() {
     }
 }
 
-async function loadSalesAnalytics() {
+async function renderAnalytics() {
+    // Fetch required analytics data and display charts (using Chart.js)
     try {
-        const data = await apiCall('/dashboard/sales');
-        if (data.success && data.data) {
-            // Use data for charts or analytics as needed
-            console.log('Sales analytics:', data.data);
-        }
+        const salesData = await apiCall('/dashboard/sales');
+        // render charts here with salesData
+        console.log('Sales analytics:', salesData);
+        // For brevity, implement charts as needed using Chart.js
     } catch (error) {
         console.error('Failed to load sales analytics:', error);
     }
 }
 
 // ========================================
-// PART 3: Product Management
+// PART 3: Products Dashboard
 // ========================================
 
 async function loadProducts() {
@@ -116,7 +110,6 @@ async function loadProducts() {
         const data = await apiCall('/products');
         if (data.success && data.products) {
             displayProducts(data.products);
-            showToast('Products loaded successfully!');
         }
     } catch (error) {
         console.error('Failed to load products:', error);
@@ -131,20 +124,19 @@ function displayProducts(products) {
     products.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${product.name}</td>
-            <td>${product.category || 'N/A'}</td>
-            <td>₹${product.price?.toLocaleString() || 0}</td>
-            <td>${product.stock || 0}</td>
-            <td>
-                <span class="badge ${product.stock > 10 ? 'badge-success' : 'badge-warning'}">
-                    ${product.stock > 10 ? 'In Stock' : 'Low Stock'}
-                </span>
-            </td>
-            <td class="action-buttons">
-                <button class="btn-info" onclick="editProduct(${product.id})">✏️ Edit</button>
-                <button class="btn-danger" onclick="deleteProduct(${product.id})">🗑️ Delete</button>
-            </td>
-        `;
+          <td>${product.name}</td>
+          <td>${product.category || 'N/A'}</td>
+          <td>₹${product.price?.toLocaleString() || 0}</td>
+          <td>${product.stock || 0}</td>
+          <td>
+            <span class="badge ${product.stock > 10 ? 'badge-success' : 'badge-warning'}">
+              ${product.stock > 10 ? 'In Stock' : 'Low Stock'}
+            </span>
+          </td>
+          <td>
+            <button class="btn-info" onclick="editProduct(${product.id})">✏️ Edit</button>
+            <button class="btn-danger" onclick="deleteProduct(${product.id})">🗑️ Delete</button>
+          </td>`;
         tbody.appendChild(row);
     });
 }
@@ -158,6 +150,7 @@ function showAddProductForm() {
 async function saveProduct(event) {
     event.preventDefault();
     const productId = document.getElementById('editProductId').value;
+
     const productData = {
         name: document.getElementById('productName').value,
         category: document.getElementById('productCategory').value,
@@ -165,9 +158,11 @@ async function saveProduct(event) {
         stock: parseInt(document.getElementById('productStock').value),
         description: document.getElementById('productDesc').value
     };
+
     try {
         const endpoint = productId ? `/products/${productId}` : '/products';
         const method = productId ? 'PUT' : 'POST';
+
         const data = await apiCall(endpoint, { method, body: JSON.stringify(productData) });
         if (data.success) {
             showToast(productId ? 'Product updated!' : 'Product added!');
@@ -192,8 +187,13 @@ async function deleteProduct(id) {
     }
 }
 
+function editProduct(id) {
+    // Implement fetching product and populating form or fetch via API
+    alert('Edit product feature to be implemented');
+}
+
 // ========================================
-// PART 4: Orders Management
+// PART 4: Orders Dashboard
 // ========================================
 
 async function loadOrders() {
@@ -201,7 +201,6 @@ async function loadOrders() {
         const data = await apiCall('/orders');
         if (data.success && data.orders) {
             displayOrders(data.orders);
-            showToast('Orders loaded successfully!');
         }
     } catch (error) {
         console.error('Failed to load orders:', error);
@@ -223,26 +222,29 @@ function displayOrders(orders) {
         }[order.status] || 'badge-secondary';
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>#${order.id}</td>
-            <td>${order.customerName || 'N/A'}</td>
-            <td>₹${order.totalAmount?.toLocaleString() || 0}</td>
-            <td><span class="badge ${statusBadge}">${order.status}</span></td>
-            <td>${new Date(order.createdAt).toLocaleDateString()}</td>
-            <td class="action-buttons">
-                <button class="btn-info" onclick="viewOrder(${order.id})">👁️ View</button>
-                <button class="btn-success" onclick="updateOrderStatus(${order.id})">✔️ Update</button>
-            </td>
-        `;
+          <td>#${order.id}</td>
+          <td>${order.customerName || 'N/A'}</td>
+          <td>₹${order.totalAmount?.toLocaleString() || 0}</td>
+          <td><span class="badge ${statusBadge}">${order.status}</span></td>
+          <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+          <td>
+            <button class="btn-info" onclick="viewOrder(${order.id})">👁️ View</button>
+            <button class="btn-success" onclick="updateOrderStatus(${order.id})">✔️ Update</button>
+          </td>`;
         tbody.appendChild(row);
     });
 }
 
-// Placeholder for viewOrder, updateOrderStatus
-function viewOrder(id){ alert('View details for order ' + id); }
-function updateOrderStatus(id){ alert('Update status for order ' + id); }
+function viewOrder(id) {
+    alert(`View details for order ${id} - to be implemented`);
+}
+
+function updateOrderStatus(id) {
+    alert(`Update status for order ${id} - to be implemented`);
+}
 
 // ========================================
-// PART 5: Customers Management
+// PART 5: Customers Dashboard
 // ========================================
 
 async function loadCustomers() {
@@ -250,7 +252,6 @@ async function loadCustomers() {
         const data = await apiCall('/customers');
         if (data.success && data.customers) {
             displayCustomers(data.customers);
-            showToast('Customers loaded successfully!');
         }
     } catch (error) {
         console.error('Failed to load customers:', error);
@@ -262,56 +263,75 @@ function displayCustomers(customers) {
     const tbody = document.querySelector('#customers table tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
-    customers.forEach(c => {
+    customers.forEach(customer => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${c.name}</td>
-            <td>${c.email}</td>
-            <td>${c.phone}</td>
-            <td>${c.totalOrders}</td>
-            <td>₹${c.totalSpent?.toLocaleString() || 0}</td>
-            <td>${c.loyaltyPoints || 0}</td>
-            <td><button class="btn-info" onclick="viewCustomer(${c.id})">View</button></td>
-        `;
+          <td>${customer.name}</td>
+          <td>${customer.email}</td>
+          <td>${customer.phone}</td>
+          <td>${customer.totalOrders || 0}</td>
+          <td>₹${customer.totalSpent?.toLocaleString() || 0}</td>
+          <td>${customer.loyaltyPoints || 0}</td>
+          <td><button class="btn-info" onclick="viewCustomer(${customer.id})">View</button></td>`;
         tbody.appendChild(row);
     });
 }
 
-// Placeholder for viewCustomer
-function viewCustomer(id){ alert('View customer ' + id); }
-
-// ========================================
-// PART 6: Analytics, Finances, Loyalty, Reviews Placeholders
-// ========================================
-
-// Similarly, implement load/render functions for analytics, finances, loyalty, and reviews dashboards here.
-
-function renderAnalytics(){
-    console.log('Render analytics dashboard - to be implemented');
-}
-function renderFinances(){
-    console.log('Render finances dashboard - to be implemented');
-}
-function renderLoyalty(){
-    console.log('Render loyalty dashboard - to be implemented');
-}
-function renderReviews(){
-    console.log('Render reviews dashboard - to be implemented');
+function viewCustomer(id) {
+    alert(`View customer details for ${id} - to be implemented`);
 }
 
 // ========================================
-// PART 7: Initialization
+// PART 6: Finances, Loyalty & Reviews - placeholders/scaffolds
 // ========================================
+
+function renderFinances() {
+    alert('Finance management dashboard to be implemented');
+}
+
+function renderLoyalty() {
+    alert('Loyalty program dashboard to be implemented');
+}
+
+function renderReviews() {
+    alert('Customer reviews dashboard to be implemented');
+}
+
+// ========================================
+// PART 7: Initialization and Navigation
+// ========================================
+
+const menuItems = document.querySelectorAll('.menu-item');
+const sections = document.querySelectorAll('main section');
+
+menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+        menuItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        sections.forEach(s => (s.style.display = 'none'));
+        const sectionId = item.getAttribute('data-section');
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.style.display = 'block';
+            section.focus();
+        }
+
+        // Map section to function
+        switch (sectionId) {
+            case 'dashboard': updateDashboard(); break;
+            case 'products': loadProducts(); break;
+            case 'orders': loadOrders(); break;
+            case 'customers': loadCustomers(); break;
+            case 'analytics': renderAnalytics(); break;
+            case 'finances': renderFinances(); break;
+            case 'loyalty': renderLoyalty(); break;
+            case 'reviews': renderReviews(); break;
+            default: break;
+        }
+    });
+});
 
 window.addEventListener('DOMContentLoaded', () => {
-    if(!checkAuth()) return;
-
-    loadDashboardStats();
-    loadSalesAnalytics();
-
-    loadProducts();
-    loadOrders();
-    loadCustomers();
-
-    console.log('Admin dashboard loaded');
+    if (!checkAuth()) return;
+    document.querySelector('.menu-item.active').click();
 });
