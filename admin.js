@@ -2,10 +2,8 @@
 // PART 1: API Configuration & Authentication
 // ========================================
 
-// API Base URL - Change this to your deployed backend URL
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// Helper function to make API calls with authentication
 async function apiCall(endpoint, options = {}) {
     const token = localStorage.getItem('authToken');
     
@@ -41,7 +39,6 @@ async function apiCall(endpoint, options = {}) {
     }
 }
 
-// Check if user is logged in
 function checkAuth() {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -51,14 +48,12 @@ function checkAuth() {
     return true;
 }
 
-// Logout function
 function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     window.location.href = 'login.html';
 }
 
-// Show toast notification
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -77,27 +72,21 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-
 // ========================================
-// PART 2: Dashboard Data Loading
+// PART 2: Dashboard Data Loading & Analytics
 // ========================================
 
-// Load dashboard statistics
 async function loadDashboardStats() {
     try {
         const data = await apiCall('/dashboard');
-        
         if (data.success && data.data) {
             const stats = data.data;
-            
-            // Update dashboard cards
             document.getElementById('dashboardTotalProducts').textContent = stats.totalProducts || 0;
             document.getElementById('dashboardTotalOrders').textContent = stats.totalOrders || 0;
             document.getElementById('dashboardTotalCustomers').textContent = stats.totalCustomers || 0;
             document.getElementById('dashboardMonthlySales').textContent = `₹${stats.totalRevenue?.toLocaleString() || 0}`;
             document.getElementById('dashboardLowStock').textContent = stats.lowStockProducts || 0;
             document.getElementById('dashboardPendingOrders').textContent = stats.pendingOrders || 0;
-            
             showToast('Dashboard loaded successfully!');
         }
     } catch (error) {
@@ -106,14 +95,12 @@ async function loadDashboardStats() {
     }
 }
 
-// Load sales analytics
 async function loadSalesAnalytics() {
     try {
         const data = await apiCall('/dashboard/sales');
-        
         if (data.success && data.data) {
-            // You can use this data to populate charts
-            console.log('Sales data loaded:', data.data);
+            // Use data for charts or analytics as needed
+            console.log('Sales analytics:', data.data);
         }
     } catch (error) {
         console.error('Failed to load sales analytics:', error);
@@ -124,11 +111,9 @@ async function loadSalesAnalytics() {
 // PART 3: Product Management
 // ========================================
 
-// Load all products
 async function loadProducts() {
     try {
         const data = await apiCall('/products');
-        
         if (data.success && data.products) {
             displayProducts(data.products);
             showToast('Products loaded successfully!');
@@ -139,13 +124,10 @@ async function loadProducts() {
     }
 }
 
-// Display products in table
 function displayProducts(products) {
     const tbody = document.querySelector('#products table tbody');
     if (!tbody) return;
-    
     tbody.innerHTML = '';
-    
     products.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -167,17 +149,15 @@ function displayProducts(products) {
     });
 }
 
-// Show add product form
 function showAddProductForm() {
     document.getElementById('productFormContainer').style.display = 'block';
     document.getElementById('productForm').reset();
     document.getElementById('editProductId').value = '';
 }
 
-// Save product (add or update)
 async function saveProduct(event) {
     event.preventDefault();
-    
+    const productId = document.getElementById('editProductId').value;
     const productData = {
         name: document.getElementById('productName').value,
         category: document.getElementById('productCategory').value,
@@ -185,18 +165,10 @@ async function saveProduct(event) {
         stock: parseInt(document.getElementById('productStock').value),
         description: document.getElementById('productDesc').value
     };
-    
-    const productId = document.getElementById('editProductId').value;
-    
     try {
         const endpoint = productId ? `/products/${productId}` : '/products';
         const method = productId ? 'PUT' : 'POST';
-        
-        const data = await apiCall(endpoint, {
-            method,
-            body: JSON.stringify(productData)
-        });
-        
+        const data = await apiCall(endpoint, { method, body: JSON.stringify(productData) });
         if (data.success) {
             showToast(productId ? 'Product updated!' : 'Product added!');
             document.getElementById('productFormContainer').style.display = 'none';
@@ -207,15 +179,10 @@ async function saveProduct(event) {
     }
 }
 
-// Delete product
 async function deleteProduct(id) {
     if (!confirm('Are you sure you want to delete this product?')) return;
-    
     try {
-        const data = await apiCall(`/products/${id}`, {
-            method: 'DELETE'
-        });
-        
+        const data = await apiCall(`/products/${id}`, { method: 'DELETE' });
         if (data.success) {
             showToast('Product deleted!');
             loadProducts();
@@ -226,14 +193,12 @@ async function deleteProduct(id) {
 }
 
 // ========================================
-// PART 4: Orders & Page Initialization
+// PART 4: Orders Management
 // ========================================
 
-// Load orders
 async function loadOrders() {
     try {
         const data = await apiCall('/orders');
-        
         if (data.success && data.orders) {
             displayOrders(data.orders);
             showToast('Orders loaded successfully!');
@@ -244,15 +209,11 @@ async function loadOrders() {
     }
 }
 
-// Display orders in table
 function displayOrders(orders) {
     const tbody = document.querySelector('#orders table tbody');
     if (!tbody) return;
-    
     tbody.innerHTML = '';
-    
     orders.forEach(order => {
-        const row = document.createElement('tr');
         const statusBadge = {
             'pending': 'badge-warning',
             'processing': 'badge-info',
@@ -260,7 +221,7 @@ function displayOrders(orders) {
             'delivered': 'badge-success',
             'cancelled': 'badge-danger'
         }[order.status] || 'badge-secondary';
-        
+        const row = document.createElement('tr');
         row.innerHTML = `
             <td>#${order.id}</td>
             <td>${order.customerName || 'N/A'}</td>
@@ -276,18 +237,81 @@ function displayOrders(orders) {
     });
 }
 
-// Initialize when page loads
-window.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    if (!checkAuth()) return;
-    
-    // Load dashboard data on page load
+// Placeholder for viewOrder, updateOrderStatus
+function viewOrder(id){ alert('View details for order ' + id); }
+function updateOrderStatus(id){ alert('Update status for order ' + id); }
+
+// ========================================
+// PART 5: Customers Management
+// ========================================
+
+async function loadCustomers() {
+    try {
+        const data = await apiCall('/customers');
+        if (data.success && data.customers) {
+            displayCustomers(data.customers);
+            showToast('Customers loaded successfully!');
+        }
+    } catch (error) {
+        console.error('Failed to load customers:', error);
+        showToast('Failed to load customers', 'error');
+    }
+}
+
+function displayCustomers(customers) {
+    const tbody = document.querySelector('#customers table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    customers.forEach(c => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${c.name}</td>
+            <td>${c.email}</td>
+            <td>${c.phone}</td>
+            <td>${c.totalOrders}</td>
+            <td>₹${c.totalSpent?.toLocaleString() || 0}</td>
+            <td>${c.loyaltyPoints || 0}</td>
+            <td><button class="btn-info" onclick="viewCustomer(${c.id})">View</button></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Placeholder for viewCustomer
+function viewCustomer(id){ alert('View customer ' + id); }
+
+// ========================================
+// PART 6: Analytics, Finances, Loyalty, Reviews Placeholders
+// ========================================
+
+// Similarly, implement load/render functions for analytics, finances, loyalty, and reviews dashboards here.
+
+function renderAnalytics(){
+    console.log('Render analytics dashboard - to be implemented');
+}
+function renderFinances(){
+    console.log('Render finances dashboard - to be implemented');
+}
+function renderLoyalty(){
+    console.log('Render loyalty dashboard - to be implemented');
+}
+function renderReviews(){
+    console.log('Render reviews dashboard - to be implemented');
+}
+
+// ========================================
+// PART 7: Initialization
+// ========================================
+
+window.addEventListener('DOMContentLoaded', () => {
+    if(!checkAuth()) return;
+
     loadDashboardStats();
     loadSalesAnalytics();
-    
-    // Load products and orders
+
     loadProducts();
     loadOrders();
-    
-    console.log('Admin dashboard initialized');
+    loadCustomers();
+
+    console.log('Admin dashboard loaded');
 });
