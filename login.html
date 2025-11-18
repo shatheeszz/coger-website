@@ -32,7 +32,7 @@
     margin-bottom: 8px;
     display: block;
   }
-  input[type=text], input[type=password] {
+  input[type=email], input[type=password] {
     width: 100%;
     padding: 12px 14px;
     margin-bottom: 20px;
@@ -42,9 +42,9 @@
     box-sizing: border-box;
     font-family: inherit;
   }
-  input[type=text]:focus, input[type=password]:focus {
+  input[type=email]:focus, input[type=password]:focus {
     border-color: #4a7c2c;
-    outline: none;
+    outline: 2px solid #4a7c2c; /* visible focus outline */
   }
   button {
     width: 100%;
@@ -58,8 +58,9 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  button:hover {
+  button:hover, button:focus {
     background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
+    outline:none;
   }
   .error-message {
     color: #d9534f;
@@ -72,7 +73,7 @@
 <body>
 <div class="login-container" role="main" aria-label="Admin login form">
   <h2>Admin Login</h2>
-  <form id="loginForm" aria-describedby="errorMessage">
+  <form id="loginForm" aria-describedby="errorMessage" novalidate>
     <div>
       <label for="email">Email</label>
       <input id="email" name="email" type="email" autocomplete="email" required aria-required="true" />
@@ -90,12 +91,16 @@
   const API_BASE_URL = 'http://localhost:3000/api';
 
   async function apiCall(endpoint, options = {}) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-    const data = await response.json();
-    if(!response.ok) {
-      throw new Error(data.error || 'Login failed');
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'Network error');
     }
-    return data;
   }
 
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -114,13 +119,14 @@
         body: JSON.stringify({ email, password })
       });
 
-      if(data.token) {
+      if (data.token) {
         localStorage.setItem('authToken', data.token);
-        // Redirect based on user role
+        // Redirect only admin users to admin page
         if (data.user && data.user.role === 'admin') {
           window.location.href = 'admin.html';
         } else {
-          window.location.href = 'index.html';
+          alert('Access denied. Only admins can log in here.');
+          localStorage.removeItem('authToken');
         }
       } else {
         throw new Error('Authentication token missing');
@@ -133,4 +139,3 @@
 </script>
 </body>
 </html>
-
