@@ -74,8 +74,8 @@
   <h2>Admin Login</h2>
   <form id="loginForm" aria-describedby="errorMessage">
     <div>
-      <label for="username">Username</label>
-      <input id="username" name="username" type="text" autocomplete="username" required aria-required="true" />
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required aria-required="true" />
     </div>
     <div>
       <label for="password">Password</label>
@@ -104,19 +104,24 @@
     errorMessageEl.style.display = 'none';
     errorMessageEl.textContent = '';
 
-    const username = e.target.username.value.trim();
+    const email = e.target.email.value.trim();
     const password = e.target.password.value;
 
     try {
       const data = await apiCall('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email, password })
       });
 
       if(data.token) {
         localStorage.setItem('authToken', data.token);
-        window.location.href = 'admin.html';
+        // Redirect based on user role
+        if (data.user && data.user.role === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'index.html';
+        }
       } else {
         throw new Error('Authentication token missing');
       }
