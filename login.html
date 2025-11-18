@@ -1,141 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Coger Enterprises Admin Login</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f5f0;
-    display: flex; justify-content: center; align-items: center;
-    min-height: 100vh;
-    margin: 0;
-  }
-  .login-container {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
-    padding: 40px 35px;
-    width: 320px;
-    box-sizing: border-box;
-  }
-  h2 {
-    text-align: center;
-    color: #4a7c2c;
-    margin-bottom: 25px;
-    font-weight: 700;
-  }
-  label {
-    font-weight: 600;
-    color: #2c1810;
-    margin-bottom: 8px;
-    display: block;
-  }
-  input[type=email], input[type=password] {
-    width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    border: 2px solid #c4bbaa;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-family: inherit;
-  }
-  input[type=email]:focus, input[type=password]:focus {
-    border-color: #4a7c2c;
-    outline: 2px solid #4a7c2c; /* visible focus outline */
-  }
-  button {
-    width: 100%;
-    background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
-    border: none;
-    padding: 14px;
-    font-size: 18px;
-    color: white;
-    font-weight: 700;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  button:hover, button:focus {
-    background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
-    outline:none;
-  }
-  .error-message {
-    color: #d9534f;
-    text-align: center;
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coger Enterprises Admin Login</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f5f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+      padding: 40px 35px;
+      width: 320px;
+      box-sizing: border-box;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+    }
+    h2 {
+      text-align: center;
+      color: #4a7c2c;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+    label {
+      font-weight: 600;
+      color: #2c1810;
+      margin-bottom: 8px;
+      display: block;
+    }
+    input[type=email], input[type=password] {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 2px solid #c4bbaa;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    input[type=email]:focus, input[type=password]:focus {
+      border-color: #4a7c2c;
+      outline: 2px solid #4a7c2c;
+    }
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #7a5d3a 0%, #a0826d 100%);
+      border: none;
+      padding: 14px;
+      font-size: 18px;
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(135deg, #5c4a33 0%, #7a5d3a 100%);
+      outline: none;
+    }
+    .error-message {
+      color: #d9534f;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 600;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-<div class="login-container" role="main" aria-label="Admin login form">
-  <h2>Admin Login</h2>
-  <form id="loginForm" aria-describedby="errorMessage" novalidate>
-    <div>
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" autocomplete="email" required aria-required="true" />
-    </div>
-    <div>
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" autocomplete="current-password" required aria-required="true" />
-    </div>
-    <div id="errorMessage" class="error-message" role="alert" aria-live="assertive" style="display:none;"></div>
-    <button type="submit">Log In</button>
-  </form>
-</div>
+  <div class="login-container" role="main" aria-label="Admin login form">
+    <!-- Add your logo.png in project directory -->
+    <img src="logo.png" alt="Coger Logo" class="logo" />
+    <h2>Admin Login</h2>
+    <form id="loginForm" aria-describedby="errorMessage" novalidate>
+      <div>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required aria-required="true" placeholder="admin@coger.in" />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required aria-required="true" placeholder="Enter password" />
+      </div>
+      <div id="errorMessage" class="error-message" role="alert" aria-live="assertive"></div>
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+  <script>
+    const API_BASE_URL = 'http://localhost:3000/api'; // Change for production
 
-<script>
-  const API_BASE_URL = 'http://localhost:3000/api';
-
-  async function apiCall(endpoint, options = {}) {
-    try {
+    async function apiCall(endpoint, options = {}) {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Login failed');
       }
       return data;
-    } catch (error) {
-      throw new Error(error.message || 'Network error');
     }
-  }
 
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const errorMessageEl = document.getElementById('errorMessage');
-    errorMessageEl.style.display = 'none';
-    errorMessageEl.textContent = '';
-
-    const email = e.target.email.value.trim();
-    const password = e.target.password.value;
-
-    try {
-      const data = await apiCall('/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-        // Redirect only admin users to admin page
-        if (data.user && data.user.role === 'admin') {
-          window.location.href = 'admin.html';
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorMessageEl = document.getElementById('errorMessage');
+      errorMessageEl.style.display = 'none';
+      errorMessageEl.textContent = '';
+      const email = e.target.email.value.trim();
+      const password = e.target.password.value;
+      try {
+        const data = await apiCall('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+          if (data.user && data.user.role === 'admin') {
+            window.location.href = 'admin.html';
+          } else {
+            errorMessageEl.textContent = 'Access denied. Only admins can log in here.';
+            errorMessageEl.style.display = 'block';
+            localStorage.removeItem('authToken');
+          }
         } else {
-          alert('Access denied. Only admins can log in here.');
-          localStorage.removeItem('authToken');
+          throw new Error('Authentication token missing');
         }
-      } else {
-        throw new Error('Authentication token missing');
+      } catch (error) {
+        errorMessageEl.textContent = error.message || 'Invalid login credentials';
+        errorMessageEl.style.display = 'block';
       }
-    } catch (error) {
-      errorMessageEl.textContent = error.message || 'Invalid login credentials';
-      errorMessageEl.style.display = 'block';
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
