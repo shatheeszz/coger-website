@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const path = require('path');
+const sequelize = require('./config/database');
+const { User, Product, Order, Review } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +27,7 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const userRoutes = require('./routes/users');
+const reviewRoutes = require('./routes/reviews');
 const dashboardRoutes = require('./routes/dashboard');
 
 // API Routes
@@ -32,6 +35,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 // Health check endpoint
@@ -49,6 +53,7 @@ app.get('/', (req, res) => {
       products: '/api/products',
       orders: '/api/orders',
       users: '/api/users',
+      reviews: '/api/reviews',
       dashboard: '/api/dashboard'
     }
   });
@@ -75,9 +80,28 @@ app.use((req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Coger API Server running on port ${PORT}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 API URL: http://localhost:${PORT}`);
-});
+// Initialize database and start server
+const startServer = async () => {
+  try {
+    // Test database connection
+    await sequelize.authenticate();
+    console.log('\u2705 Database connection established');
+
+    // Sync database models
+    await sequelize.sync({ alter: false });
+    console.log('\u2705 Database models synchronized');
+
+    // Start Express server
+    app.listen(PORT, () => {
+      console.log(`\ud83d\ude80 Coger API Server running on port ${PORT}`);
+      console.log(`\ud83d\udcc1 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`\ud83d\udd17 API URL: http://localhost:${PORT}`);
+      console.log('\ud83d\udc40 Waiting for requests...');
+    });
+  } catch (error) {
+    console.error('\u274c Failed to start server:', error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
