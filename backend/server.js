@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const path = require('path');
-const sequelize = require('./config/database');
+const { sequelize } = require('./config/database');
 const { User, Product, Order, Review } = require('./models');
 
 const app = express();
@@ -84,6 +84,7 @@ app.use((req, res) => {
 const startServer = async () => {
   try {
     // Test database connection
+            console.log('DEBUG: sequelize =', sequelize); 
     await sequelize.authenticate();
     console.log('\u2705 Database connection established');
 
