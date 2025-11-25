@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const sequelize = require('../config/database');
 
 const Product = sequelize.define('Product', {
   id: {
@@ -106,14 +106,8 @@ const Product = sequelize.define('Product', {
     defaultValue: {}
   }
 }, {
-  timestamps: true,
-  indexes: [
-    { fields: ['category'] },
-    { fields: ['sku'], unique: true },
-    { fields: ['isActive'] },
-    { fields: ['isFeatured'] }
-  ]
-});
+  timestamps: true
+  );
 
 // Instance methods
 Product.prototype.toJSON = function() {

@@ -1,52 +1,16 @@
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
+const path = require('path');
 
-// Database configuration using Sequelize ORM for PostgreSQL
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'coger_db',
-  process.env.DB_USER || 'postgres',
-  process.env.DB_PASSWORD || '',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 5432,
-    dialect: 'postgres',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    },
-    define: {
-      timestamps: true,
-      underscored: true,
-      freezeTableName: true
-    }
+// Database configuration using Sequelize ORM for SQLite (development)
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: path.join(__dirname, '..', 'database.sqlite'),
+  logging: process.env.NODE_ENV === 'development' ? console.log : false,
+  define: {
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true
   }
-);
+});
 
-// Test database connection
-const testConnection = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('✅ Database connection established successfully.');
-  } catch (error) {
-    console.error('❌ Unable to connect to database:', error.message);
-    process.exit(1);
-  }
-};
-
-// Sync database models (create tables if they don't exist)
-const syncDatabase = async () => {
-  try {
-    await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
-    console.log('✅ Database synchronized successfully.');
-  } catch (error) {
-    console.error('❌ Database sync error:', error.message);
-  }
-};
-
-module.exports = {
-  sequelize,
-  testConnection,
-  syncDatabase
-};
+module.exports = sequelize;

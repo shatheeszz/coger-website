@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const path = require('path');
-const { sequelize } = require('./config/database');
+const sequelize = require('./config/database');
 const { User, Product, Order, Review } = require('./models');
 
 const app = express();

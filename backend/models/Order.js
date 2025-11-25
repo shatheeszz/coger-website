@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const sequelize = require('../config/database');
 
 const Order = sequelize.define('Order', {
   id: {
@@ -131,14 +131,7 @@ const Order = sequelize.define('Order', {
     allowNull: true
   }
 }, {
-  timestamps: true,
-  indexes: [
-    { fields: ['userId'] },
-    { fields: ['orderNumber'], unique: true },
-    { fields: ['status'] },
-    { fields: ['paymentStatus'] },
-    { fields: ['createdAt'] }
-  ]
+  timestamps: true
 });
 
 // Hooks
