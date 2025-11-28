@@ -68,8 +68,8 @@ function switchSection(sectionId) {
 // ==================================================
 async function refreshDashboard() {
   try {
-    // Fetch dashboard stats
-    const stats = await apiCall('/api/dashboard');
+    // Fetch dashboard stats - CONFIG.API_BASE_URL already has /api prefix
+    const stats = await apiCall('/dashboard');
     
     // Update dashboard cards
     document.getElementById('dashboardTotalProducts').textContent = stats.totalProducts || 0;
@@ -90,8 +90,7 @@ async function refreshDashboard() {
 // ==================================================
 async function loadProducts() {
   try {
-    const products = await 90
-     ('/api/products');
+    const products = await apiCall('/products');
     displayProducts(products);
   } catch (error) {
     showToast('Failed to load products', 'error');
@@ -140,8 +139,7 @@ async function deleteProduct(id) {
   if (!confirm('Are you sure you want to delete this product?')) return;
   
   try {
-    await 155
-     (`/api/products/${id}`, { method: 'DELETE' });
+    await apiCall(`/products/${id}`, { method: 'DELETE' });
     showToast('Product deleted successfully');
     loadProducts();
   } catch (error) {
@@ -154,8 +152,7 @@ async function deleteProduct(id) {
 // ==================================================
 async function loadOrders() {
   try {
-    const orders = await 175
-     ('/api/orders');
+    const orders = await apiCall('/orders');
     displayOrders(orders);
   } catch (error) {
     showToast('Failed to load orders', 'error');
@@ -205,8 +202,7 @@ function updateOrderStatus(id) {
 // ==================================================
 async function loadCustomers() {
   try {
-    const customers = await 230
-     ('/api/users');
+    const customers = await apiCall('/users');
     displayCustomers(customers);
   } catch (error) {
     showToast('Failed to load customers', 'error');
@@ -251,8 +247,7 @@ function viewCustomer(id) {
 // ==================================================
 async function loadReviews() {
   try {
-    const reviews = await 270
-     ('/api/reviews');
+    const reviews = await apiCall('/reviews');
     displayReviews(reviews);
   } catch (error) {
     showToast('Failed to load reviews', 'error');
@@ -292,8 +287,7 @@ async function deleteReview(id) {
   if (!confirm('Are you sure you want to delete this review?')) return;
   
   try {
-    await 290
-     (`/api/reviews/${id}`, { method: 'DELETE' });
+    await apiCall(`/reviews/${id}`, { method: 'DELETE' });
     showToast('Review deleted successfully');
     loadReviews();
   } catch (error) {
