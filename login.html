@@ -67,8 +67,7 @@
                 });
                 
                 if (data.token) {
-                    localStorage.setItemCONFIG.STORAGE_KEYS.AUTH_TOKENtoken);
-                    
+            localStorage.setItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN, data.token);                    
                     // Check if user is admin
                     if (data.user && data.user.role === 'admin') {
                         showToast('Login successful! Redirecting...');
