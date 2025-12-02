@@ -89,8 +89,7 @@ const startServer = async () => {
     console.log('\u2705 Database connection established');
 
     // Sync database models
-    await sequelize.sync({ alter: false });
-    console.log('\u2705 Database models synchronized');
+    await sequelize.sync({ alter: false });    console.log('\u2705 Database models synchronized');
 
     // Start Express server
     app.listen(PORT, () => {
