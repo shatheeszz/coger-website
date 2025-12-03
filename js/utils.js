@@ -23,7 +23,7 @@ async function apiCall(endpoint, options = {}) {
                 localStorage.clear();
                 window.location.href = 'login.html';
             }
-            throw new Error(data.error || 'API request failed');
+            throw new Error(typeof data.error === 'string' ? data.error : (data.error?.message || 'API request failed'));
         }
         return data;
     } catch (error) {
