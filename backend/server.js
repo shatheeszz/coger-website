@@ -31,7 +31,7 @@ const userRoutes = require('./routes/users');
 const dashboardRoutes = require('./routes/dashboard');
 
 // API Routes
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 // app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
     message: 'Coger Enterprises API',
     version: '1.0.0',
     endpoints: {
-      auth: '/api/auth',
+      auth: '/auth',
       products: '/api/products',
       orders: '/api/orders',
       users: '/api/users',
