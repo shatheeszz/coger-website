@@ -4,9 +4,14 @@
 
 const CONFIG = {
     // API Base URL - automatically switches between local and production
-    API_BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:3000/api'
-        : 'https://api.cogeragri.in/api',
+    API_BASE_URL: (function() {
+    const isProduction = window.location.hostname.includes('.cogeragri.in') || window.location.hostname.includes('coger.in');
+    if (isProduction) return 'https://cuddly-carnival-vpx6765554xcxj77-3000.preview.app.github.dev/api';
+    
+    // For Codespaces and localhost, use dynamic port
+    const port = window.location.port ? ':' + window.location.port : '';
+    return window.location.protocol + '//' + window.location.hostname + port + '/api';
+  })(),
     
     // Application Settings
     APP_NAME: 'Coger Enterprises',

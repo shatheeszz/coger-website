@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const path = require('path');
 const sequelize = require('./config/database');
-const { User, Product, Order, Review } = require('./models');
+const { User, Order } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,18 +24,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const productRoutes = require('./routes/products');
+// const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const userRoutes = require('./routes/users');
-const reviewRoutes = require('./routes/reviews');
+// const reviewRoutes = require('./routes/reviews');
 const dashboardRoutes = require('./routes/dashboard');
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
+// app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/reviews', reviewRoutes);
+// app.use('/api/reviews', reviewRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 // Health check endpoint
