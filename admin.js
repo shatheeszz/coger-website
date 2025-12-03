@@ -68,15 +68,18 @@ function switchSection(sectionId) {
 // ==================================================
 async function refreshDashboard() {
   try {
-    // Fetch dashboard stats - CONFIG.API_BASE_URL already has /api prefix
-    const stats = await apiCall('/dashboard');
+    // Fetch dashboard stats
+    const response = await apiCall('/dashboard');
+    
+    // Extract stats from response wrapper
+    const stats = response.data || response;
     
     // Update dashboard cards
     document.getElementById('dashboardTotalProducts').textContent = stats.totalProducts || 0;
     document.getElementById('dashboardTotalOrders').textContent = stats.totalOrders || 0;
     document.getElementById('dashboardTotalCustomers').textContent = stats.totalCustomers || 0;
-    document.getElementById('dashboardMonthlySales').textContent = `₹${stats.monthlySales || 0}`;
-    document.getElementById('dashboardLowStock').textContent = stats.lowStock || 0;
+    document.getElementById('dashboardMonthlySales').textContent = `₹${stats.totalRevenue || 0}`;
+    document.getElementById('dashboardLowStock').textContent = stats.lowStockProducts || 0;
     document.getElementById('dashboardPendingOrders').textContent = stats.pendingOrders || 0;
     
   } catch (error) {
