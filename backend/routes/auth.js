@@ -61,7 +61,7 @@ router.post('/login', [
     const mockUser = {
       id: 1,
       email: 'admin@coger.in',
-      password: await bcrypt.hash('admin123', 10),
+      password: await bcrypt.hash('admin@1', 10),
       name: 'Admin User',
       role: 'admin'
     };
