@@ -10,7 +10,7 @@ const CONFIG = {
     
     // For Codespaces and localhost, use dynamic port
     const port = window.location.port ? ':' + window.location.port : '';
-    return window.location.protocol + '//' + window.location.hostname + port + '/api';
+    return window.location.protocol + '//' + window.location.hostname + port ;
   })(),
     
     // Application Settings
