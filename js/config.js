@@ -6,7 +6,7 @@ const CONFIG = {
     // API Base URL - automatically switches between local and production
     API_BASE_URL: (function() {
     const isProduction = window.location.hostname.includes('.cogeragri.in') || window.location.hostname.includes('coger.in');
-    if (isProduction) return 'https://cuddly-carnival-vpx6765554xcxj77-3000.app.github.dev/api';
+    if (isProduction) return 'https://cuddly-carnival-vpx6765554xcxj77-3000.app.github.dev';
     
     // For Codespaces and localhost, use dynamic port
     const port = window.location.port ? ':' + window.location.port : '';
