@@ -6,7 +6,7 @@ const CONFIG = {
     // API Base URL - automatically switches between local and production
     API_BASE_URL: (function() {
     const isProduction = window.location.hostname.includes('.cogeragri.in') || window.location.hostname.includes('coger.in');
-    if (isProd) return 'https://coger-website.onrender.com';    const port = window.location.port ? ':' + window.location.port : '';
+    if (isProduction) return 'https://coger-website.onrender.com';    const port = window.location.port ? ':' + window.location.port : '';
     return window.location.protocol + '//' + window.location.hostname + port ;
   })(),
     
