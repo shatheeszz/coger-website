@@ -56,6 +56,11 @@
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+                        
+            if (typeof CONFIG === 'undefined') {
+                showToast('System configuration not loaded. Please refresh the page.', 'error');
+                return;
+            }
             
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
