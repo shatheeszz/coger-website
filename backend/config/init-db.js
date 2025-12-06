@@ -77,8 +77,8 @@ async function initializeDatabase() {
     console.log('🔄 Creating admin user...');
     const adminUser = await User.create({
       username: 'admin',
-      email: 'admin@cogerenterprises.com',
-      password: 'admin123', // Will be hashed automatically by the User model
+      email: 'admin@coger.in',
+      password: 'admin@1', // Will be hashed automatically by the User model
       role: 'admin',
       phone: '+91 9876543210',
       address: 'Coger Enterprises HQ, Tamil Nadu'
@@ -162,8 +162,8 @@ async function initializeDatabase() {
     console.log(`   Orders: ${await Order.count()}`);
     console.log(`   Reviews: ${await Review.count()}`);
     console.log('\n🔑 Admin credentials:');
-    console.log('   Email: admin@cogerenterprises.com');
-    console.log('   Password: admin123\n');
+    console.log('   Email: admin@coger.in');
+    console.log('   Password: admin@1\n');
     
     process.exit(0);
   } catch (error) {
