@@ -52,6 +52,7 @@ router.post('/login', [
     }
 
     const { email, password } = req.body;
+        console.log('Login attempt with email:', email);
 
     // TODO: Find user in database
     // const user = await User.findOne({ where: { email } });
