@@ -58,11 +58,11 @@
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
+const apiCall            
             try {
-                const data = await apiCall('/auth/login', {
+                const data = await fetch('https://coger-backend.railway.app/api/auth/login', {
                     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
                 
