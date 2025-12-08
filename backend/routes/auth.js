@@ -100,4 +100,44 @@ router.post('/login', [
   }
 });
 
+  // POST /api/auth/seed - Seed admin user (dev only)
+router.post('/seed', async (req, res) => {
+  try {
+    const { User } = require('../models');
+    const bcrypt = require('bcryptjs');
+
+    // Check if admin user already exists
+    const existingUser = await User.findOne({ where: { email: 'admin@coger.in' } });
+    
+    if (existingUser) {
+      return res.status(200).json({ success: true, message: 'Admin user already exists' });
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('admin@1', salt);
+
+    // Create admin user
+    const adminUser = await User.create({
+      username: 'admin',
+      email: 'admin@coger.in',
+      password: hashedPassword,
+      firstName: 'Admin',
+      lastName: 'Coger',
+      phone: '+91-9999999999',
+      role: 'admin'
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Admin user created successfully',
+      data: { id: adminUser.id, email: adminUser.email }
+    });
+  } catch (error) {
+    console.error('Seed error:', error);
+    res.status(500).json({ success: false, message: 'Seed failed', error: error.message });
+  }
+});
+    
+
 module.exports = router;
