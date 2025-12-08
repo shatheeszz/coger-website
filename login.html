@@ -57,14 +57,14 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById('email').value.trim();
+            const  = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             
       try {
           const res = await fetch('https://coger-backend.railway.app/api/auth/login', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-username, password }}              });
+, password }}              });
           
       if (!res.ok) {
           throw new Error('Login failed. Status: ' + res.status);
